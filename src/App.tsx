@@ -1,15 +1,15 @@
 import './App.css';
 import { styled } from 'styled-components';
 import Header from './components/default/header/Header';
-import NavBar from './components/default/navBar/NavBar';
+// import NavBar from './components/default/navBar/NavBar';
 import AppContent from './components/default/Content';
 
 function App() {
   return (
     <Root>
-      <div className='leftContainer'>
+      {/* <div className='leftContainer'>
         <NavBar />
-      </div>
+      </div> */}
       <div className='rightContainer'>
         <Header />
         <AppContent />
