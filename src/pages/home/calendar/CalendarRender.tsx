@@ -1,13 +1,6 @@
 import React from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
-import {
-  RenderHeaderContainer,
-  RenderHeaderMonth,
-  DaysRow,
-  Cell,
-  Row,
-  Body,
-} from './CalendarStyledComponents';
+import { RenderHeaderContainer, DaysRow, Cell, Row, Body } from './CalendarStyledComponents';
 
 // RenderHeader
 // 일단 여기에 둠
@@ -25,7 +18,7 @@ export const RenderHeader: React.FC<RenderHeaderProps> = ({
   return (
     <RenderHeaderContainer>
       <button onClick={prevMonth}>◁</button>
-      <RenderHeaderMonth>{format(currentMonth, 'MMMM')}</RenderHeaderMonth>
+      <div>{format(currentMonth, 'MMMM')}</div>
       <button onClick={nextMonth}>▷</button>
     </RenderHeaderContainer>
   );

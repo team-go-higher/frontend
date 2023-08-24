@@ -2,19 +2,20 @@ import styled from 'styled-components';
 import { format, isSameMonth, isSameDay } from 'date-fns';
 
 export const CalendarPage = styled.div`
-  display: flex;
-  width: 1070px;
-  height: 600px;
-  margin: 0 5vw;
-  border: 1px solid gray;
+  width: 996px;
+  margin: auto;
+  border: 1px solid red;
+  .calendar-detail {
+    display: flex;
+    flex-direction: row;
+  }
 `;
 
 //CalendarContainer
 export const CalendarContainer = styled.div`
-  width: 826px;
-  height: 600px;
-  margin: 0 5px;
-  border: 1px solid blue;
+  width: 735px;
+  margin-right: 11px;
+  border: 0.5px solid #ccc;
 `;
 
 //RenderHeader
@@ -26,11 +27,6 @@ export const RenderHeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   border: 1px solid pink;
-`;
-export const RenderHeaderMonth = styled.div`
-  display: flex;
-  height: 50px;
-  margin:;
 `;
 
 //RenderDays
@@ -73,7 +69,7 @@ export const Cell = styled.div<CellProps>`
   display: flex;
   justify-content: right;
   width: 100%;
-  height: 100px;
+  height: 111px;
   border: 0.5px solid #ccc;
   font-size: 12px;
   font-weight: 500;
@@ -107,6 +103,28 @@ export const Row = styled.div`
 //DayContainer
 export const DayContainer = styled.div`
   width: 250px;
-  height: 600px;
+  height: 589px;
+  border-radius: 15px;
+  border: 1px solid #3253ff;
+`;
+
+// RenderDayDetail
+export const DetailContainer = styled.div`
+  display: flex;
+  width: 213px;
+  height: 50px;
+  margin: auto;
+  justify-content: space-between;
+  align-items: center;
   border: 1px solid pink;
+  div {
+    color: #3253ff;
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1.4px;
+  }
 `;
