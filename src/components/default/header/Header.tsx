@@ -11,7 +11,7 @@ const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추�
 
 const Header = () => {
   const [isSelect, setIsSelect] = useState('공고리스트');
-
+  if (window.location.pathname === '/login') return null;
   return (
     <HeaderContainer>
       <div className='headerContainer'>
