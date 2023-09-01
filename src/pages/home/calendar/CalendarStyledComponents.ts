@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { format, isSameMonth, isSameDay } from 'date-fns';
 
+//Calendar
 export const CalendarPage = styled.div`
   width: 996px;
   margin: auto;
-  border: 1px solid red;
   .calendar-detail {
     display: flex;
     flex-direction: row;
@@ -23,10 +23,13 @@ export const RenderHeaderContainer = styled.div`
   display: flex;
   width: 213px;
   height: 50px;
-  margin: auto;
+  margin: 20px auto;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid pink;
+  .month {
+    font-size: 22px;
+    font-weight: 700;
+  }
 `;
 
 //RenderDays
@@ -142,8 +145,8 @@ export const DetailContainer = styled.div`
     display: flex;
     width: 213px;
     height: 50px;
-    margin: auto;
-    justify-content: space-between;
+    margin: 20px auto;
+    justify-content: center;
     align-items: center;
   }
   .selectedDate {
@@ -154,6 +157,7 @@ export const DetailContainer = styled.div`
     font-weight: 600;
     line-height: normal;
     letter-spacing: 1.4px;
+    margin: 10px;
   }
 `;
 

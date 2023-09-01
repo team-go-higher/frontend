@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import data from './dummy.json';
-import { DetailContainer, EventContainer } from './CalendarStyledComponents';
+import { CalendarCard } from './CalendarCard';
+import dayLeft from '../../../assets/calendar/calendar_day_left.png';
+import dayRight from '../../../assets/calendar/calendar_day_right.png';
+import { DetailContainer } from './CalendarStyledComponents';
 
 // RenderHeader
 // 일단 여기에 둠
@@ -25,29 +28,22 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
   nextDay,
 }) => {
   const [events, setEvents] = useState<EventData[]>([]);
+
   useEffect(() => {
     const filteredEvents = data.data.filter(event => {
       return format(new Date(event.eventDate), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
     });
-
     setEvents(filteredEvents);
   }, [selectedDate]);
-  console.log(events);
+
   return (
     <DetailContainer>
       <div className='selectDate'>
-        <button onClick={prevDay}>◁</button>
+        <img src={dayLeft} onClick={prevDay} />
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
-        <button onClick={nextDay}>▷</button>
+        <img src={dayRight} onClick={nextDay} />
       </div>
-      {events &&
-        events.map(event => (
-          <EventContainer key={event.id} process={event.process}>
-            <div>{event.title}</div>
-            <div>{event.role}</div>
-            <div>{format(new Date(event.eventDate), 'M월 dd일 HH:mm')}</div>
-          </EventContainer>
-        ))}
+      {events && events.map(event => <CalendarCard key={event.id} event={event}></CalendarCard>)}
     </DetailContainer>
   );
 };

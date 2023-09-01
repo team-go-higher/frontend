@@ -1,10 +1,11 @@
 import React from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import data from './dummy.json';
+import headerLeft from '../../../assets/calendar/calendar_header_left.png';
+import headerRight from '../../../assets/calendar/calendar_header_right.png';
 import { RenderHeaderContainer, DaysRow, Cell, Event, Row, Body } from './CalendarStyledComponents';
 
-// RenderHeader
-// 일단 여기에 둠
+// RenderHeader(월)
 interface RenderHeaderProps {
   currentMonth: Date;
   prevMonth: () => void;
@@ -18,14 +19,14 @@ export const RenderHeader: React.FC<RenderHeaderProps> = ({
 }) => {
   return (
     <RenderHeaderContainer>
-      <button onClick={prevMonth}>◁</button>
-      <div>{format(currentMonth, 'MMMM')}</div>
-      <button onClick={nextMonth}>▷</button>
+      <img src={headerLeft} onClick={prevMonth} />
+      <div className='month'>{format(currentMonth, 'MMMM')}</div>
+      <img src={headerRight} onClick={nextMonth} />
     </RenderHeaderContainer>
   );
 };
 
-// RenderDays
+// RenderDays(요일)
 export const RenderDays = () => {
   const days = [];
   const date = ['sun', 'mon', 'thu', 'wed', 'turs', 'fri', 'sat'];
@@ -40,8 +41,7 @@ export const RenderDays = () => {
   return <div style={{ display: 'flex' }}>{days}</div>;
 };
 
-// RenderCells
-// 일단 여기에 둠
+// RenderCells(달력 셀)
 interface RenderCellsProps {
   currentMonth: Date;
   selectedDate: Date;
