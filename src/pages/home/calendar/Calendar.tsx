@@ -4,7 +4,7 @@ import { RenderHeader, RenderDays, RenderCells } from './CalendarRender';
 import { RenderDetailHeader } from './DetailRender';
 import { CalendarPage, CalendarContainer, DayContainer } from './CalendarStyledComponents';
 
-export const Calendar = () => {
+const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -44,3 +44,5 @@ export const Calendar = () => {
     </CalendarPage>
   );
 };
+
+export default Calendar;

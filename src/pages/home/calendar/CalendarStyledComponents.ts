@@ -33,33 +33,33 @@ export const RenderHeaderContainer = styled.div`
 `;
 
 //RenderDays
-interface DayProps {
-  rowKey: number;
-}
-
-export const DaysRow = styled.div<DayProps>`
+export const RenderDaysContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 33px;
-  border: 0.5px solid #ccc;
-  font-size: 17px;
-  font-weight: 500;
-  color: #363636;
-  ${props =>
-    props.rowKey === 6 &&
-    `
-    color: #3253FF;
-  `}
-  ${props =>
-    props.rowKey === 0 &&
-    `
-    color: #FF5555;
-  `}
+  .daysRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 33px;
+    border: 0.5px solid #ccc;
+    font-size: 17px;
+    font-weight: 500;
+    color: #363636;
+  }
+  .sat {
+    color: #3253ff;
+  }
+  .sun {
+    color: #ff5555;
+  }
 `;
 
 //RenderCells
+export const RenderCellsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 interface CellProps {
   day: Date;
   monthStart: Date;
@@ -122,10 +122,6 @@ export const Event = styled.div<EventProps>`
       background: ${colors[process]};
     `;
   }}
-`;
-export const Body = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 export const Row = styled.div`
   display: flex;
