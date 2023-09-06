@@ -39,9 +39,9 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
   return (
     <DetailContainer>
       <div className='selectDate'>
-        <img src={dayLeft} onClick={prevDay} />
+        <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
-        <img src={dayRight} onClick={nextDay} />
+        <img src={dayRight} alt='dayLeft' onClick={nextDay} />
       </div>
       {events && events.map(event => <CalendarCard key={event.id} event={event}></CalendarCard>)}
     </DetailContainer>

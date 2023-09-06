@@ -26,9 +26,9 @@ export const RenderHeader: React.FC<RenderHeaderProps> = ({
 }) => {
   return (
     <RenderHeaderContainer>
-      <img src={headerLeft} onClick={prevMonth} />
+      <img src={headerLeft} alt='headerLeft' onClick={prevMonth} />
       <div className='month'>{format(currentMonth, 'MMMM')}</div>
-      <img src={headerRight} onClick={nextMonth} />
+      <img src={headerRight} alt='headerRight' onClick={nextMonth} />
     </RenderHeaderContainer>
   );
 };

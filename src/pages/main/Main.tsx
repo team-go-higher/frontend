@@ -16,7 +16,7 @@ const Main = () => {
       <ToggleContainer onClick={toggleHandler}>
         <div className={`toggle-container ${isCalendar ? '' : 'false'}`} />
         <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
-          <img src={isCalendar ? calendarToggle : kanbanToggle} alt='Image' />
+          <img src={isCalendar ? calendarToggle : kanbanToggle} alt='toggle' />
         </div>
       </ToggleContainer>
       {isCalendar ? <Calendar></Calendar> : <Kanban></Kanban>}
