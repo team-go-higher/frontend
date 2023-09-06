@@ -1,9 +1,16 @@
 import React from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import data from './dummy.json';
-import headerLeft from '../../../assets/calendar/calendar_header_left.png';
-import headerRight from '../../../assets/calendar/calendar_header_right.png';
-import { RenderHeaderContainer, DaysRow, Cell, Event, Row, Body } from './CalendarStyledComponents';
+import headerLeft from '../../assets/calendar/calendar_header_left.png';
+import headerRight from '../../assets/calendar/calendar_header_right.png';
+import {
+  RenderHeaderContainer,
+  RenderDaysContainer,
+  Cell,
+  Event,
+  Row,
+  RenderCellsContainer,
+} from './CalendarStyledComponents';
 
 // RenderHeader(월)
 interface RenderHeaderProps {
@@ -19,26 +26,24 @@ export const RenderHeader: React.FC<RenderHeaderProps> = ({
 }) => {
   return (
     <RenderHeaderContainer>
-      <img src={headerLeft} onClick={prevMonth} />
+      <img src={headerLeft} alt='headerLeft' onClick={prevMonth} />
       <div className='month'>{format(currentMonth, 'MMMM')}</div>
-      <img src={headerRight} onClick={nextMonth} />
+      <img src={headerRight} alt='headerRight' onClick={nextMonth} />
     </RenderHeaderContainer>
   );
 };
 
 // RenderDays(요일)
 export const RenderDays = () => {
-  const days = [];
-  const date = ['sun', 'mon', 'thu', 'wed', 'turs', 'fri', 'sat'];
+  const date = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  for (let i = 0; i < 7; i++) {
-    days.push(
-      <DaysRow key={i} rowKey={i}>
-        {date[i]}
-      </DaysRow>,
-    );
-  }
-  return <div style={{ display: 'flex' }}>{days}</div>;
+  return (
+    <RenderDaysContainer>
+      {date.map((day, i) => (
+        <div className={`daysRow ${i === 6 ? 'sat' : i === 0 ? 'sun' : ''}`}>{day}</div>
+      ))}
+    </RenderDaysContainer>
+  );
 };
 
 // RenderCells(달력 셀)
@@ -94,5 +99,5 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
     rows.push(<Row key={day.toDateString()}>{days}</Row>);
     days = [];
   }
-  return <Body>{rows}</Body>;
+  return <RenderCellsContainer>{rows}</RenderCellsContainer>;
 };
