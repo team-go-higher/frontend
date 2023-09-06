@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import data from './dummy.json';
 import { CalendarCard } from './CalendarCard';
-import dayLeft from '../../../assets/calendar/calendar_day_left.png';
-import dayRight from '../../../assets/calendar/calendar_day_right.png';
+import dayLeft from '../../assets/calendar/calendar_day_left.png';
+import dayRight from '../../assets/calendar/calendar_day_right.png';
 import { DetailContainer } from './CalendarStyledComponents';
 
 // RenderHeader

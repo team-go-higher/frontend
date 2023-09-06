@@ -1,8 +1,8 @@
 import React from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import data from './dummy.json';
-import headerLeft from '../../../assets/calendar/calendar_header_left.png';
-import headerRight from '../../../assets/calendar/calendar_header_right.png';
+import headerLeft from '../../assets/calendar/calendar_header_left.png';
+import headerRight from '../../assets/calendar/calendar_header_right.png';
 import {
   RenderHeaderContainer,
   RenderDaysContainer,

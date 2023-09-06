@@ -2,24 +2,24 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from './calendar/Calendar';
 import Kanban from './kanban/Kanban';
-import calendarToggle from '../../assets/home/calendar_toggle.png';
-import kanbanToggle from '../../assets/home/kanban_toggle.png';
+import calendarToggle from '../../assets/main/calendar_toggle.png';
+import kanbanToggle from '../../assets/main/kanban_toggle.png';
 
-const Home = () => {
-  const [isHome, setHome] = useState(true);
+const Main = () => {
+  const [isCalendar, setCalendar] = useState(true);
   const toggleHandler = () => {
-    setHome(!isHome);
+    setCalendar(!isCalendar);
   };
 
   return (
     <div>
       <ToggleContainer onClick={toggleHandler}>
-        <div className={`toggle-container ${isHome ? '' : 'false'}`} />
-        <div className={`toggle-circle ${isHome ? '' : 'false'}`}>
-          <img src={isHome ? calendarToggle : kanbanToggle} alt='Image' />
+        <div className={`toggle-container ${isCalendar ? '' : 'false'}`} />
+        <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
+          <img src={isCalendar ? calendarToggle : kanbanToggle} alt='Image' />
         </div>
       </ToggleContainer>
-      {isHome ? <Calendar></Calendar> : <Kanban></Kanban>}
+      {isCalendar ? <Calendar></Calendar> : <Kanban></Kanban>}
     </div>
   );
 };
@@ -62,4 +62,4 @@ const ToggleContainer = styled.div`
   }
 `;
 
-export default Home;
+export default Main;
