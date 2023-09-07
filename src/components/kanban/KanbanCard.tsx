@@ -2,9 +2,9 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 import { styled } from 'styled-components';
 
-import { Data } from '../../types/interfaces/KanbanProcess';
-import { useAppDispatch } from '../../redux/store';
-import { updateProcess } from '../../redux/kanbanSlice';
+import { Data } from 'types/interfaces/KanbanProcess';
+import { useAppDispatch } from 'redux/store';
+import { updateProcess } from 'redux/kanbanSlice';
 
 interface IProps {
   item: Data;

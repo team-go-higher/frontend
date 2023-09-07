@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { useDrop } from 'react-dnd';
 
-import { KanbanProcessData } from '../../data/mock/KanbanProcess';
+import { KanbanProcessData } from 'data/mock/KanbanProcess';
 
 interface IProps {
   processName: string;

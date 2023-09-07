@@ -1,4 +1,4 @@
-import { IKanbanProcess } from '../../types/interfaces/KanbanProcess';
+import { IKanbanProcess } from 'types/interfaces/KanbanProcess';
 
 export const KanbanProcessData: IKanbanProcess = {
   toApply: {
