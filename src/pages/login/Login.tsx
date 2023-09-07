@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
-import KakaoImg from '../../assets/login/img_login_kakao.png';
-import GoogleImg from '../../assets/login/img_login_google.png';
+import KakaoImg from 'assets/login/login_kakao.svg';
+import GoogleImg from 'assets/login/login_google.svg';
 
 const Login = () => {
   return (

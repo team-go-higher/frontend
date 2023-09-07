@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { KanbanProcessData } from '../data/mock/KanbanProcess';
-import { IKanbanProcess, Data } from '../types/interfaces/KanbanProcess';
+import { KanbanProcessData } from 'data/mock/KanbanProcess';
+import { IKanbanProcess, Data } from 'types/interfaces/KanbanProcess';
 
 const initialState: IKanbanProcess = KanbanProcessData;
 

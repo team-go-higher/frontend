@@ -4,8 +4,8 @@ import {
   HeaderMenuContainer,
   HeaderPersonalContaienr,
 } from './HeaderStyledComponents';
-import AlarmImg from '../../../assets/default/img_alarm.png';
-import ArrowDownImg from '../../../assets/default/img_arrow_down.png';
+import AlarmImg from 'assets/header/header_alarm.svg';
+import ArrowDownImg from 'assets/header/header_arrow_down.svg';
 
 const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추가', '마이페이지'];
 

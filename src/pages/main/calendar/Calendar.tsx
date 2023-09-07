@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { addMonths, subMonths, addDays, subDays } from 'date-fns';
-import { RenderHeader, RenderDays, RenderCells } from '../../../components/calendar/CalendarRender';
-import { RenderDetailHeader } from '../../../components/calendar/DetailRender';
+import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
+import { RenderDetailHeader } from 'components/calendar/DetailRender';
 import {
   CalendarPage,
   CalendarContainer,
   DayContainer,
-} from '../../../components/calendar/CalendarStyledComponents';
+} from 'components/calendar/CalendarStyledComponents';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());

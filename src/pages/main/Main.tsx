@@ -2,8 +2,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from './calendar/Calendar';
 import Kanban from './kanban/Kanban';
-import calendarToggle from '../../assets/main/calendar_toggle.png';
-import kanbanToggle from '../../assets/main/kanban_toggle.png';
+import calendarToggle from 'assets/main/main_calendar_toggle.svg';
+import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
 
 const Main = () => {
   const [isCalendar, setCalendar] = useState(true);

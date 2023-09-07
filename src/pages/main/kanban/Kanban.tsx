@@ -4,11 +4,11 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Modal, { Styles } from 'react-modal';
 
-import KanbanList from '../../../components/kanban/KanbanList';
-import KanbanCard from '../../../components/kanban/KanbanCard';
-import { useAppDispatch, useAppSelector } from '../../../redux/store';
-import { useModal } from '../../../hooks/useModal';
-import { addResume } from '../../../redux/kanbanSlice';
+import KanbanList from 'components/kanban/KanbanList';
+import KanbanCard from 'components/kanban/KanbanCard';
+import { useAppDispatch, useAppSelector } from 'redux/store';
+import { useModal } from 'hooks/useModal';
+import { addResume } from 'redux/kanbanSlice';
 
 const Kanban = () => {
   const dispatch = useAppDispatch();
