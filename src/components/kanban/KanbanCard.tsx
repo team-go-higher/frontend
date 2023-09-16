@@ -11,7 +11,6 @@ interface IProps {
 }
 
 const KanbanCard = ({ item }: IProps) => {
-  console.log(item);
   const dispatch = useAppDispatch();
 
   function changeKanbanProcess(target: Data, nextProcessName: string) {

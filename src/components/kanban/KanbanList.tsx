@@ -28,9 +28,11 @@ const KanbanList = ({ processName, children }: IProps) => {
 };
 
 const KanbanListContainer = styled.div`
-  width: 22.5rem;
+  min-width: 327px;
+  height: 835px;
   background-color: rgb(var(--kanbanBackground));
   border-radius: 15px;
+  overflow-x: auto;
 `;
 
 const ProcessTitle = styled.div<{ processName: string }>`
