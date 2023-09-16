@@ -18,8 +18,10 @@ const Kanban = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   function kanbanListHandler(processName: string): ReactElement[] {
-    const cards = kanbanProcessData[processName].data.map((item, i) => (
-      <KanbanCard key={`${i} key`} item={item} />
+    const filterdData = kanbanProcessData?.filter(data => data.processType === processName)[0];
+
+    const cards = filterdData.applications.map((item, i) => (
+      <KanbanCard key={`${i} key`} item={item} currentProcessName={processName} />
     ));
 
     const addButton = (
@@ -61,13 +63,11 @@ const Kanban = () => {
             closeModal={closeModal}
             currentModalProcess={currentModalProcess}
           />
-          <KanbanList processName={'toApply'}>{kanbanListHandler('toApply')}</KanbanList>
-          <KanbanList processName={'resumeScreening'}>
-            {kanbanListHandler('resumeScreening')}
-          </KanbanList>
-          <KanbanList processName={'test'}>{kanbanListHandler('test')}</KanbanList>
-          <KanbanList processName={'interview'}>{kanbanListHandler('interview')}</KanbanList>
-          <KanbanList processName={'complete'}>{kanbanListHandler('complete')}</KanbanList>
+          <KanbanList processName={'TO_APPLY'}>{kanbanListHandler('TO_APPLY')}</KanbanList>
+          <KanbanList processName={'DOCUMENT'}>{kanbanListHandler('DOCUMENT')}</KanbanList>
+          <KanbanList processName={'TEST'}>{kanbanListHandler('TEST')}</KanbanList>
+          <KanbanList processName={'INTERVIEW'}>{kanbanListHandler('INTERVIEW')}</KanbanList>
+          <KanbanList processName={'COMPLETE'}>{kanbanListHandler('COMPLETE')}</KanbanList>
         </KanbanBoardContainer>
       </div>
     </DndProvider>

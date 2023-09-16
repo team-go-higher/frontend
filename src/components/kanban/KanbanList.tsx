@@ -1,9 +1,7 @@
 import React, { ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { useDrop } from 'react-dnd';
-
-import { KanbanProcessData } from 'data/mock/KanbanProcess';
-
+import { formatProcessToKorean } from 'utils/common';
 interface IProps {
   processName: string;
   children: ReactElement[];
@@ -21,7 +19,7 @@ const KanbanList = ({ processName, children }: IProps) => {
 
   return (
     <KanbanListContainer ref={ref}>
-      <ProcessTitle processName={processName}>{KanbanProcessData[processName].korean}</ProcessTitle>
+      <ProcessTitle $processName={processName}>{formatProcessToKorean(processName)}</ProcessTitle>
       <KanbanCardContainer>{children}</KanbanCardContainer>
     </KanbanListContainer>
   );
@@ -35,13 +33,13 @@ const KanbanListContainer = styled.div`
   overflow-x: auto;
 `;
 
-const ProcessTitle = styled.div<{ processName: string }>`
+const ProcessTitle = styled.div<{ $processName: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
   border-radius: 15px 15px 0 0;
-  background: ${({ processName }) => `rgb(var(--${processName}))`};
+  background: ${({ $processName }) => `rgb(var(--${$processName}))`};
   font-size: 20px;
   color: rgb(var(--grayText));
 `;
