@@ -1,18 +1,56 @@
 import { styled } from 'styled-components';
 import KakaoImg from 'assets/login/login_kakao.svg';
 import GoogleImg from 'assets/login/login_google.svg';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 const Login = () => {
+  const location = window.location;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname !== '/login') {
+      const url = new URL(location.href);
+      const urlParams = url.searchParams;
+
+      const accessToken = urlParams.get('accessToken');
+      const role = urlParams.get('role');
+      const expireDate = moment().add(5, 'minute').format('YYYY-MM-DD hh:mm:ss');
+
+      if (accessToken !== null && role !== null) {
+        let userInfo = {
+          accessToken: accessToken,
+          role: role,
+          expireDate: expireDate,
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      }
+      navigate('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   return (
     <Main>
       <Wrapper>
         <div className='loginTitle'>쉬운 관리의 시작, 고하이어</div>
         <div className='loginBtnContainer'>
-          <div className='btnContainer' id='kakao'>
+          <div
+            className='btnContainer'
+            id='kakao'
+            onClick={() => {
+              window.open(`${process.env.REACT_APP_BASE_URL}/oauth2/authorization/kakao`, '_self');
+            }}>
             <img src={KakaoImg} className='btnImg' alt='kakao' />
             <div className='btnTitle'>카카오로 로그인</div>
           </div>
-          <div className='btnContainer' id='google'>
+          <div
+            className='btnContainer'
+            id='google'
+            onClick={() => {
+              window.open(`${process.env.REACT_APP_BASE_URL}/oauth2/authorization/google`, '_self');
+            }}>
             <img src={GoogleImg} className='btnImg' alt='google' />
             <div className='btnTitle'>구글로 로그인</div>
           </div>
