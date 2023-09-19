@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   HeaderContainer,
   HeaderMenuContainer,
-  HeaderPersonalContaienr,
+  HeaderPersonalContainer,
 } from './HeaderStyledComponents';
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
@@ -28,16 +28,14 @@ const Header = () => {
             );
           })}
         </HeaderMenuContainer>
-        <HeaderPersonalContaienr>
+        <HeaderPersonalContainer>
           <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
           <div className='personalBox'>
-            <div className='profile'>
-              <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
-            </div>
+            <div className='profile'>고하</div>
             <div className='profileName'>사용자</div>
             <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
           </div>
-        </HeaderPersonalContaienr>
+        </HeaderPersonalContainer>
       </div>
     </HeaderContainer>
   );
