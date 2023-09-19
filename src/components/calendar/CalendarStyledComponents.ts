@@ -3,7 +3,7 @@ import { format, isSameMonth, isSameDay } from 'date-fns';
 
 //Calendar
 export const CalendarPage = styled.div`
-  width: 996px;
+  width: fit-content;
   margin: auto;
   .calendar-detail {
     display: flex;
