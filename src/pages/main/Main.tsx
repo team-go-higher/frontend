@@ -14,7 +14,6 @@ const Main = () => {
   return (
     <div>
       <ToggleContainer onClick={toggleHandler}>
-        <div className={`toggle-container ${isCalendar ? '' : 'false'}`} />
         <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
           <img src={isCalendar ? calendarToggle : kanbanToggle} alt='toggle' />
         </div>
@@ -25,40 +24,31 @@ const Main = () => {
 };
 
 const ToggleContainer = styled.div`
-  position: relative;
+  position: absolute;
   cursor: pointer;
-  width: 68px;
-  height: 35px;
-  left: 80%;
-  .toggle-container {
-    width: 68px;
-    height: 35px;
-    border-radius: 30px;
-    background-color: rgba(50, 83, 255, 1);
-  }
-  .toggle-container.false {
-    border: 1px rgba(50, 83, 255, 1) solid;
-    background-color: white;
-    transition: 0.3s;
-  }
+  width: 52px;
+  height: 25px;
+  top: 77px;
+  right: calc((100vw - 996px) / 2);
+  border-radius: 17.5px;
+  background: #d9d9d9;
 
   .toggle-circle {
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: -2px;
+    left: 0px;
     width: 31px;
     height: 31px;
     border-radius: 50%;
-    background-color: white;
+    background-color: rgba(50, 83, 255, 1);
     transition: 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .toggle-circle.false {
-    left: 35px;
+    left: 23px;
     transition: 0.3s;
-    background-color: rgba(50, 83, 255, 1);
   }
 `;
 
