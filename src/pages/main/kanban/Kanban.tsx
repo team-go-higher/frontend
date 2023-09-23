@@ -78,10 +78,9 @@ const KanbanHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0px;
-  margin: auto;
+  margin: 20px auto;
   width: 213px;
-  /* height: 50px; */
+  height: 50px;
 `;
 
 const Paragraph = styled.p`
