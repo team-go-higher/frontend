@@ -44,7 +44,7 @@ export const HeaderMenuContainer = styled.div`
     width: 75px;
   }
 `;
-export const HeaderPersonalContaienr = styled.div`
+export const HeaderPersonalContainer = styled.div`
   display: flex;
   margin-left: 90px;
   align-items: center;
@@ -52,6 +52,7 @@ export const HeaderPersonalContaienr = styled.div`
     width: 16px;
     height: 17px;
     margin-right: 17px;
+    cursor: pointer;
   }
   .personalBox {
     padding: 4px 7px;
@@ -61,22 +62,33 @@ export const HeaderPersonalContaienr = styled.div`
     align-items: center;
     border-radius: 42px;
     border: 0.5px solid #3253ff;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 95px;
     .profile {
       border-radius: 50%;
-      width: 21px;
-      height: 21px;
+      width: 23px;
+      height: 23px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-right: 4px;
+      background: #9570e2;
+      color: #fff;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 500;
     }
     .profileName {
       color: #333;
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.14px;
-      margin-right: 4px;
     }
     .arrowDown {
       width: 7px;
       height: 4px;
+      margin-left: auto;
     }
   }
 `;
