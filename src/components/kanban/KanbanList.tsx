@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { useDrop } from 'react-dnd';
-import { formatProcessToKorean } from 'utils/common';
+import { formatProcessToKorean } from 'utils/process';
 interface IProps {
   processName: string;
   children: ReactElement[];
