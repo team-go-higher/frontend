@@ -236,9 +236,7 @@ const ModalComponent = ({ modalIsOpen, closeModal, currentModalProcess }: IProps
               type='datetime-local'
               $error={errors.scheduled ? true : false}
               placeholder='마감일을 선택하세요'
-              {...register('scheduled', {
-                required: '마감일 필수',
-              })}
+              {...register('scheduled')}
             />
             {errors.scheduled && <S.InvalidIcon>!</S.InvalidIcon>}
           </S.ModalInputBox>
