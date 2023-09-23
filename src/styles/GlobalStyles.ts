@@ -70,10 +70,4 @@ export const GlobalStyles = createGlobalStyle`
     select:focus {
         outline : none;
     }
-    button {
-        border : none;
-        outline : none;
-        background-color : transparent;
-        cursor : pointer;
-    }
 `;
