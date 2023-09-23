@@ -7,6 +7,7 @@ import { useAppDispatch } from 'redux/store';
 import { updateProcess } from 'redux/kanbanSlice';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
+import { formatDataType } from 'utils/date';
 
 interface IProps {
   item: application;
@@ -57,7 +58,7 @@ const KanbanCard = ({ item, currentProcessName }: IProps) => {
       </DetailProcess>
       <CompanyName>{item.companyName}</CompanyName>
       <Job>{item.duty}</Job>
-      <Schedule>{item.schedule}</Schedule>
+      <Schedule>{formatDataType(item.schedule)}</Schedule>
       <MoreIconDiv>
         <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />
       </MoreIconDiv>
