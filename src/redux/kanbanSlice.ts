@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { KanbanProcessData } from 'data/mock/KanbanProcess';
-import { IKanbanProcess, Data } from 'types/interfaces/KanbanProcess';
+import { kanbanProcessData2 } from 'data/mock/KanbanProcess';
+import { IkabanData, application } from 'types/interfaces/KanbanProcess';
+import { current } from '@reduxjs/toolkit';
 
-const initialState: IKanbanProcess = KanbanProcessData;
+const initialState: IkabanData[] = kanbanProcessData2;
 
 export const kanbanSlice = createSlice({
   name: 'kanban',
@@ -10,36 +11,63 @@ export const kanbanSlice = createSlice({
   reducers: {
     addResume: (
       state,
-      { payload }: PayloadAction<{ processName: string; newResumeData: Data }>,
+      { payload }: PayloadAction<{ processName: string; newResumeData: application }>,
     ) => {
-      state[payload.processName].data.push(payload.newResumeData);
+      const filterdData = state.filter(data => data.processType === payload.processName)[0];
+
+      filterdData.applications.push(payload.newResumeData);
     },
     updateProcess: (
       state,
-      { payload }: PayloadAction<{ target: Data; nextProcessName: string }>,
-    ) => {
-      const targetCurrentProcess = payload.target.currentProcess;
-      const targetId = payload.target.id;
-      const nextProcessName = payload.nextProcessName;
+      {
+        payload,
+      }: PayloadAction<{
+        currentProcessName: string;
+        target: application;
+        nextProcessName: string;
+      }>,
+    ): IkabanData[] => {
+      const { currentProcessName, target, nextProcessName } = payload;
 
-      if (targetCurrentProcess !== nextProcessName) {
-        // drop한 Item을 가져와서 updatedTargetData 민들기
-        // updatedTargetData process의 data 항목에 넣어주기
-        const updatedTargetData = state[targetCurrentProcess].data.find(
-          item => item.id === targetId,
-        ) as Data;
-        updatedTargetData.currentProcess = nextProcessName;
-        updatedTargetData.schedule = '마감일을 입력하세요';
-        updatedTargetData.detailProcess = state[nextProcessName].korean;
+      if (currentProcessName !== nextProcessName) {
+        const currentProcessData = state.find(
+          data => data.processType === currentProcessName,
+        ) as IkabanData;
+        const nextProcessData = state.find(
+          data => data.processType === nextProcessName,
+        ) as IkabanData;
 
-        state[nextProcessName].data.push(updatedTargetData);
-
-        // drop된 공고를 filter한 새로운 state를 기존의 state에 대체
-        const filterdProcessData = state[targetCurrentProcess].data.filter(
-          data => data.id !== targetId,
+        const targetIndex = currentProcessData.applications.findIndex(
+          item => item.id === target.id,
         );
-        state[targetCurrentProcess].data = filterdProcessData;
+
+        if (targetIndex !== -1) {
+          const updatedCurrentProcessApplications = currentProcessData.applications.filter(
+            app => app.id !== target.id,
+          );
+
+          const updatedTarget = {
+            ...target,
+            schedule: '마감일을 입력하세요',
+            processDescription: nextProcessName,
+          };
+
+          const newState: IkabanData[] = state.map(processData => {
+            if (processData.processType === currentProcessName) {
+              return { ...processData, applications: updatedCurrentProcessApplications };
+            } else if (processData.processType === nextProcessName) {
+              return {
+                ...processData,
+                applications: [...nextProcessData.applications, updatedTarget],
+              };
+            } else {
+              return processData;
+            }
+          });
+          return newState;
+        }
       }
+      return state;
     },
   },
 });

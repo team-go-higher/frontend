@@ -2,11 +2,11 @@ import { css } from 'styled-components';
 
 export const theme = {
   color: {
-    toApply: '255, 233, 116',
-    resumeScreening: '255, 174, 198',
-    test: '200, 174, 255',
-    interview: '158, 220, 255',
-    complete: '150, 150, 150',
+    TO_APPLY: '255, 233, 116',
+    DOCUMENT: '255, 174, 198',
+    TEST: '200, 174, 255',
+    INTERVIEW: '158, 220, 255',
+    COMPLETE: '150, 150, 150',
     redText: '255, 85, 85',
     blueText: '50, 83, 255',
     grayText: '85, 85, 85',
@@ -16,6 +16,8 @@ export const theme = {
     white: '256, 256, 256',
     inputBorder: '150, 150, 150',
     modalHelperText: '150, 150, 150',
+    placeholder: '200, 200, 200',
+    dropDownHover: '237, 237, 237',
   },
 };
 

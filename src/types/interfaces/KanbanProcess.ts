@@ -1,15 +1,13 @@
-export interface IKanbanProcess {
-  [processName: string]: {
-    korean: string;
-    data: Data[];
-  };
+export interface IkabanData {
+  processType: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  applications: application[];
 }
 
-export interface Data {
+export interface application {
   id: number;
   companyName: string;
-  job: string;
+  duty: string;
+  detailedDuty: null | string;
+  processDescription: string;
   schedule: string;
-  currentProcess: string;
-  detailProcess: string;
 }
