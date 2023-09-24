@@ -1,28 +1,36 @@
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useQuery } from 'react-query';
 
 import LeftIcon from 'assets/main/main_left_arrow.svg';
 import RightIcon from 'assets/main/main_right_arrow.svg';
 import KanbanList from 'components/kanban/KanbanList';
 import KanbanCard from 'components/kanban/KanbanCard';
 import ModalComponent from 'components/default/modal/ModalComponent';
-import { useAppSelector } from 'redux/store';
+import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
+import { fetchKanbanList } from 'apis/kanban';
+import { setApplications } from 'redux/kanbanSlice';
 
 const Kanban = () => {
-  const kanbanProcessData = useAppSelector(state => state.kanban);
-  const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
-
+  const dispatch = useAppDispatch();
+  const { data, isLoading, isSuccess } = useQuery('fetchApplications', fetchKanbanList);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  function kanbanListHandler(processName: string): ReactElement[] {
-    const filterdData = kanbanProcessData?.filter(data => data.processType === processName)[0];
+  const kanbanList = useAppSelector(state => state.kanban);
+  const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
 
-    const cards = filterdData.applications.map((item, i) => (
-      <KanbanCard key={`${i} key`} item={item} currentProcessName={processName} />
-    ));
+  function kanbanListHandler(processName: string): ReactElement[] {
+    const filterdData = kanbanList?.filter(data => data.processType === processName)[0];
+    let cards: ReactElement[] = [];
+
+    if (filterdData?.applications.length > 0) {
+      cards = filterdData?.applications.map((item, i) => (
+        <KanbanCard key={`${i} key`} item={item} currentProcessName={processName} />
+      ));
+    }
 
     const addButton = (
       <PlusButton key={processName} onClick={() => openModal(processName, 'normal')}>
@@ -30,7 +38,11 @@ const Kanban = () => {
       </PlusButton>
     );
 
-    return [...cards, addButton];
+    if (filterdData?.applications.length > 0) {
+      return [...cards, addButton];
+    } else {
+      return [addButton];
+    }
   }
 
   function scrollButtonHandler(type: 'prev' | 'next') {
@@ -48,6 +60,15 @@ const Kanban = () => {
       });
     }
   }
+
+  if (!isLoading && isSuccess) {
+    const kanbanList = data.data.data;
+    dispatch(setApplications(kanbanList));
+  }
+
+  useEffect(() => {
+    console.log('aa', kanbanList);
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>

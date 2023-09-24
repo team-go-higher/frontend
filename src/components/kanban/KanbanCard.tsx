@@ -57,7 +57,7 @@ const KanbanCard = ({ item, currentProcessName }: IProps) => {
         {item.processDescription}
       </DetailProcess>
       <CompanyName>{item.companyName}</CompanyName>
-      <Job>{item.duty}</Job>
+      <Job>{item.position}</Job>
       <Schedule>{formatDataType(item.schedule)}</Schedule>
       <MoreIconDiv>
         <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />

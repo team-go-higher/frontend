@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { processStage, processStageKeys } from 'data/RecruitProcess';
 import * as S from './ModalStyledComponents';
-import { useAppDispatch } from 'redux/store';
-import { addResume } from 'redux/kanbanSlice';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
+import { fomatProcessTypeToEnglish } from 'utils/process';
+import { registerSimpleApplication } from 'apis/kanban';
+import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
 
 interface IProps {
   isEditMode: boolean;
@@ -16,9 +18,17 @@ interface IProps {
 }
 
 const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProcess }: IProps) => {
-  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const [processStageToggle, setProcessStageToggle] = useState(false);
   const [detailedprocessStageToggle, setdetailedProcessStageToggle] = useState(false);
+  const addMutation = useMutation(
+    (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
+    {
+      onSuccess(data, variables, context) {
+        queryClient.invalidateQueries('fetchApplications');
+      },
+    },
+  );
 
   const {
     register,
@@ -35,7 +45,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
       companyName: '',
       processStage: '전형단계를 선택하세요',
       detailedProcessStage: '세부단계를 선택하세요',
-      role: '',
+      position: '',
       scheduled: '',
       recruitUrl: '',
     },
@@ -47,7 +57,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
       companyName: '',
       processStage: '전형단계를 선택하세요',
       detailedProcessStage: '세부단계를 선택하세요',
-      role: '',
+      position: '',
       scheduled: '',
     });
 
@@ -77,20 +87,23 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
   }
 
   // 간편등록 handler
-  function addSimpleHandler() {
-    const newResumeData = {
-      id: 10,
+  function simpleResisterHandler() {
+    const newApplicationData = {
       companyName: getValues('companyName'),
-      duty: getValues('role'),
-      detailedDuty: getValues('role'),
-      processDescription:
-        getValues('detailedProcessStage') === defaultValues?.detailedProcessStage
-          ? getValues('processStage')
-          : getValues('detailedProcessStage'),
-      schedule: getValues('scheduled'),
-      recruitUrl: getValues('recruitUrl'),
+      position: getValues('position'),
+      url: getValues('recruitUrl'),
+      currentProcess: {
+        type: fomatProcessTypeToEnglish(getValues('processStage')),
+        description:
+          getValues('detailedProcessStage') === defaultValues?.detailedProcessStage
+            ? getValues('processStage')
+            : getValues('detailedProcessStage'),
+        schedule: getValues('scheduled'),
+      },
     };
-    dispatch(addResume({ processName: currentModalProcess, newResumeData }));
+
+    addMutation.mutate(newApplicationData);
+    // dispatch(addSimpleApplication({ processName: currentModalProcess, newApplicationData }));
     closeModal();
   }
 
@@ -136,7 +149,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
         style={S.editModalStyles}
         id={currentModalProcess}
         appElement={document.getElementById('root') as HTMLBodyElement}>
-        <S.ModalForm onSubmit={handleSubmit(addSimpleHandler)}>
+        <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
           <S.ModalTitle>전형수정</S.ModalTitle>
           <S.ModalInputWrapper>
             <S.ModalDropdownBox
@@ -228,7 +241,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
         style={S.normalModalStyles}
         id={currentModalProcess}
         appElement={document.getElementById('root') as HTMLBodyElement}>
-        <S.ModalForm onSubmit={handleSubmit(addSimpleHandler)}>
+        <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
           <S.ModalTitle>간편등록</S.ModalTitle>
           <S.ModalInputWrapper>
             {/* 회사명 */}
@@ -315,13 +328,13 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
             <S.ModalInputBox>
               <S.ModalInput
                 type='text'
-                $error={errors.role ? true : false}
+                $error={errors.position ? true : false}
                 placeholder='직무를 선택하세요'
-                {...register('role', {
+                {...register('position', {
                   required: '직무 필수',
                 })}
               />
-              {errors.role && <S.InvalidIcon>!</S.InvalidIcon>}
+              {errors.position && <S.InvalidIcon>!</S.InvalidIcon>}
             </S.ModalInputBox>
 
             {/* 마감일 */}
