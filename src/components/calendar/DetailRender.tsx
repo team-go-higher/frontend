@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import data from './dummy.json';
 import { CalendarCard } from './CalendarCard';
 import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
 import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
@@ -28,13 +27,6 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
   nextDay,
 }) => {
   const [events, setEvents] = useState<EventData[]>([]);
-
-  useEffect(() => {
-    const filteredEvents = data.data.filter(event => {
-      return format(new Date(event.eventDate), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-    });
-    setEvents(filteredEvents);
-  }, [selectedDate]);
 
   return (
     <DetailContainer>
