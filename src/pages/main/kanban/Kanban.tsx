@@ -25,7 +25,7 @@ const Kanban = () => {
     ));
 
     const addButton = (
-      <PlusButton key={processName} onClick={() => openModal(processName)}>
+      <PlusButton key={processName} onClick={() => openModal(processName, 'normal')}>
         <Circle>+</Circle>
       </PlusButton>
     );
@@ -59,6 +59,7 @@ const Kanban = () => {
         </KanbanHeaderContainer>
         <KanbanBoardContainer ref={containerRef}>
           <ModalComponent
+            isEditMode={false}
             modalIsOpen={modalIsOpen}
             closeModal={closeModal}
             currentModalProcess={currentModalProcess}

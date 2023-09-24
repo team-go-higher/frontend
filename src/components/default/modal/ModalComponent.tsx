@@ -9,12 +9,13 @@ import { addResume } from 'redux/kanbanSlice';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 
 interface IProps {
+  isEditMode: boolean;
   modalIsOpen: boolean;
   closeModal: () => void;
   currentModalProcess: string;
 }
 
-const ModalComponent = ({ modalIsOpen, closeModal, currentModalProcess }: IProps) => {
+const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProcess }: IProps) => {
   const dispatch = useAppDispatch();
   const [processStageToggle, setProcessStageToggle] = useState(false);
   const [detailedprocessStageToggle, setdetailedProcessStageToggle] = useState(false);
@@ -126,140 +127,233 @@ const ModalComponent = ({ modalIsOpen, closeModal, currentModalProcess }: IProps
     validationDetailedProcess();
   }, [getValues('detailedProcessStage')]);
 
-  return (
-    <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      contentLabel='간편등록'
-      style={S.modalStyles}
-      id={currentModalProcess}
-      appElement={document.getElementById('root') as HTMLBodyElement}>
-      <S.ModalForm onSubmit={handleSubmit(addSimpleHandler)}>
-        <S.ModalTitle>간편등록</S.ModalTitle>
-        <S.ModalInputWrapper>
-          {/* 회사명 */}
-          <S.ModalInputBox>
-            <S.ModalInput
-              type='text'
-              $error={errors.companyName ? true : false}
-              placeholder='회사명을 입력하세요'
-              {...register('companyName', { required: '회사명 필수' })}
-            />
-            {errors.companyName && <S.InvalidIcon>!</S.InvalidIcon>}
-          </S.ModalInputBox>
-
-          {/* 전형단계 */}
-          <S.ModalDropdownBox
-            type='button'
-            onChange={validationProcess}
-            $showItem={processStageToggle}
-            $error={errors.processStage ? true : false}
-            onClick={() => {
-              ToggleHandler('processStage');
-            }}>
-            <S.PlaceHolder
-              $color={defaultValues?.processStage !== getValues('processStage')}
-              $error={errors.processStage ? true : false}>
-              {getValues('processStage')}
-            </S.PlaceHolder>
-            <S.ArrowIcon src={SelectArrowIcon} />
-            {processStageToggle && (
-              <S.ModalDropdownItemBox>
-                {processStageKeys.map((process: string) => (
-                  <S.DropdownItem
-                    onClick={() => {
-                      dropDownItemHandler('processStage', process);
-                    }}>
-                    {process}
-                  </S.DropdownItem>
-                ))}
-              </S.ModalDropdownItemBox>
-            )}
-            {errors.processStage && <S.InvalidIcon>!</S.InvalidIcon>}
-          </S.ModalDropdownBox>
-
-          {/* 세부단계 */}
-          <S.ModalDropdownBox
-            type='button'
-            disabled={
-              getValues('processStage') === '지원예정' ||
-              getValues('processStage') === '서류전형' ||
-              defaultValues?.processStage === getValues('processStage')
-            }
-            $showItem={detailedprocessStageToggle}
-            $error={errors.detailedProcessStage ? true : false}
-            onClick={() => {
-              ToggleHandler('detailedProcessStage');
-            }}>
-            <S.PlaceHolder
-              $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
-              $error={errors.detailedProcessStage ? true : false}>
-              {getValues('detailedProcessStage')}
-            </S.PlaceHolder>
-            {getValues('processStage') !== '지원예정' &&
-              getValues('processStage') !== '서류전형' &&
-              defaultValues?.processStage !== getValues('processStage') && (
-                <S.ArrowIcon src={SelectArrowIcon} />
+  if (isEditMode) {
+    return (
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel='간편수정'
+        style={S.editModalStyles}
+        id={currentModalProcess}
+        appElement={document.getElementById('root') as HTMLBodyElement}>
+        <S.ModalForm onSubmit={handleSubmit(addSimpleHandler)}>
+          <S.ModalTitle>전형수정</S.ModalTitle>
+          <S.ModalInputWrapper>
+            <S.ModalDropdownBox
+              type='button'
+              onChange={validationProcess}
+              $showItem={processStageToggle}
+              $error={errors.processStage ? true : false}
+              onClick={() => {
+                ToggleHandler('processStage');
+              }}>
+              <S.PlaceHolder
+                $color={defaultValues?.processStage !== getValues('processStage')}
+                $error={errors.processStage ? true : false}>
+                {getValues('processStage')}
+              </S.PlaceHolder>
+              <S.ArrowIcon src={SelectArrowIcon} />
+              {processStageToggle && (
+                <S.ModalDropdownItemBox>
+                  {processStageKeys.map((process: string) => (
+                    <S.DropdownItem
+                      onClick={() => {
+                        dropDownItemHandler('processStage', process);
+                      }}>
+                      {process}
+                    </S.DropdownItem>
+                  ))}
+                </S.ModalDropdownItemBox>
               )}
+              {errors.processStage && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalDropdownBox>
 
-            {detailedprocessStageToggle && (
-              <S.ModalDropdownItemBox>
-                {processStage[getValues('processStage')].detailed?.map((process: string) => (
-                  <S.DropdownItem
-                    onClick={() => {
-                      dropDownItemHandler('detailedProcessStage', process);
-                    }}>
-                    {process}
-                  </S.DropdownItem>
-                ))}
-              </S.ModalDropdownItemBox>
-            )}
-            {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
-          </S.ModalDropdownBox>
+            {/* 세부단계 */}
+            <S.ModalDropdownBox
+              type='button'
+              disabled={
+                getValues('processStage') === '지원예정' ||
+                getValues('processStage') === '서류전형' ||
+                defaultValues?.processStage === getValues('processStage')
+              }
+              $showItem={detailedprocessStageToggle}
+              $error={errors.detailedProcessStage ? true : false}
+              onClick={() => {
+                ToggleHandler('detailedProcessStage');
+              }}>
+              <S.PlaceHolder
+                $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
+                $error={errors.detailedProcessStage ? true : false}>
+                {getValues('detailedProcessStage')}
+              </S.PlaceHolder>
+              {getValues('processStage') !== '지원예정' &&
+                getValues('processStage') !== '서류전형' &&
+                defaultValues?.processStage !== getValues('processStage') && (
+                  <S.ArrowIcon src={SelectArrowIcon} />
+                )}
 
-          {/* 직무 */}
-          <S.ModalInputBox>
-            <S.ModalInput
-              type='text'
-              $error={errors.role ? true : false}
-              placeholder='직무를 선택하세요'
-              {...register('role', {
-                required: '직무 필수',
-              })}
-            />
-            {errors.role && <S.InvalidIcon>!</S.InvalidIcon>}
-          </S.ModalInputBox>
+              {detailedprocessStageToggle && (
+                <S.ModalDropdownItemBox>
+                  {processStage[getValues('processStage')].detailed?.map((process: string) => (
+                    <S.DropdownItem
+                      onClick={() => {
+                        dropDownItemHandler('detailedProcessStage', process);
+                      }}>
+                      {process}
+                    </S.DropdownItem>
+                  ))}
+                </S.ModalDropdownItemBox>
+              )}
+              {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalDropdownBox>
+          </S.ModalInputWrapper>
 
-          {/* 마감일 */}
-          <S.ModalInputBox>
-            <S.ModalInput
-              type='datetime-local'
-              $error={errors.scheduled ? true : false}
-              placeholder='마감일을 선택하세요'
-              {...register('scheduled')}
-            />
-            {errors.scheduled && <S.InvalidIcon>!</S.InvalidIcon>}
-          </S.ModalInputBox>
+          <S.ModalButtonWrapper>
+            <S.InModalButton mode='common' onClick={closeModal}>
+              돌아가기
+            </S.InModalButton>
+            <S.InModalButton mode='simple' type='submit' onClick={validationProcess}>
+              수정완료
+            </S.InModalButton>
+          </S.ModalButtonWrapper>
+        </S.ModalForm>
+      </Modal>
+    );
+  } else
+    return (
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel='간편등록'
+        style={S.normalModalStyles}
+        id={currentModalProcess}
+        appElement={document.getElementById('root') as HTMLBodyElement}>
+        <S.ModalForm onSubmit={handleSubmit(addSimpleHandler)}>
+          <S.ModalTitle>간편등록</S.ModalTitle>
+          <S.ModalInputWrapper>
+            {/* 회사명 */}
+            <S.ModalInputBox>
+              <S.ModalInput
+                type='text'
+                $error={errors.companyName ? true : false}
+                placeholder='회사명을 입력하세요'
+                {...register('companyName', { required: '회사명 필수' })}
+              />
+              {errors.companyName && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalInputBox>
 
-          {/* 공고링크 */}
-          <S.ModalInput type='url' placeholder='https://' />
-        </S.ModalInputWrapper>
-        <S.ModalHelperText>
-          자세한 채용정보 등록은
-          <br />
-          일반등록 버튼을 눌러주세요
-        </S.ModalHelperText>
-        <S.ModalButtonWrapper>
-          <S.InModalButton mode='common' onClick={closeModal}>
-            일반등록
-          </S.InModalButton>
-          <S.InModalButton mode='simple' type='submit' onClick={validationProcess}>
-            간편등록
-          </S.InModalButton>
-        </S.ModalButtonWrapper>
-      </S.ModalForm>
-    </Modal>
-  );
+            {/* 전형단계 */}
+            <S.ModalDropdownBox
+              type='button'
+              onChange={validationProcess}
+              $showItem={processStageToggle}
+              $error={errors.processStage ? true : false}
+              onClick={() => {
+                ToggleHandler('processStage');
+              }}>
+              <S.PlaceHolder
+                $color={defaultValues?.processStage !== getValues('processStage')}
+                $error={errors.processStage ? true : false}>
+                {getValues('processStage')}
+              </S.PlaceHolder>
+              <S.ArrowIcon src={SelectArrowIcon} />
+              {processStageToggle && (
+                <S.ModalDropdownItemBox>
+                  {processStageKeys.map((process: string) => (
+                    <S.DropdownItem
+                      onClick={() => {
+                        dropDownItemHandler('processStage', process);
+                      }}>
+                      {process}
+                    </S.DropdownItem>
+                  ))}
+                </S.ModalDropdownItemBox>
+              )}
+              {errors.processStage && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalDropdownBox>
+
+            {/* 세부단계 */}
+            <S.ModalDropdownBox
+              type='button'
+              disabled={
+                getValues('processStage') === '지원예정' ||
+                getValues('processStage') === '서류전형' ||
+                defaultValues?.processStage === getValues('processStage')
+              }
+              $showItem={detailedprocessStageToggle}
+              $error={errors.detailedProcessStage ? true : false}
+              onClick={() => {
+                ToggleHandler('detailedProcessStage');
+              }}>
+              <S.PlaceHolder
+                $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
+                $error={errors.detailedProcessStage ? true : false}>
+                {getValues('detailedProcessStage')}
+              </S.PlaceHolder>
+              {getValues('processStage') !== '지원예정' &&
+                getValues('processStage') !== '서류전형' &&
+                defaultValues?.processStage !== getValues('processStage') && (
+                  <S.ArrowIcon src={SelectArrowIcon} />
+                )}
+
+              {detailedprocessStageToggle && (
+                <S.ModalDropdownItemBox>
+                  {processStage[getValues('processStage')].detailed?.map((process: string) => (
+                    <S.DropdownItem
+                      onClick={() => {
+                        dropDownItemHandler('detailedProcessStage', process);
+                      }}>
+                      {process}
+                    </S.DropdownItem>
+                  ))}
+                </S.ModalDropdownItemBox>
+              )}
+              {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalDropdownBox>
+
+            {/* 직무 */}
+            <S.ModalInputBox>
+              <S.ModalInput
+                type='text'
+                $error={errors.role ? true : false}
+                placeholder='직무를 선택하세요'
+                {...register('role', {
+                  required: '직무 필수',
+                })}
+              />
+              {errors.role && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalInputBox>
+
+            {/* 마감일 */}
+            <S.ModalInputBox>
+              <S.ModalInput
+                type='datetime-local'
+                $error={errors.scheduled ? true : false}
+                placeholder='마감일을 선택하세요'
+                {...register('scheduled')}
+              />
+              {errors.scheduled && <S.InvalidIcon>!</S.InvalidIcon>}
+            </S.ModalInputBox>
+
+            {/* 공고링크 */}
+            <S.ModalInput type='url' placeholder='https://' />
+          </S.ModalInputWrapper>
+          <S.ModalHelperText>
+            자세한 채용정보 등록은
+            <br />
+            일반등록 버튼을 눌러주세요
+          </S.ModalHelperText>
+          <S.ModalButtonWrapper>
+            <S.InModalButton mode='common' onClick={closeModal}>
+              일반등록
+            </S.InModalButton>
+            <S.InModalButton mode='simple' type='submit' onClick={validationProcess}>
+              간편등록
+            </S.InModalButton>
+          </S.ModalButtonWrapper>
+        </S.ModalForm>
+      </Modal>
+    );
 };
 
 export default ModalComponent;
