@@ -49,4 +49,25 @@ export const GlobalStyles = createGlobalStyle`
         border-collapse: collapse;
         border-spacing: 0;
     }
+    button {
+        border : none;
+        outline : none;
+        background-color : transparent;
+        cursor : pointer;
+    }
+    input::placeholder {
+        color : #C8C8C8;
+        font-size : 17px;
+        font-weight : 500;
+        line-height : normal;
+    }
+    input:focus {
+        outline : none;
+    }
+    select::-ms-expand { 
+	    display: none;
+    }
+    select:focus {
+        outline : none;
+    }
 `;

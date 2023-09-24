@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { styled } from 'styled-components';
 
-import { Data } from 'types/interfaces/KanbanProcess';
+import { application } from 'types/interfaces/KanbanProcess';
 import { useAppDispatch } from 'redux/store';
 import { updateProcess } from 'redux/kanbanSlice';
+import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
+import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
+import { formatDataType } from 'utils/date';
 
 interface IProps {
-  item: Data;
+  item: application;
+  currentProcessName: string;
 }
 
-const KanbanCard = ({ item }: IProps) => {
-  console.log(item);
+const KanbanCard = ({ item, currentProcessName }: IProps) => {
   const dispatch = useAppDispatch();
+  const [moreMenuShow, setMoreMenuShow] = useState(false);
 
-  function changeKanbanProcess(target: Data, nextProcessName: string) {
-    dispatch(updateProcess({ target, nextProcessName }));
+  function handleMoreMenu() {
+    setMoreMenuShow(!moreMenuShow);
+  }
+
+  function changeKanbanProcess(target: application, nextProcessName: string) {
+    dispatch(updateProcess({ currentProcessName, target, nextProcessName }));
   }
 
   // [CollectedProps, ConnectDragSource, ConnectDragPreview]
@@ -40,26 +48,50 @@ const KanbanCard = ({ item }: IProps) => {
   });
 
   return (
-    <KanbanCardContainer ref={ref} $isdragging={isDragging}>
+    <KanbanCardContainer
+      ref={ref}
+      $isdragging={isDragging}
+      $currentProcessName={currentProcessName}>
       {/* 드래그 가능한 요소의 내용 */}
-      <DetailProcess $currentProcessName={item.currentProcess}>{item.detailProcess}</DetailProcess>
+      <DetailProcess $currentProcessName={currentProcessName}>
+        {item.processDescription}
+      </DetailProcess>
       <CompanyName>{item.companyName}</CompanyName>
-      <Job>{item.job}</Job>
-      <Schedule>{item.schedule}</Schedule>
+      <Job>{item.duty}</Job>
+      <Schedule>{formatDataType(item.schedule)}</Schedule>
+      <MoreIconDiv>
+        <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />
+      </MoreIconDiv>
+      {moreMenuShow && (
+        <MoreMenuColumn $currentProcessName={currentProcessName}>
+          <MoreItem>
+            <MoreItemIcon />
+            <MoreItemText>간편 수정하기</MoreItemText>
+          </MoreItem>
+          <MoreItem>
+            <MoreItemIcon />
+            <MoreItemText>공고 숨기기</MoreItemText>
+          </MoreItem>
+        </MoreMenuColumn>
+      )}
     </KanbanCardContainer>
   );
 };
 
 interface IKanbanCardContainerProps {
   $isdragging: boolean;
+  $currentProcessName: string;
 }
 
 const KanbanCardContainer = styled.div<IKanbanCardContainerProps>`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 5px;
   padding: 18px 35px;
   border-radius: 19px;
+  box-shadow: ${({ $currentProcessName }) =>
+    `0px 0px 3px 0px rgba(var(--${$currentProcessName}), 0.5);`};
   background-color: rgb(var(--cardBackground));
   opacity: ${({ $isdragging }) => ($isdragging ? '0.5' : '1')};
   cursor: pointer;
@@ -94,4 +126,40 @@ const Schedule = styled.p`
   color: rgb(var(--redText));
   font-weight: 600;
 `;
+
+const MoreIconDiv = styled.div`
+  position: absolute;
+  bottom: 18px;
+  right: 35px;
+`;
+
+const MoreMenuColumn = styled.div<{ $currentProcessName: string }>`
+  z-index: 5;
+  position: absolute;
+  bottom: -43px;
+  right: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 9px 25px 9px 16px;
+  width: 150px;
+  height: 64px;
+  background-color: rgb(var(--white));
+  border-radius: 8px;
+  box-shadow: ${({ $currentProcessName }) =>
+    `0px 0px 4px 0px rgba(var(--${$currentProcessName}), 0.5);`};
+`;
+
+const MoreItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+const MoreItemText = styled.p`
+  color: rgb(var(--grayText));
+  font-size: 16px;
+  line-height: 23px;
+`;
+
 export default KanbanCard;
