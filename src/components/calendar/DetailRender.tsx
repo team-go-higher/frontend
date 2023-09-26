@@ -3,14 +3,16 @@ import { format } from 'date-fns';
 import { CalendarCard } from './CalendarCard';
 import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
 import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
-import { DetailContainer } from './CalendarStyledComponents';
+import { DetailContainer, PlusButton, Circle } from './CalendarStyledComponents';
+import ModalComponent from 'components/default/modal/ModalComponent';
+import { useModal } from 'hooks/useModal';
+import { IDetailData } from 'types/interfaces/CalendarProcess';
 
-// RenderHeader
-// 일단 여기에 둠
 interface RenderDetailHeaderProps {
   selectedDate: Date;
   prevDay: () => void;
   nextDay: () => void;
+  detailData: [];
 }
 
 interface EventData {
@@ -25,8 +27,19 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
   selectedDate,
   prevDay,
   nextDay,
+  detailData,
 }) => {
-  const [events, setEvents] = useState<EventData[]>([]);
+  const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
+
+  function calendarHandler() {
+    const addButton = (
+      <PlusButton key={1} onClick={() => openModal('')}>
+        <Circle>+</Circle>
+      </PlusButton>
+    );
+
+    return addButton;
+  }
 
   return (
     <DetailContainer>
@@ -35,7 +48,14 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
         <img src={dayRight} alt='dayLeft' onClick={nextDay} />
       </div>
-      {events && events.map(event => <CalendarCard key={event.id} event={event}></CalendarCard>)}
+      <ModalComponent
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        currentModalProcess={currentModalProcess}
+      />
+      <div>{calendarHandler()}</div>
+      {detailData &&
+        detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
     </DetailContainer>
   );
 };

@@ -10,6 +10,7 @@ import {
   Row,
   RenderCellsContainer,
 } from './CalendarStyledComponents';
+import { ICalendarData } from 'types/interfaces/CalendarProcess';
 
 // RenderHeader(월)
 interface RenderHeaderProps {
@@ -52,12 +53,14 @@ interface RenderCellsProps {
   currentMonth: Date;
   selectedDate: Date;
   onDateClick: (date: Date) => void;
+  calendarData: [];
 }
 
 export const RenderCells: React.FC<RenderCellsProps> = ({
   currentMonth,
   selectedDate,
   onDateClick,
+  calendarData,
 }) => {
   const monthStart = startOfMonth(currentMonth); //8월 1일
   const monthEnd = endOfMonth(monthStart); //8월 31일
@@ -73,10 +76,12 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, 'd');
       const cloneDay = new Date(day);
-
-      // const eventsOnThisDate = events.filter(event => {
-      //   return format(new Date(event.eventDate), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
-      // });
+      let eventsOnThisDate: ICalendarData[] = [];
+      if (calendarData && calendarData.length) {
+        eventsOnThisDate = calendarData.filter((data: ICalendarData) => {
+          return format(new Date(data.schedule), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
+        });
+      }
 
       days.push(
         <Cell
@@ -86,12 +91,13 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
           currentMonth={currentMonth}
           key={day.toDateString()}
           onClick={() => onDateClick(cloneDay)}>
-          {/* <div className='date'>{formattedDate.padStart(2, '0')}</div>
-          {eventsOnThisDate.map(event => (
-            <Event key={event.id} process={event.process}>
-              {event.title}
-            </Event>
-          ))} */}
+          <div className='date'>{formattedDate.padStart(2, '0')}</div>
+          {eventsOnThisDate &&
+            eventsOnThisDate.map((event, i) => (
+              <Event key={i} processType={event.processType}>
+                {event.name}
+              </Event>
+            ))}
         </Cell>,
       );
       day = addDays(day, 1);

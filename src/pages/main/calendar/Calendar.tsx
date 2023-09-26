@@ -7,37 +7,26 @@ import {
   CalendarContainer,
   DayContainer,
 } from 'components/calendar/CalendarStyledComponents';
-import { fetchMonthCalendar, fetchDayCalendar } from 'apis/calendar';
+import { fetchMonthCalendar, fetchDetailCalendar } from 'apis/calendar';
+import { useQuery } from 'react-query';
+import { queryKey } from 'apis/queryKey';
+import { ICalendarData, IDetailData } from 'types/interfaces/CalendarProcess';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  useEffect(() => {
-    fetchMonth(parseInt(format(currentMonth, 'yyyy')), parseInt(format(currentMonth, 'MM')));
-  }, [currentMonth]);
-
-  useEffect(() => {
-    fetchDate(format(selectedDate, 'yyyy-MM-dd'));
-  }, [selectedDate]);
-
   //api 연결
-  async function fetchMonth(year: number, month: number) {
-    try {
-      const calendarData = await fetchMonthCalendar(year, month);
-      console.log(calendarData);
-    } catch (error) {
-      console.error('Error fetching calendar data:', error);
-    }
-  }
-  async function fetchDate(date: string) {
-    try {
-      const calendarData = await fetchDayCalendar(date);
-      console.log(calendarData);
-    } catch (error) {
-      console.error('Error fetching calendar data:', error);
-    }
-  }
+  const { data: calendarData } = useQuery(queryKey.CALENDARDATA, () =>
+    fetchMonthCalendar(
+      parseInt(format(currentMonth, 'yyyy')),
+      parseInt(format(currentMonth, 'MM')),
+    ),
+  );
+
+  const { data: detailData } = useQuery(queryKey.DETAILDATA, () =>
+    fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
+  );
 
   //값 변경
   const prevMonth = () => {
@@ -66,11 +55,17 @@ const Calendar = () => {
             currentMonth={currentMonth}
             selectedDate={selectedDate}
             onDateClick={onDateClick}
+            calendarData={calendarData}
           />
         </CalendarContainer>
 
         <DayContainer>
-          <RenderDetailHeader selectedDate={selectedDate} prevDay={prevDay} nextDay={nextDay} />
+          <RenderDetailHeader
+            selectedDate={selectedDate}
+            prevDay={prevDay}
+            nextDay={nextDay}
+            detailData={detailData}
+          />
         </DayContainer>
       </div>
     </CalendarPage>

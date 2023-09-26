@@ -98,7 +98,7 @@ export const Cell = styled.div<CellProps>`
 `;
 
 interface EventProps {
-  process: string;
+  processType: string;
 }
 export const Event = styled.div<EventProps>`
   width: 91px;
@@ -108,21 +108,9 @@ export const Event = styled.div<EventProps>`
   padding: 2.5px 5px;
   border-radius: 5px;
   color: white;
-  ${({ process }) => {
-    type Color = string;
-
-    const colors: { [key: string]: Color } = {
-      '0': '#A2E270',
-      '1': '#60CFFE',
-      '2': '#FEAC60',
-      '3': '#9570E2',
-    };
-
-    return `
-      background: ${colors[process]};
-    `;
-  }}
+  background: rgb(var(--processType));
 `;
+
 export const Row = styled.div`
   display: flex;
 `;
@@ -157,6 +145,30 @@ export const DetailContainer = styled.div`
   }
 `;
 
+export const PlusButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 222px;
+  margin: auto;
+  height: 8.75rem;
+  border: 1px solid rgb(var(--border));
+  border-radius: 19px;
+  cursor: pointer;
+`;
+
+export const Circle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid rgb(var(--border));
+  color: rgb(var(--border));
+  background-color: rgb(var(--white));
+`;
+
 export const EventContainer = styled.div<EventProps>`
   box-sizing: border-box;
   width: 222px;
@@ -165,36 +177,20 @@ export const EventContainer = styled.div<EventProps>`
   margin-bottom: 9px;
   padding: 12px 21px;
   border-radius: 10px;
-
-  ${({ process }) => {
-    type Color = string;
-
-    const colors: { [key: string]: Color } = {
-      '0': '#A2E270',
-      '1': '#60CFFE',
-      '2': '#FEAC60',
-      '3': '#9570E2',
-    };
-
-    return `
-      border: 1px solid ${colors[process]};
-      border-top: 14px solid ${colors[process]};
-
-      div:nth-child(1) {
-        color: #333;
-        font-size: 22px;
-        font-weight: 700;
-      }
-      div:nth-child(2) {
-        color: ${colors[process]};
-        font-size: 17px;
-        font-weight: 600;
-      }
-      div:nth-child(3) {
-        color: #f55;
-        font-size: 15px;
-        font-weight: 600;
-      }
-    `;
-  }}
+  border: 1px solid rgb(var(--processType));
+  div:nth-child(1) {
+    color: #333;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  div:nth-child(2) {
+    color: $rgb(var(--processType));
+    font-size: 17px;
+    font-weight: 600;
+  }
+  div:nth-child(3) {
+    color: #f55;
+    font-size: 15px;
+    font-weight: 600;
+  }
 `;
