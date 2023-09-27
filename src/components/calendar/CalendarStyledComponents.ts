@@ -30,6 +30,9 @@ export const RenderHeaderContainer = styled.div`
     font-size: 22px;
     font-weight: 700;
   }
+  img {
+    cursor: pointer;
+  }
 `;
 
 //RenderDays
@@ -47,7 +50,7 @@ export const RenderDaysContainer = styled.div`
     color: #363636;
   }
   .sat {
-    color: #3253ff;
+    color: rgb(var(--main));
   }
   .sun {
     color: #ff5555;
@@ -81,19 +84,19 @@ export const Cell = styled.div<CellProps>`
   ${props =>
     !isSameMonth(props.day, props.monthStart) &&
     `
-    color: #D9D9D9;
+    color: rgb(var(--border));
   `}
   ${props =>
     isSameDay(props.day, props.selectedDate) &&
     `
-    border: 0.5px solid #3253FF;
-    color: #3253FF;
+    border: 0.5px solid rgb(var(--main));
+    color: rgb(var(--main));
     box-shadow: 0 0 6px 3px rgba(50, 83, 255, 0.225);
   `}
   ${props =>
     format(props.currentMonth, 'M') !== format(props.day, 'M') &&
     `
-    color: #D9D9D9;
+    color: rgb(var(--border));
   `}
 `;
 
@@ -108,7 +111,7 @@ export const Event = styled.div<EventProps>`
   padding: 2.5px 5px;
   border-radius: 5px;
   color: white;
-  background: rgb(var(--processType));
+  background: ${({ processType }) => `rgb(--${processType})`};
 `;
 
 export const Row = styled.div`
@@ -120,7 +123,7 @@ export const DayContainer = styled.div`
   width: 250px;
   height: 589px;
   border-radius: 15px;
-  border: 1px solid #3253ff;
+  border: 1px solid rgb(var(--main));
 `;
 
 // RenderDayDetail
@@ -134,7 +137,8 @@ export const DetailContainer = styled.div`
     align-items: center;
   }
   .selectedDate {
-    color: #3253ff;
+    width: 120px;
+    color: rgb(var(--main));
     text-align: center;
     font-size: 28px;
     font-style: normal;
@@ -142,6 +146,9 @@ export const DetailContainer = styled.div`
     line-height: normal;
     letter-spacing: 1.4px;
     margin: 10px;
+  }
+  img {
+    cursor: pointer;
   }
 `;
 
@@ -177,14 +184,14 @@ export const EventContainer = styled.div<EventProps>`
   margin-bottom: 9px;
   padding: 12px 21px;
   border-radius: 10px;
-  border: 1px solid rgb(var(--processType));
+  border: 1px solid ${({ processType }) => `rgb(--${processType})`};
   div:nth-child(1) {
     color: #333;
     font-size: 22px;
     font-weight: 700;
   }
   div:nth-child(2) {
-    color: $rgb(var(--processType));
+    color: ${({ processType }) => `rgb(--${processType})`};
     font-size: 17px;
     font-weight: 600;
   }

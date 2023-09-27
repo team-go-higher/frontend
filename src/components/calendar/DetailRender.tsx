@@ -15,14 +15,6 @@ interface RenderDetailHeaderProps {
   detailData: [];
 }
 
-interface EventData {
-  id: number;
-  eventDate: string;
-  title: string;
-  process: string;
-  role: string;
-}
-
 export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
   selectedDate,
   prevDay,
@@ -46,16 +38,16 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
       <div className='selectDate'>
         <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
-        <img src={dayRight} alt='dayLeft' onClick={nextDay} />
+        <img src={dayRight} alt='dayRight' onClick={nextDay} />
       </div>
       <ModalComponent
         modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         currentModalProcess={currentModalProcess}
       />
-      <div>{calendarHandler()}</div>
       {detailData &&
         detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
+      <div>{calendarHandler()}</div>
     </DetailContainer>
   );
 };

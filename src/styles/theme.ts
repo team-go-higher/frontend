@@ -18,6 +18,7 @@ export const theme = {
     modalHelperText: '150, 150, 150',
     placeholder: '200, 200, 200',
     dropDownHover: '237, 237, 237',
+    main: '50, 83, 255',
   },
 };
 
