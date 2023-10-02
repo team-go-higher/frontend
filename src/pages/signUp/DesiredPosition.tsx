@@ -1,5 +1,6 @@
-import { goHigerApi } from 'apis';
+import { usePositions, usePostPositions } from 'apis/signUp';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 const PositionList = [
@@ -21,8 +22,13 @@ interface IPositionList {
   position: string;
 }
 const DesiredPosition = () => {
+  const navigate = useNavigate();
+
   const [position, setPosition] = useState<number[]>([]);
   const [positionList, setPositionList] = useState<IPositionList[]>([]);
+
+  const { status, data } = usePositions();
+  const { mutate: postPostions } = usePostPositions();
 
   const handleSelect = (id: number) => {
     if (position.includes(id)) {
@@ -35,39 +41,29 @@ const DesiredPosition = () => {
     }
   };
 
-  const getPositions = async () => {
-    try {
-      const { data }: any = await goHigerApi.get('/v1/positions');
-      if (data.success) {
-        setPositionList(data.data);
-      }
-    } catch (e) {
-      alert(e);
-    }
+  //희망 직무 저장, api 작업 완료 후 수정 필요
+  const handlePostion = () => {
+    postPostions(position, {
+      onSuccess: () => {
+        navigate('/');
+      },
+      onError: error => {
+        console.log(error + 'onError');
+      },
+    });
   };
 
   useEffect(() => {
-    getPositions();
-  }, []);
-
-  //희망 직무 저장, api 작업 완료 후 수정 필요
-  const handlePostion = async () => {
-    try {
-      const { data }: any = goHigerApi.post('/v1/desired-positions', {
-        positionIds: position,
-      });
-      if (data.success) {
-        console.log(data);
-      }
-    } catch (e) {
-      alert(e);
+    if (status === 'success') {
+      setPositionList(data.data);
     }
-  };
+  }, [status, data]);
 
   return (
     <Main>
       <Wrapper>
         <div className='mainTitle'>희망 직무를 선택하세요</div>
+
         <PositionContainer>
           {/* 직무 데이터 추가 시 수정 필요, 우선 데이터가 없어 더미데이터로 처리 */}
           {positionList.length > 1 ? (
@@ -102,9 +98,11 @@ const DesiredPosition = () => {
             </>
           )}
         </PositionContainer>
+
         <div className='requestPosition'>
           나의 직무가 없나요? <span>요청하기</span>
         </div>
+
         <DefaultBtn
           active={position.length > 0}
           onClick={() => {
