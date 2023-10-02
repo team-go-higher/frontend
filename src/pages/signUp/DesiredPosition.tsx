@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { goHigerApi } from 'apis';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 const PositionList = [
@@ -15,17 +16,51 @@ const PositionList = [
   '세무',
 ];
 
+interface IPositionList {
+  id: number;
+  position: string;
+}
 const DesiredPosition = () => {
-  const [position, setPosition] = useState<string[]>([]);
+  const [position, setPosition] = useState<number[]>([]);
+  const [positionList, setPositionList] = useState<IPositionList[]>([]);
 
-  const handlePosition = (item: string) => {
-    if (position.includes(item)) {
+  const handleSelect = (id: number) => {
+    if (position.includes(id)) {
       const newPositionArr = position.filter(number => {
-        return number !== item;
+        return number !== id;
       });
       setPosition(newPositionArr);
     } else {
-      setPosition([...position, item]);
+      setPosition([...position, id]);
+    }
+  };
+
+  const getPositions = async () => {
+    try {
+      const { data }: any = await goHigerApi.get('/v1/positions');
+      if (data.success) {
+        setPositionList(data.data);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  useEffect(() => {
+    getPositions();
+  }, []);
+
+  //희망 직무 저장, api 작업 완료 후 수정 필요
+  const handlePostion = async () => {
+    try {
+      const { data }: any = goHigerApi.post('/v1/desired-positions', {
+        positionIds: position,
+      });
+      if (data.success) {
+        console.log(data);
+      }
+    } catch (e) {
+      alert(e);
     }
   };
 
@@ -34,24 +69,51 @@ const DesiredPosition = () => {
       <Wrapper>
         <div className='mainTitle'>희망 직무를 선택하세요</div>
         <PositionContainer>
-          {PositionList.map((item, index) => {
-            return (
-              <PositionCardContainer
-                active={position.includes(item)}
-                key={index}
-                onClick={() => {
-                  handlePosition(item);
-                }}>
-                {item}
-              </PositionCardContainer>
-            );
-          })}
-          <PositionCardContainer active={false}>기타(직접입력)</PositionCardContainer>
+          {/* 직무 데이터 추가 시 수정 필요, 우선 데이터가 없어 더미데이터로 처리 */}
+          {positionList.length > 1 ? (
+            <>
+              {positionList.map((item, index) => {
+                return (
+                  <PositionCardContainer
+                    active={position.includes(item.id)}
+                    key={index}
+                    onClick={() => {
+                      handleSelect(item.id);
+                    }}>
+                    {item.position}
+                  </PositionCardContainer>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {PositionList.map((item, index) => {
+                return (
+                  <PositionCardContainer
+                    active={position.includes(index)}
+                    key={index}
+                    onClick={() => {
+                      handleSelect(index);
+                    }}>
+                    {item}
+                  </PositionCardContainer>
+                );
+              })}
+            </>
+          )}
         </PositionContainer>
         <div className='requestPosition'>
           나의 직무가 없나요? <span>요청하기</span>
         </div>
-        <DefaultBtn active={position.length > 0}>고하이어 시작하기</DefaultBtn>
+        <DefaultBtn
+          active={position.length > 0}
+          onClick={() => {
+            if (position.length > 0) {
+              handlePostion();
+            }
+          }}>
+          고하이어 시작하기
+        </DefaultBtn>
       </Wrapper>
     </Main>
   );
