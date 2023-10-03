@@ -6,7 +6,6 @@ import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
 import { DetailContainer, PlusButton, Circle } from './CalendarStyledComponents';
 import ModalComponent from 'components/default/modal/ModalComponent';
 import { useModal } from 'hooks/useModal';
-import { IDetailData } from 'types/interfaces/CalendarProcess';
 
 interface RenderDetailHeaderProps {
   selectedDate: Date;
@@ -45,9 +44,11 @@ export const RenderDetailHeader: React.FC<RenderDetailHeaderProps> = ({
         closeModal={closeModal}
         currentModalProcess={currentModalProcess}
       />
-      {detailData &&
-        detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
-      <div>{calendarHandler()}</div>
+      <div className='cardContainer'>
+        {detailData &&
+          detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
+        <div>{calendarHandler()}</div>
+      </div>
     </DetailContainer>
   );
 };

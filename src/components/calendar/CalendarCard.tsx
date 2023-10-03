@@ -17,7 +17,7 @@ interface CalendarCardProps {
 
 export const CalendarCard: React.FC<CalendarCardProps> = ({ event }) => {
   return (
-    <EventContainer processType={event.process.type}>
+    <EventContainer $processType={event.process.type}>
       <div>{event.companyName}</div>
       <div>{event.process.description}</div>
       <div>{format(new Date(event.process.schedule), 'M월 dd일 HH:mm')}</div>

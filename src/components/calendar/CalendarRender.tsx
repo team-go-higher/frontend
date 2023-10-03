@@ -85,19 +85,22 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
 
       days.push(
         <Cell
-          day={day}
-          monthStart={monthStart}
-          selectedDate={selectedDate}
-          currentMonth={currentMonth}
+          $day={day}
+          $monthStart={monthStart}
+          $selectedDate={selectedDate}
+          $currentMonth={currentMonth}
           key={day.toDateString()}
           onClick={() => onDateClick(cloneDay)}>
           <div className='date'>{formattedDate.padStart(2, '0')}</div>
           {eventsOnThisDate &&
-            eventsOnThisDate.map((event, i) => (
-              <Event key={i} processType={event.processType}>
+            eventsOnThisDate.slice(0, 3).map((event, i) => (
+              <Event key={i} $processType={event.processType}>
                 {event.name}
               </Event>
             ))}
+          {eventsOnThisDate.length > 3 && (
+            <div className='plus'>+{eventsOnThisDate.length - 3}</div>
+          )}
         </Cell>,
       );
       day = addDays(day, 1);

@@ -64,11 +64,10 @@ export const RenderCellsContainer = styled.div`
 `;
 
 interface CellProps {
-  day: Date;
-  monthStart: Date;
-  selectedDate: Date;
-  currentMonth: Date;
-  onClick: () => void;
+  $day: Date;
+  $monthStart: Date;
+  $selectedDate: Date;
+  $currentMonth: Date;
 }
 
 export const Cell = styled.div<CellProps>`
@@ -78,40 +77,53 @@ export const Cell = styled.div<CellProps>`
   font-size: 12px;
   font-weight: 500;
   color: #969696;
+  cursor: pointer;
   .date {
-    margin: 5px 7px 5px 80px;
+    width: 16px;
+    height: 16px;
+    margin: 4px 4px 2px 81px;
   }
   ${props =>
-    !isSameMonth(props.day, props.monthStart) &&
+    !isSameMonth(props.$day, props.$monthStart) &&
     `
     color: rgb(var(--border));
   `}
   ${props =>
-    isSameDay(props.day, props.selectedDate) &&
+    isSameDay(props.$day, props.$selectedDate) &&
     `
     border: 0.5px solid rgb(var(--main));
     color: rgb(var(--main));
     box-shadow: 0 0 6px 3px rgba(50, 83, 255, 0.225);
+    .date{
+      font-size: 14px;
+      font-weight: 600;
+    }
   `}
   ${props =>
-    format(props.currentMonth, 'M') !== format(props.day, 'M') &&
+    format(props.$currentMonth, 'M') !== format(props.$day, 'M') &&
     `
     color: rgb(var(--border));
   `}
+  .plus {
+    margin-left: 4px;
+    color: rgb(var(--main));
+    font-size: 15px;
+    font-weight: 600;
+  }
 `;
 
 interface EventProps {
-  processType: string;
+  $processType: string;
 }
 export const Event = styled.div<EventProps>`
-  width: 91px;
-  height: 17px;
+  width: 99px;
+  height: 22px;
   margin: auto;
   margin-bottom: 1px;
-  padding: 2.5px 5px;
+  padding: 5px 6px;
   border-radius: 5px;
   color: white;
-  background: ${({ processType }) => `rgb(--${processType})`};
+  background: ${({ $processType }) => `rgb(var(--${$processType}))`};
 `;
 
 export const Row = styled.div`
@@ -150,6 +162,23 @@ export const DetailContainer = styled.div`
   img {
     cursor: pointer;
   }
+  .cardContainer {
+    height: 485px;
+    overflow-x: hidden;
+  }
+  .cardContainer::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .cardContainer::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: rgba(92, 92, 92, 0.4);
+    border-radius: 10px;
+  }
+
+  .cardContainer::-webkit-scrollbar-track {
+    background: rgba(92, 92, 92, 0.1); /*스크롤바 뒷 배경 색상*/
+  }
 `;
 
 export const PlusButton = styled.button`
@@ -158,9 +187,9 @@ export const PlusButton = styled.button`
   justify-content: center;
   width: 222px;
   margin: auto;
-  height: 8.75rem;
+  height: 110px;
   border: 1px solid rgb(var(--border));
-  border-radius: 19px;
+  border-radius: 10px;
   cursor: pointer;
 `;
 
@@ -182,16 +211,20 @@ export const EventContainer = styled.div<EventProps>`
   height: 110px;
   margin: auto;
   margin-bottom: 9px;
-  padding: 12px 21px;
+  padding: 14px 21px;
   border-radius: 10px;
-  border: 1px solid ${({ processType }) => `rgb(--${processType})`};
+  border: 1px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
+  border-top: 14px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
+  div {
+    margin: 4px 0;
+  }
   div:nth-child(1) {
     color: #333;
     font-size: 22px;
     font-weight: 700;
   }
   div:nth-child(2) {
-    color: ${({ processType }) => `rgb(--${processType})`};
+    color: ${({ $processType }) => `rgb(var(--${$processType}))`};
     font-size: 17px;
     font-weight: 600;
   }
@@ -199,5 +232,24 @@ export const EventContainer = styled.div<EventProps>`
     color: #f55;
     font-size: 15px;
     font-weight: 600;
+  }
+`;
+
+// UnscheduledContainer
+export const UnscheduledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .text {
+    color: #333;
+    font-size: 25px;
+    font-weight: 700;
+    margin: 77px 0 29px 0;
+  }
+  .card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 `;

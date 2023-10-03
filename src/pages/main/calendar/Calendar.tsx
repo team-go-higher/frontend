@@ -6,28 +6,31 @@ import {
   CalendarPage,
   CalendarContainer,
   DayContainer,
+  UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
-import { fetchMonthCalendar, fetchDetailCalendar } from 'apis/calendar';
+import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
+import { CalendarCard } from 'components/calendar/CalendarCard';
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
-import { ICalendarData, IDetailData } from 'types/interfaces/CalendarProcess';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   //api 연결
-  const { data: calendarData } = useQuery(queryKey.CALENDARDATA, () =>
+  const { data: calendarData } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
     fetchMonthCalendar(
       parseInt(format(currentMonth, 'yyyy')),
       parseInt(format(currentMonth, 'MM')),
     ),
   );
-
-  const { data: detailData } = useQuery(queryKey.DETAILDATA, () =>
+  const { data: detailData } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
     fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   );
-
+  const { data: unscheduledData } = useQuery(queryKey.UNSCHEDULEDDATA, () =>
+    fetchUnscheduledCalendar(1, 1),
+  );
+  console.log(unscheduledData);
   //값 변경
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
@@ -68,6 +71,18 @@ const Calendar = () => {
           />
         </DayContainer>
       </div>
+      <UnscheduledContainer>
+        {unscheduledData && unscheduledData.content.length !== 0 && (
+          <div>
+            <div className='text'>전형을 기다리고 있어요</div>
+            <div className='card'>
+              {unscheduledData.content.map((event: any) => (
+                <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+              ))}
+            </div>
+          </div>
+        )}
+      </UnscheduledContainer>
     </CalendarPage>
   );
 };
