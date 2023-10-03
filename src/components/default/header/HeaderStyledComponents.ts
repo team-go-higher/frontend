@@ -9,44 +9,46 @@ export const HeaderContainer = styled.div`
   border-bottom: 1px solid #d6d6d6;
   .headerContainer {
     display: flex;
-    width: fit-content;
     align-items: center;
-
+    width: 996px;
     justify-content: space-between;
     .headerLogo {
       color: #333;
-      margin-right: 250px;
       font-size: 18px;
       font-weight: 700;
       letter-spacing: 1.08px;
+    }
+    .rightContainer {
+      display: flex;
     }
   }
 `;
 export const HeaderMenuContainer = styled.div`
   display: flex;
-  gap: 62px;
+  gap: 50px;
   align-items: center;
   .menuItem {
     cursor: pointer;
     text-align: center;
     line-height: 50px;
-    width: fit-content;
     color: #333;
     font-size: 13px;
     font-weight: 500;
     letter-spacing: -0.52px;
+    width: 84px;
+    box-sizing: border-box;
+    height: 50px;
   }
   .active {
     color: rgb(var(--main));
     width: fit-content;
     font-weight: 700;
     border-bottom: 3px solid rgb(var(--main));
-    width: 75px;
   }
 `;
 export const HeaderPersonalContainer = styled.div`
   display: flex;
-  margin-left: 90px;
+  margin-left: 66px;
   align-items: center;
   .alarmImg {
     width: 16px;
