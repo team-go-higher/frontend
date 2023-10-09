@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
-import { RenderDetailHeader } from 'components/calendar/DetailRender';
+import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
 import {
   CalendarPage,
   CalendarContainer,
@@ -16,6 +16,7 @@ import { queryKey } from 'apis/queryKey';
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
   const { data: calendarData } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
@@ -28,10 +29,10 @@ const Calendar = () => {
     fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   );
   const { data: unscheduledData } = useQuery(queryKey.UNSCHEDULEDDATA, () =>
-    fetchUnscheduledCalendar(1, 1),
+    fetchUnscheduledCalendar(currentPage, 10),
   );
-  console.log(unscheduledData);
-  //값 변경
+
+  //달력 값 변경
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
@@ -46,6 +47,14 @@ const Calendar = () => {
   };
   const nextDay = () => {
     setSelectedDate(addDays(selectedDate, 1));
+  };
+
+  //페이지
+  const prevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
   };
 
   return (
@@ -63,7 +72,7 @@ const Calendar = () => {
         </CalendarContainer>
 
         <DayContainer>
-          <RenderDetailHeader
+          <RenderDetail
             selectedDate={selectedDate}
             prevDay={prevDay}
             nextDay={nextDay}
@@ -73,14 +82,11 @@ const Calendar = () => {
       </div>
       <UnscheduledContainer>
         {unscheduledData && unscheduledData.content.length !== 0 && (
-          <div>
-            <div className='text'>전형을 기다리고 있어요</div>
-            <div className='card'>
-              {unscheduledData.content.map((event: any) => (
-                <CalendarCard key={event.applicationId} event={event}></CalendarCard>
-              ))}
-            </div>
-          </div>
+          <RenderUnscheduled
+            unscheduledData={unscheduledData}
+            currentPage={currentPage}
+            prevPage={prevPage}
+            nextPage={nextPage}></RenderUnscheduled>
         )}
       </UnscheduledContainer>
     </CalendarPage>

@@ -241,6 +241,9 @@ export const UnscheduledContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const RenderUnscheduledContainer = styled.div`
   .text {
     color: #333;
     font-size: 25px;
