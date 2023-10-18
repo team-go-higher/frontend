@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
 export function useModal() {
+  const [mode, setMode] = useState('normal');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [currentModalProcess, setCurrentModalProcess] = useState('');
+  const [currentModalProcessName, setCurrentModalProcess] = useState('');
 
-  const openModal = (processName: string, mode: 'normal' | 'edit') => {
+  const openModal = (processName: string, mode: string) => {
     setCurrentModalProcess(processName);
+    setMode(mode);
     setModalIsOpen(true);
   };
 
@@ -15,5 +17,5 @@ export function useModal() {
   };
 
   // 모달 열기/닫기 상태와 함수를 반환
-  return { modalIsOpen, openModal, closeModal, currentModalProcess };
+  return { modalIsOpen, openModal, closeModal, mode, currentModalProcessName };
 }
