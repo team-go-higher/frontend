@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -15,12 +15,13 @@ import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 
 const Kanban = () => {
+  const [fetchedProcessData, setFethedProcessData] = useState();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useQuery('fetchApplications', fetchKanbanList);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const kanbanList = useAppSelector(state => state.kanban);
-  const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
+  const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode } = useModal();
 
   function kanbanListHandler(processName: string): ReactElement[] {
     const filterdData = kanbanList?.filter(data => data.processType === processName)[0];
@@ -28,7 +29,13 @@ const Kanban = () => {
 
     if (filterdData?.applications.length > 0) {
       cards = filterdData?.applications.map((item, i) => (
-        <KanbanCard key={`${i} key`} item={item} currentProcessName={processName} />
+        <KanbanCard
+          key={`${i} key`}
+          item={item}
+          currentProcessName={processName}
+          openModal={openModal}
+          setFethedProcessData={setFethedProcessData}
+        />
       ));
     }
 
@@ -66,12 +73,15 @@ const Kanban = () => {
     dispatch(setApplications(kanbanList));
   }
 
-  useEffect(() => {
-    console.log('aa', kanbanList);
-  }, []);
-
   return (
     <DndProvider backend={HTML5Backend}>
+      <ModalComponent
+        mode={mode}
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        currentModalProcess={currentModalProcessName}
+        fetchedProcessData={fetchedProcessData}
+      />
       <div>
         <KanbanHeaderContainer>
           <ScrollButton src={LeftIcon} onClick={() => scrollButtonHandler('prev')} />
@@ -79,17 +89,21 @@ const Kanban = () => {
           <ScrollButton src={RightIcon} onClick={() => scrollButtonHandler('next')} />
         </KanbanHeaderContainer>
         <KanbanBoardContainer ref={containerRef}>
-          <ModalComponent
-            isEditMode={false}
-            modalIsOpen={modalIsOpen}
-            closeModal={closeModal}
-            currentModalProcess={currentModalProcess}
-          />
-          <KanbanList processName={'TO_APPLY'}>{kanbanListHandler('TO_APPLY')}</KanbanList>
-          <KanbanList processName={'DOCUMENT'}>{kanbanListHandler('DOCUMENT')}</KanbanList>
-          <KanbanList processName={'TEST'}>{kanbanListHandler('TEST')}</KanbanList>
-          <KanbanList processName={'INTERVIEW'}>{kanbanListHandler('INTERVIEW')}</KanbanList>
-          <KanbanList processName={'COMPLETE'}>{kanbanListHandler('COMPLETE')}</KanbanList>
+          <KanbanList processName={'TO_APPLY'} openModal={openModal}>
+            {kanbanListHandler('TO_APPLY')}
+          </KanbanList>
+          <KanbanList processName={'DOCUMENT'} openModal={openModal}>
+            {kanbanListHandler('DOCUMENT')}
+          </KanbanList>
+          <KanbanList processName={'TEST'} openModal={openModal}>
+            {kanbanListHandler('TEST')}
+          </KanbanList>
+          <KanbanList processName={'INTERVIEW'} openModal={openModal}>
+            {kanbanListHandler('INTERVIEW')}
+          </KanbanList>
+          <KanbanList processName={'COMPLETE'} openModal={openModal}>
+            {kanbanListHandler('COMPLETE')}
+          </KanbanList>
         </KanbanBoardContainer>
       </div>
     </DndProvider>
