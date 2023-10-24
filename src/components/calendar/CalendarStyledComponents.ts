@@ -65,7 +65,6 @@ export const RenderCellsContainer = styled.div`
 
 interface CellProps {
   $day: Date;
-  $monthStart: Date;
   $selectedDate: Date;
   $currentMonth: Date;
 }
@@ -84,7 +83,7 @@ export const Cell = styled.div<CellProps>`
     margin: 4px 4px 2px 81px;
   }
   ${props =>
-    !isSameMonth(props.$day, props.$monthStart) &&
+    !isSameMonth(props.$day, props.$currentMonth) &&
     `
     color: rgb(var(--border));
   `}
@@ -98,11 +97,6 @@ export const Cell = styled.div<CellProps>`
       font-size: 14px;
       font-weight: 600;
     }
-  `}
-  ${props =>
-    format(props.$currentMonth, 'M') !== format(props.$day, 'M') &&
-    `
-    color: rgb(var(--border));
   `}
   .plus {
     margin-left: 4px;

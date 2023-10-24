@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import headerLeft from 'assets/main/main_left_arrow.svg';
 import headerRight from 'assets/main/main_right_arrow.svg';
@@ -63,10 +63,11 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
   calendarData,
 }) => {
   const monthStart = startOfMonth(currentMonth); //8월 1일
-  const monthEnd = endOfMonth(monthStart); //8월 31일
+  const monthEnd = endOfMonth(currentMonth); //8월 31일
   const startDate = startOfWeek(monthStart); //7월 30일
   const endDate = endOfWeek(monthEnd); //9월 2일
 
+  // 달력 만들기
   const rows = [];
   let days = [];
   let day = startDate;
@@ -82,11 +83,9 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
           return format(new Date(data.schedule), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
         });
       }
-
       days.push(
         <Cell
           $day={day}
-          $monthStart={monthStart}
           $selectedDate={selectedDate}
           $currentMonth={currentMonth}
           key={day.toDateString()}

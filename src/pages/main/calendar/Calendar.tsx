@@ -9,7 +9,6 @@ import {
   UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
 import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
-import { CalendarCard } from 'components/calendar/CalendarCard';
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
@@ -33,6 +32,11 @@ const Calendar = () => {
   );
 
   //달력 값 변경
+  useEffect(() => {
+    if (format(selectedDate, 'yyyy-MM') !== format(currentMonth, 'yyyy-MM')) {
+      setCurrentMonth(selectedDate);
+    }
+  }, [selectedDate]);
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
@@ -49,7 +53,7 @@ const Calendar = () => {
     setSelectedDate(addDays(selectedDate, 1));
   };
 
-  //페이지
+  //전형일 없는 지원서 페이지
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
   };
