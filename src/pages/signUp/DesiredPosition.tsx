@@ -3,20 +3,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-const PositionList = [
-  '디자인',
-  '법률',
-  '금융',
-  'CS',
-  '마케팅',
-  '개발',
-  '작가',
-  '영업',
-  '교육',
-  '회계',
-  '세무',
-];
-
 interface IPositionList {
   id: number;
   position: string;
@@ -41,16 +27,23 @@ const DesiredPosition = () => {
     }
   };
 
-  //희망 직무 저장, api 작업 완료 후 수정 필요
   const handlePostion = () => {
-    postPostions(position, {
-      onSuccess: () => {
-        navigate('/');
-      },
-      onError: error => {
-        console.log(error + 'onError');
-      },
-    });
+    if (position.length > 0) {
+      postPostions(position, {
+        onSuccess: () => {
+          navigate('/');
+        },
+        onError: (error: any) => {
+          const errorCode = error.response.data.error.code;
+          if (errorCode === 'USER_002') {
+            alert('게스트가 아닙니다. 로그인해주세요.');
+            navigate('/login');
+          } else {
+            alert('문제가 발생했습니다. 다시 선택해주세요.');
+          }
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -65,33 +58,18 @@ const DesiredPosition = () => {
         <div className='mainTitle'>희망 직무를 선택하세요</div>
 
         <PositionContainer>
-          {/* 직무 데이터 추가 시 수정 필요, 우선 데이터가 없어 더미데이터로 처리 */}
-          {positionList.length > 1 ? (
+          {positionList.length > 1 && (
             <>
-              {positionList.map((item, index) => {
+              {positionList.map(item => {
                 return (
                   <PositionCardContainer
                     active={position.includes(item.id)}
-                    key={index}
+                    first={position[0] === item.id}
+                    key={item.id}
                     onClick={() => {
                       handleSelect(item.id);
                     }}>
                     {item.position}
-                  </PositionCardContainer>
-                );
-              })}
-            </>
-          ) : (
-            <>
-              {PositionList.map((item, index) => {
-                return (
-                  <PositionCardContainer
-                    active={position.includes(index)}
-                    key={index}
-                    onClick={() => {
-                      handleSelect(index);
-                    }}>
-                    {item}
                   </PositionCardContainer>
                 );
               })}
@@ -104,6 +82,7 @@ const DesiredPosition = () => {
         </div>
 
         <DefaultBtn
+          first={false}
           active={position.length > 0}
           onClick={() => {
             if (position.length > 0) {
@@ -161,17 +140,17 @@ const PositionContainer = styled.div`
   gap: 12px;
 `;
 
-const PositionCardContainer = styled.div<{ active: boolean }>`
+const PositionCardContainer = styled.div<{ active: boolean; first: boolean }>`
   display: flex;
   cursor: pointer;
   justify-content: center;
   align-items: center;
   border-radius: 30px;
   border: 0.5px solid #d9d9d9;
-  background: ${props => (props.active ? '#333' : '#fff')};
+  background: ${props => (props.active ? (props.first ? '#333333' : '#DFDFDF') : '#fff')};
   width: 239px;
   height: 56px;
-  color: ${props => (props.active ? '#fff' : '#333')};
+  color: ${props => (props.first ? '#fff' : '#333')};
   text-align: center;
   font-size: 20px;
   font-weight: 500;

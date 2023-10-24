@@ -13,6 +13,8 @@ export const usePositions = () => {
 const postPositions = async (positionIds: number[]) => {
   const { data }: any = await goHigerApi.post('/v1/desired-positions', {
     positionIds: positionIds,
+    mainPositionId: positionIds[0],
+    emptyInput: true,
   });
   return data;
 };
