@@ -16,7 +16,7 @@ const Login = () => {
 
       const accessToken = urlParams.get('accessToken');
       const role = urlParams.get('role');
-      const expireDate = moment().add(5, 'minute').format('YYYY-MM-DD hh:mm:ss');
+      const expireDate = moment().add(1, 'month').format('YYYY-MM-DD hh:mm:ss');
 
       if (accessToken !== null && role !== null) {
         let userInfo = {
@@ -25,8 +25,12 @@ const Login = () => {
           expireDate: expireDate,
         };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        if (role === 'GUEST') {
+          navigate('/signUp/desiredPosition');
+        } else {
+          navigate('/');
+        }
       }
-      navigate('/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
