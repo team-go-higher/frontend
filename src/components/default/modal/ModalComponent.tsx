@@ -6,25 +6,34 @@ import { useMutation, useQueryClient } from 'react-query';
 import { processStage, processStageKeys } from 'data/RecruitProcess';
 import * as S from './ModalStyledComponents';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
-import { fomatProcessTypeToEnglish } from 'utils/process';
+import { fomatProcessTypeToEnglish, formatProcessToKorean } from 'utils/process';
 import { registerSimpleApplication } from 'apis/kanban';
 import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
 
 interface IProps {
-  isEditMode: boolean;
+  mode: string;
   modalIsOpen: boolean;
   closeModal: () => void;
   currentModalProcess: string;
+  fetchedProcessData: any;
 }
 
-const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProcess }: IProps) => {
+const ModalComponent = ({
+  mode,
+  modalIsOpen,
+  closeModal,
+  currentModalProcess,
+  fetchedProcessData,
+}: IProps) => {
   const queryClient = useQueryClient();
   const [processStageToggle, setProcessStageToggle] = useState(false);
   const [detailedprocessStageToggle, setdetailedProcessStageToggle] = useState(false);
+  const [userInputToggle, setUserInputToggle] = useState(false);
+
   const addMutation = useMutation(
     (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
     {
-      onSuccess(data, variables, context) {
+      onSuccess() {
         queryClient.invalidateQueries('fetchApplications');
       },
     },
@@ -43,8 +52,8 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
     mode: 'onSubmit',
     defaultValues: {
       companyName: '',
-      processStage: '전형단계를 선택하세요',
-      detailedProcessStage: '세부단계를 선택하세요',
+      processStage: currentModalProcess && (formatProcessToKorean(currentModalProcess) as string),
+      detailedProcessStage: '',
       position: '',
       scheduled: '',
       recruitUrl: '',
@@ -55,15 +64,17 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
   useEffect(() => {
     reset({
       companyName: '',
-      processStage: '전형단계를 선택하세요',
-      detailedProcessStage: '세부단계를 선택하세요',
+      processStage: currentModalProcess && (formatProcessToKorean(currentModalProcess) as string),
+      detailedProcessStage: '',
       position: '',
       scheduled: '',
+      recruitUrl: '',
     });
 
     setProcessStageToggle(false);
     setdetailedProcessStageToggle(false);
-  }, [closeModal]);
+    setUserInputToggle(false);
+  }, [currentModalProcess]);
 
   // 전형 or 세부단계 드롭박스 토글 함수
   function ToggleHandler(dropDownId: string) {
@@ -103,7 +114,6 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
     };
 
     addMutation.mutate(newApplicationData);
-    // dispatch(addSimpleApplication({ processName: currentModalProcess, newApplicationData }));
     closeModal();
   }
 
@@ -125,22 +135,22 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
   }
 
   function validationDetailedProcess() {
-    if (getValues('detailedProcessStage') === '세부단계를 선택하세요') {
+    if (getValues('detailedProcessStage') === '') {
       setError('detailedProcessStage', { type: 'required', message: '세부단계 필수' });
     } else {
       clearErrors('detailedProcessStage');
     }
   }
 
-  useEffect(() => {
-    validationProcess();
-  }, [getValues('processStage')]);
+  // useEffect(() => {
+  //   validationProcess();
+  // }, [getValues('processStage')]);
 
   useEffect(() => {
     validationDetailedProcess();
   }, [getValues('detailedProcessStage')]);
 
-  if (isEditMode) {
+  if (mode === 'edit') {
     return (
       <Modal
         isOpen={modalIsOpen}
@@ -150,7 +160,12 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
         id={currentModalProcess}
         appElement={document.getElementById('root') as HTMLBodyElement}>
         <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
-          <S.ModalTitle>전형수정</S.ModalTitle>
+          {fetchedProcessData.data.length === 0 ? (
+            <S.ModalTitle>전형추가</S.ModalTitle>
+          ) : (
+            <S.ModalTitle>전형수정</S.ModalTitle>
+          )}
+
           <S.ModalInputWrapper>
             <S.ModalDropdownBox
               type='button'
@@ -170,6 +185,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
                 <S.ModalDropdownItemBox>
                   {processStageKeys.map((process: string) => (
                     <S.DropdownItem
+                      key={process}
                       onClick={() => {
                         dropDownItemHandler('processStage', process);
                       }}>
@@ -182,43 +198,57 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
             </S.ModalDropdownBox>
 
             {/* 세부단계 */}
-            <S.ModalDropdownBox
-              type='button'
-              disabled={
-                getValues('processStage') === '지원예정' ||
-                getValues('processStage') === '서류전형' ||
-                defaultValues?.processStage === getValues('processStage')
-              }
-              $showItem={detailedprocessStageToggle}
-              $error={errors.detailedProcessStage ? true : false}
-              onClick={() => {
-                ToggleHandler('detailedProcessStage');
-              }}>
-              <S.PlaceHolder
-                $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
-                $error={errors.detailedProcessStage ? true : false}>
-                {getValues('detailedProcessStage')}
-              </S.PlaceHolder>
-              {getValues('processStage') !== '지원예정' &&
-                getValues('processStage') !== '서류전형' &&
-                defaultValues?.processStage !== getValues('processStage') && (
-                  <S.ArrowIcon src={SelectArrowIcon} />
-                )}
+            {userInputToggle ? (
+              <S.ModalInputBox>
+                <S.ModalInput
+                  type='text'
+                  $error={errors.detailedProcessStage ? true : false}
+                  placeholder='세부 단계 입력'
+                  {...register('detailedProcessStage')}
+                />
+                {errors.scheduled && <S.InvalidIcon>!</S.InvalidIcon>}
+              </S.ModalInputBox>
+            ) : (
+              <S.ModalDropdownBox
+                type='button'
+                disabled={
+                  getValues('processStage') === '지원예정' ||
+                  getValues('processStage') === '서류전형'
+                }
+                $showItem={detailedprocessStageToggle}
+                $error={errors.detailedProcessStage ? true : false}
+                onClick={() => {
+                  ToggleHandler('detailedProcessStage');
+                }}>
+                <S.PlaceHolder
+                  $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
+                  $error={errors.detailedProcessStage ? true : false}>
+                  {getValues('detailedProcessStage') === ''
+                    ? '세부 단계를 입력하세요'
+                    : getValues('detailedProcessStage')}
+                </S.PlaceHolder>
+                {getValues('processStage') !== '지원예정' &&
+                  getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
 
-              {detailedprocessStageToggle && (
-                <S.ModalDropdownItemBox>
-                  {processStage[getValues('processStage')].detailed?.map((process: string) => (
-                    <S.DropdownItem
-                      onClick={() => {
-                        dropDownItemHandler('detailedProcessStage', process);
-                      }}>
-                      {process}
+                {detailedprocessStageToggle && (
+                  <S.ModalDropdownItemBox>
+                    {fetchedProcessData.data.map((process: string) => (
+                      <S.DropdownItem
+                        key={process}
+                        onClick={() => {
+                          dropDownItemHandler('detailedProcessStage', process);
+                        }}>
+                        {process}
+                      </S.DropdownItem>
+                    ))}
+                    <S.DropdownItem onClick={() => setUserInputToggle(true)}>
+                      직접 입력
                     </S.DropdownItem>
-                  ))}
-                </S.ModalDropdownItemBox>
-              )}
-              {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
-            </S.ModalDropdownBox>
+                  </S.ModalDropdownItemBox>
+                )}
+                {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
+              </S.ModalDropdownBox>
+            )}
           </S.ModalInputWrapper>
 
           <S.ModalButtonWrapper>
@@ -274,6 +304,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
                 <S.ModalDropdownItemBox>
                   {processStageKeys.map((process: string) => (
                     <S.DropdownItem
+                      key={process}
                       onClick={() => {
                         dropDownItemHandler('processStage', process);
                       }}>
@@ -289,9 +320,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
             <S.ModalDropdownBox
               type='button'
               disabled={
-                getValues('processStage') === '지원예정' ||
-                getValues('processStage') === '서류전형' ||
-                defaultValues?.processStage === getValues('processStage')
+                getValues('processStage') === '지원예정' || getValues('processStage') === '서류전형'
               }
               $showItem={detailedprocessStageToggle}
               $error={errors.detailedProcessStage ? true : false}
@@ -301,18 +330,18 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
               <S.PlaceHolder
                 $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
                 $error={errors.detailedProcessStage ? true : false}>
-                {getValues('detailedProcessStage')}
+                {getValues('detailedProcessStage') === ''
+                  ? '세부 단계를 입력하세요'
+                  : getValues('detailedProcessStage')}
               </S.PlaceHolder>
               {getValues('processStage') !== '지원예정' &&
-                getValues('processStage') !== '서류전형' &&
-                defaultValues?.processStage !== getValues('processStage') && (
-                  <S.ArrowIcon src={SelectArrowIcon} />
-                )}
+                getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
 
               {detailedprocessStageToggle && (
                 <S.ModalDropdownItemBox>
                   {processStage[getValues('processStage')].detailed?.map((process: string) => (
                     <S.DropdownItem
+                      key={process}
                       onClick={() => {
                         dropDownItemHandler('detailedProcessStage', process);
                       }}>
@@ -349,7 +378,7 @@ const ModalComponent = ({ isEditMode, modalIsOpen, closeModal, currentModalProce
             </S.ModalInputBox>
 
             {/* 공고링크 */}
-            <S.ModalInput type='url' placeholder='https://' />
+            <S.ModalInput placeholder='https://' {...register('recruitUrl')} />
           </S.ModalInputWrapper>
           <S.ModalHelperText>
             자세한 채용정보 등록은

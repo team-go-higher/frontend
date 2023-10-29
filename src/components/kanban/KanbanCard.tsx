@@ -8,15 +8,27 @@ import { updateProcess } from 'redux/kanbanSlice';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import { formatDataType } from 'utils/date';
+import { fetchApplicationProcessType } from 'apis/kanban';
 
 interface IProps {
   item: application;
   currentProcessName: string;
+  openModal: (processName: string, mode: string) => void;
+  setFethedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const KanbanCard = ({ item, currentProcessName }: IProps) => {
+const KanbanCard = ({ item, currentProcessName, openModal, setFethedProcessData }: IProps) => {
   const dispatch = useAppDispatch();
   const [moreMenuShow, setMoreMenuShow] = useState(false);
+
+  // const updateMutation = useMutation(
+  //   (applicationId, processId) => updateApplicationProcess(applicationId, processId),
+  //   {
+  //     onSuccess(data, variables, context) {
+  //       queryClient.invalidateQueries('fetchApplications');
+  //     },
+  //   },
+  // );
 
   function handleMoreMenu() {
     setMoreMenuShow(!moreMenuShow);
@@ -26,7 +38,6 @@ const KanbanCard = ({ item, currentProcessName }: IProps) => {
     dispatch(updateProcess({ currentProcessName, target, nextProcessName }));
   }
 
-  // [CollectedProps, ConnectDragSource, ConnectDragPreview]
   // monitor.getItem() 의 내용으로 들어갈 값을 정의합니다.
   // type 값은 무조건 설정되어 있어야 합니다. (useDrop의 accept와 일치시켜야 함)
   const [{ isDragging }, ref] = useDrag({
@@ -38,43 +49,51 @@ const KanbanCard = ({ item, currentProcessName }: IProps) => {
     }),
 
     // 드래그가 완전히 끝났을때 실행됩니다. 보통 여기에서 Redux dispatch를 많이 실행시킵니다.
-    end: (draggedItem, monitor) => {
+    end: async (draggedItem, monitor) => {
       const dropResult: any = monitor.getDropResult();
-      console.log('dropResult', dropResult, 'draggedItem', draggedItem);
+
       if (dropResult) {
+        const { data } = await fetchApplicationProcessType(draggedItem.id, dropResult.processName);
+
+        setFethedProcessData(data);
+        if (data.success) {
+          openModal(dropResult.processName, 'edit');
+        }
         changeKanbanProcess(draggedItem, dropResult.processName);
       }
     },
   });
 
   return (
-    <KanbanCardContainer
-      ref={ref}
-      $isdragging={isDragging}
-      $currentProcessName={currentProcessName}>
-      {/* 드래그 가능한 요소의 내용 */}
-      <DetailProcess $currentProcessName={currentProcessName}>
-        {item.processDescription}
-      </DetailProcess>
-      <CompanyName>{item.companyName}</CompanyName>
-      <Job>{item.position}</Job>
-      <Schedule>{formatDataType(item.schedule)}</Schedule>
-      <MoreIconDiv>
-        <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />
-      </MoreIconDiv>
-      {moreMenuShow && (
-        <MoreMenuColumn $currentProcessName={currentProcessName}>
-          <MoreItem>
-            <MoreItemIcon />
-            <MoreItemText>간편 수정하기</MoreItemText>
-          </MoreItem>
-          <MoreItem>
-            <MoreItemIcon />
-            <MoreItemText>공고 숨기기</MoreItemText>
-          </MoreItem>
-        </MoreMenuColumn>
-      )}
-    </KanbanCardContainer>
+    <>
+      <KanbanCardContainer
+        ref={ref}
+        $isdragging={isDragging}
+        $currentProcessName={currentProcessName}>
+        {/* 드래그 가능한 요소의 내용 */}
+        <DetailProcess $currentProcessName={currentProcessName}>
+          {item.processDescription}
+        </DetailProcess>
+        <CompanyName>{item.companyName}</CompanyName>
+        <Job>{item.position}</Job>
+        <Schedule>{formatDataType(item.schedule)}</Schedule>
+        <MoreIconDiv>
+          <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />
+        </MoreIconDiv>
+        {moreMenuShow && (
+          <MoreMenuColumn $currentProcessName={currentProcessName}>
+            <MoreItem>
+              <MoreItemIcon />
+              <MoreItemText>간편 수정하기</MoreItemText>
+            </MoreItem>
+            <MoreItem>
+              <MoreItemIcon />
+              <MoreItemText>공고 숨기기</MoreItemText>
+            </MoreItem>
+          </MoreMenuColumn>
+        )}
+      </KanbanCardContainer>
+    </>
   );
 };
 
