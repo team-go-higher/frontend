@@ -20,7 +20,11 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({ event }) => {
     <EventContainer $processType={event.process.type}>
       <div>{event.companyName}</div>
       <div>{event.process.description}</div>
-      <div>{format(new Date(event.process.schedule), 'M월 dd일 HH:mm')}</div>
+      <div>
+        {event.process.schedule
+          ? format(new Date(event.process.schedule), 'M월 dd일 HH:mm')
+          : '전형일을 입력하세요'}
+      </div>
     </EventContainer>
   );
 };

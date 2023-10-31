@@ -75,16 +75,16 @@ export const RenderUnscheduled: React.FC<RenderUnscheduledProps> = ({
 }) => {
   return (
     <RenderUnscheduledContainer>
-      {currentPage > 1 && <div onClick={prevPage}>◁</div>}
       <div>
         <div className='text'>전형일을 기다리고 있어요</div>
         <div className='card'>
+          {currentPage > 1 && <div onClick={prevPage}>◁</div>}
           {unscheduledData.content.map((event: any) => (
             <CalendarCard key={event.applicationId} event={event}></CalendarCard>
           ))}
+          {unscheduledData.hasNext && <div onClick={nextPage}>▷</div>}
         </div>
       </div>
-      {unscheduledData.hasNext && <div onClick={nextPage}>▷</div>}
     </RenderUnscheduledContainer>
   );
 };

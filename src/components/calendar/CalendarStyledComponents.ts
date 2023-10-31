@@ -203,8 +203,7 @@ export const EventContainer = styled.div<EventProps>`
   box-sizing: border-box;
   width: 222px;
   height: 110px;
-  margin: auto;
-  margin-bottom: 9px;
+  margin: 10px;
   padding: 14px 21px;
   border-radius: 10px;
   border: 1px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
@@ -243,10 +242,14 @@ export const RenderUnscheduledContainer = styled.div`
     font-size: 25px;
     font-weight: 700;
     margin: 77px 0 29px 0;
+    display: flex;
+    justify-content: center;
   }
   .card {
+    width: 996px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
   }
 `;

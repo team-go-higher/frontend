@@ -27,8 +27,8 @@ const Calendar = () => {
   const { data: detailData } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
     fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   );
-  const { data: unscheduledData } = useQuery(queryKey.UNSCHEDULEDDATA, () =>
-    fetchUnscheduledCalendar(currentPage, 10),
+  const { data: unscheduledData } = useQuery([currentPage, queryKey.UNSCHEDULEDDATA], () =>
+    fetchUnscheduledCalendar(currentPage, 2),
   );
 
   //달력 값 변경
