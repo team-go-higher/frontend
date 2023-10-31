@@ -16,11 +16,8 @@ const Main = () => {
   };
 
   const handlePage = useCallback(() => {
-    if (userInfo) {
-      const accessToken = JSON.parse(userInfo).accessToken;
-      if (!accessToken) {
-        navigate('/login');
-      }
+    if (!userInfo) {
+      navigate('/login');
     }
   }, [navigate, userInfo]);
 
