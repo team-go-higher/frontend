@@ -7,8 +7,9 @@ import { processStage, processStageKeys } from 'data/RecruitProcess';
 import * as S from './ModalStyledComponents';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 import { fomatProcessTypeToEnglish, formatProcessToKorean } from 'utils/process';
-import { registerSimpleApplication } from 'apis/kanban';
+import { editSimpleApplication, registerSimpleApplication } from 'apis/kanban';
 import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
+import { goHigerApi } from 'apis';
 
 interface IProps {
   mode: string;
@@ -16,6 +17,7 @@ interface IProps {
   closeModal: () => void;
   currentModalProcess: string;
   fetchedProcessData: any;
+  applicationInfo: any;
 }
 
 const ModalComponent = ({
@@ -24,6 +26,7 @@ const ModalComponent = ({
   closeModal,
   currentModalProcess,
   fetchedProcessData,
+  applicationInfo,
 }: IProps) => {
   const queryClient = useQueryClient();
   const [processStageToggle, setProcessStageToggle] = useState(false);
@@ -32,6 +35,30 @@ const ModalComponent = ({
 
   const addMutation = useMutation(
     (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('fetchApplications');
+      },
+    },
+  );
+
+  const editMutation = useMutation(
+    (data: any) => {
+      const { editApplicationData, applicationId } = data;
+      return editSimpleApplication(editApplicationData, applicationId);
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('fetchApplications');
+      },
+    },
+  );
+
+  const moveMutation = useMutation(
+    (data: any) => {
+      const { applicationId, processId } = data;
+      return goHigerApi.patch(`v1/applications/current-process`, { applicationId, processId });
+    },
     {
       onSuccess() {
         queryClient.invalidateQueries('fetchApplications');
@@ -51,30 +78,34 @@ const ModalComponent = ({
   } = useForm({
     mode: 'onSubmit',
     defaultValues: {
-      companyName: '',
-      processStage: currentModalProcess && (formatProcessToKorean(currentModalProcess) as string),
-      detailedProcessStage: '',
-      position: '',
-      scheduled: '',
-      recruitUrl: '',
+      companyName: applicationInfo?.companyName || '',
+      processStage: currentModalProcess
+        ? (formatProcessToKorean(currentModalProcess) as string)
+        : applicationInfo?.process?.description,
+      detailedProcessStage: applicationInfo?.processDescription || '',
+      position: applicationInfo?.position || '',
+      scheduled: applicationInfo?.process?.schedule || '',
+      recruitUrl: applicationInfo?.recruitUrl || '',
     },
   });
 
   // 모달close시 안의 내용 reset
   useEffect(() => {
     reset({
-      companyName: '',
-      processStage: currentModalProcess && (formatProcessToKorean(currentModalProcess) as string),
-      detailedProcessStage: '',
-      position: '',
-      scheduled: '',
-      recruitUrl: '',
+      companyName: applicationInfo?.companyName || '',
+      processStage: currentModalProcess
+        ? (formatProcessToKorean(currentModalProcess) as string)
+        : applicationInfo?.process?.description,
+      detailedProcessStage: applicationInfo?.processDescription || '',
+      position: applicationInfo?.position,
+      scheduled: applicationInfo?.process?.schedule || '',
+      recruitUrl: applicationInfo?.recruitUrl || '',
     });
 
     setProcessStageToggle(false);
     setdetailedProcessStageToggle(false);
     setUserInputToggle(false);
-  }, [currentModalProcess]);
+  }, [modalIsOpen]);
 
   // 전형 or 세부단계 드롭박스 토글 함수
   function ToggleHandler(dropDownId: string) {
@@ -97,24 +128,60 @@ const ModalComponent = ({
     }
   }
 
-  // 간편등록 handler
+  // 간편등록 & 수정 handler
   function simpleResisterHandler() {
-    const newApplicationData = {
-      companyName: getValues('companyName'),
-      position: getValues('position'),
-      url: getValues('recruitUrl'),
-      currentProcess: {
-        type: fomatProcessTypeToEnglish(getValues('processStage')),
-        description:
-          getValues('detailedProcessStage') === defaultValues?.detailedProcessStage
-            ? getValues('processStage')
-            : getValues('detailedProcessStage'),
+    if (mode === 'add') {
+      const newApplicationData = {
+        companyName: getValues('companyName'),
+        position: getValues('position'),
+        url: getValues('recruitUrl'),
+        currentProcess: {
+          type: fomatProcessTypeToEnglish(getValues('processStage')),
+          description:
+            getValues('detailedProcessStage') === defaultValues?.detailedProcessStage
+              ? getValues('processStage')
+              : getValues('detailedProcessStage'),
+          schedule: getValues('scheduled'),
+        },
+      };
+
+      addMutation.mutate(newApplicationData);
+    } else if (mode === 'edit') {
+      const editApplicationData = {
+        companyName: getValues('companyName'),
+        position: getValues('position'),
+        processId: applicationInfo.process.id,
         schedule: getValues('scheduled'),
-      },
+        url: getValues('recruitUrl'),
+      };
+
+      editMutation.mutate({
+        editApplicationData,
+        applicationId: applicationInfo.applicationId,
+      });
+    }
+    closeModal();
+  }
+
+  console.log(applicationInfo);
+  async function addNewProcess() {
+    const requestData = {
+      type: fomatProcessTypeToEnglish(getValues('processStage')),
+      description: getValues('detailedProcessStage'),
     };
 
-    addMutation.mutate(newApplicationData);
-    closeModal();
+    const { data } = await goHigerApi.post(
+      `v1/applications/${applicationInfo.applicationId}/processes`,
+      requestData,
+    );
+    console.log(data.success);
+
+    if (data.success) {
+      moveMutation.mutate({
+        applicationId: applicationInfo.applicationId,
+        processId: data.data.id,
+      });
+    }
   }
 
   // 전형 or 세부단계 유효성 검사 함수
@@ -150,7 +217,9 @@ const ModalComponent = ({
     validationDetailedProcess();
   }, [getValues('detailedProcessStage')]);
 
-  if (mode === 'edit') {
+  console.log(getValues('processStage'));
+
+  if (mode === 'move') {
     return (
       <Modal
         isOpen={modalIsOpen}
@@ -159,7 +228,7 @@ const ModalComponent = ({
         style={S.editModalStyles}
         id={currentModalProcess}
         appElement={document.getElementById('root') as HTMLBodyElement}>
-        <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
+        <S.ModalForm onSubmit={handleSubmit(addNewProcess)}>
           {fetchedProcessData.data.length === 0 ? (
             <S.ModalTitle>전형추가</S.ModalTitle>
           ) : (
@@ -232,13 +301,13 @@ const ModalComponent = ({
 
                 {detailedprocessStageToggle && (
                   <S.ModalDropdownItemBox>
-                    {fetchedProcessData.data.map((process: string) => (
+                    {fetchedProcessData.data.map((process: any) => (
                       <S.DropdownItem
                         key={process}
                         onClick={() => {
                           dropDownItemHandler('detailedProcessStage', process);
                         }}>
-                        {process}
+                        {process.description}
                       </S.DropdownItem>
                     ))}
                     <S.DropdownItem onClick={() => setUserInputToggle(true)}>
@@ -272,15 +341,18 @@ const ModalComponent = ({
         id={currentModalProcess}
         appElement={document.getElementById('root') as HTMLBodyElement}>
         <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
-          <S.ModalTitle>간편등록</S.ModalTitle>
+          <S.ModalTitle>{mode === 'add' ? '간편등록' : '간편수정'}</S.ModalTitle>
           <S.ModalInputWrapper>
             {/* 회사명 */}
             <S.ModalInputBox>
               <S.ModalInput
+                defaultValue={getValues('companyName')}
                 type='text'
                 $error={errors.companyName ? true : false}
                 placeholder='회사명을 입력하세요'
-                {...register('companyName', { required: '회사명 필수' })}
+                {...register('companyName', {
+                  required: '회사명 필수',
+                })}
               />
               {errors.companyName && <S.InvalidIcon>!</S.InvalidIcon>}
             </S.ModalInputBox>
@@ -288,6 +360,7 @@ const ModalComponent = ({
             {/* 전형단계 */}
             <S.ModalDropdownBox
               type='button'
+              disabled={mode === 'edit' ? true : false}
               onChange={validationProcess}
               $showItem={processStageToggle}
               $error={errors.processStage ? true : false}
@@ -299,7 +372,7 @@ const ModalComponent = ({
                 $error={errors.processStage ? true : false}>
                 {getValues('processStage')}
               </S.PlaceHolder>
-              <S.ArrowIcon src={SelectArrowIcon} />
+              {mode === 'edit' ? null : <S.ArrowIcon src={SelectArrowIcon} />}
               {processStageToggle && (
                 <S.ModalDropdownItemBox>
                   {processStageKeys.map((process: string) => (
@@ -320,7 +393,10 @@ const ModalComponent = ({
             <S.ModalDropdownBox
               type='button'
               disabled={
-                getValues('processStage') === '지원예정' || getValues('processStage') === '서류전형'
+                mode === 'edit'
+                  ? true
+                  : getValues('processStage') === '지원예정' ||
+                    getValues('processStage') === '서류전형'
               }
               $showItem={detailedprocessStageToggle}
               $error={errors.detailedProcessStage ? true : false}
@@ -334,8 +410,11 @@ const ModalComponent = ({
                   ? '세부 단계를 입력하세요'
                   : getValues('detailedProcessStage')}
               </S.PlaceHolder>
-              {getValues('processStage') !== '지원예정' &&
-                getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
+
+              {mode === 'edit'
+                ? null
+                : getValues('processStage') !== '지원예정' &&
+                  getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
 
               {detailedprocessStageToggle && (
                 <S.ModalDropdownItemBox>

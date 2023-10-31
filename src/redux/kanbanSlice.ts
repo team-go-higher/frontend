@@ -41,12 +41,12 @@ export const kanbanSlice = createSlice({
         ) as IkabanData;
 
         const targetIndex = currentProcessData.applications.findIndex(
-          item => item.id === target.id,
+          item => item.applicationId === target.applicationId,
         );
 
         if (targetIndex !== -1) {
           const updatedCurrentProcessApplications = currentProcessData.applications.filter(
-            app => app.id !== target.id,
+            app => app.applicationId !== target.applicationId,
           );
 
           const updatedTarget = {

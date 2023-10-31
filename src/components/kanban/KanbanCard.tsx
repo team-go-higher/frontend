@@ -3,40 +3,35 @@ import { useDrag } from 'react-dnd';
 import { styled } from 'styled-components';
 
 import { application } from 'types/interfaces/KanbanProcess';
-import { useAppDispatch } from 'redux/store';
-import { updateProcess } from 'redux/kanbanSlice';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import { formatDataType } from 'utils/date';
 import { fetchApplicationProcessType } from 'apis/kanban';
+import { modalMode } from 'hooks/useModal';
 
 interface IProps {
   item: application;
   currentProcessName: string;
-  openModal: (processName: string, mode: string) => void;
+  openModal: (parameter: { mode: modalMode; processName?: string; applicationInfo?: any }) => void;
   setFethedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const KanbanCard = ({ item, currentProcessName, openModal, setFethedProcessData }: IProps) => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [moreMenuShow, setMoreMenuShow] = useState(false);
-
-  // const updateMutation = useMutation(
-  //   (applicationId, processId) => updateApplicationProcess(applicationId, processId),
-  //   {
-  //     onSuccess(data, variables, context) {
-  //       queryClient.invalidateQueries('fetchApplications');
-  //     },
-  //   },
-  // );
 
   function handleMoreMenu() {
     setMoreMenuShow(!moreMenuShow);
   }
 
-  function changeKanbanProcess(target: application, nextProcessName: string) {
-    dispatch(updateProcess({ currentProcessName, target, nextProcessName }));
+  function handleEditBtn() {
+    openModal({ mode: 'edit', applicationInfo: item });
+    setMoreMenuShow(false);
   }
+
+  // function changeKanbanProcess(target: application, nextProcessName: string) {
+  //   dispatch(updateProcess({ currentProcessName, target, nextProcessName }));
+  // }
 
   // monitor.getItem() 의 내용으로 들어갈 값을 정의합니다.
   // type 값은 무조건 설정되어 있어야 합니다. (useDrop의 accept와 일치시켜야 함)
@@ -53,13 +48,20 @@ const KanbanCard = ({ item, currentProcessName, openModal, setFethedProcessData 
       const dropResult: any = monitor.getDropResult();
 
       if (dropResult) {
-        const { data } = await fetchApplicationProcessType(draggedItem.id, dropResult.processName);
+        const { data } = await fetchApplicationProcessType(
+          draggedItem.applicationId,
+          dropResult.processName,
+        );
 
-        setFethedProcessData(data);
         if (data.success) {
-          openModal(dropResult.processName, 'edit');
+          setFethedProcessData(data);
+          openModal({
+            mode: 'move',
+            applicationInfo: { applicationId: draggedItem.applicationId },
+            processName: dropResult.processName,
+          });
         }
-        changeKanbanProcess(draggedItem, dropResult.processName);
+        // changeKanbanProcess(draggedItem, dropResult.processName);
       }
     },
   });
@@ -72,17 +74,17 @@ const KanbanCard = ({ item, currentProcessName, openModal, setFethedProcessData 
         $currentProcessName={currentProcessName}>
         {/* 드래그 가능한 요소의 내용 */}
         <DetailProcess $currentProcessName={currentProcessName}>
-          {item.processDescription}
+          {item.process.description}
         </DetailProcess>
         <CompanyName>{item.companyName}</CompanyName>
         <Job>{item.position}</Job>
-        <Schedule>{formatDataType(item.schedule)}</Schedule>
+        <Schedule>{formatDataType(item.process.schedule)}</Schedule>
         <MoreIconDiv>
           <MoreIcon fill={`rgb(var(--${currentProcessName}))`} onClick={handleMoreMenu} />
         </MoreIconDiv>
         {moreMenuShow && (
           <MoreMenuColumn $currentProcessName={currentProcessName}>
-            <MoreItem>
+            <MoreItem onClick={handleEditBtn}>
               <MoreItemIcon />
               <MoreItemText>간편 수정하기</MoreItemText>
             </MoreItem>

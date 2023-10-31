@@ -6,9 +6,15 @@ export interface IkabanData {
 }
 
 export interface application {
-  id: number;
+  applicationId: number;
   companyName: string;
   position: string;
+  process: {
+    description: string;
+    id: number;
+    schedule: string;
+    type: processType;
+  };
   specificPosition: null | string;
   processDescription: string;
   schedule: string;

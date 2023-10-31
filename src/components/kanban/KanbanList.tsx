@@ -2,10 +2,11 @@ import React, { ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { useDrop } from 'react-dnd';
 import { formatProcessToKorean } from 'utils/process';
+import { modalMode } from 'hooks/useModal';
 
 interface IProps {
   processName: string;
-  openModal: (processName: string, mode: string) => void;
+  openModal: (parameter: { mode: modalMode; processName?: string; applicationInfo?: any }) => void;
   children: ReactElement[];
 }
 

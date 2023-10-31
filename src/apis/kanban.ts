@@ -11,6 +11,17 @@ export const registerSimpleApplication = async (newApplicationData: IRegisterNew
   return data;
 };
 
+export const editSimpleApplication = async (
+  newApplicationData: IRegisterNewApplication,
+  applicationId: any,
+) => {
+  const data: any = await goHigerApi.put(
+    `/v1/applications/${applicationId}/simple`,
+    newApplicationData,
+  );
+  return data;
+};
+
 export const fetchApplicationProcessType = async (applicationId: any, processType: any) => {
   const data: any = await goHigerApi.get(
     `/v1/applications/${applicationId}/processes?processType=${processType}`,

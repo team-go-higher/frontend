@@ -21,7 +21,8 @@ const Kanban = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const kanbanList = useAppSelector(state => state.kanban);
-  const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode } = useModal();
+  const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode, applicationInfo } =
+    useModal();
 
   function kanbanListHandler(processName: string): ReactElement[] {
     const filterdData = kanbanList?.filter(data => data.processType === processName)[0];
@@ -40,7 +41,7 @@ const Kanban = () => {
     }
 
     const addButton = (
-      <PlusButton key={processName} onClick={() => openModal(processName, 'normal')}>
+      <PlusButton key={processName} onClick={() => openModal({ mode: 'add', processName })}>
         <Circle>+</Circle>
       </PlusButton>
     );
@@ -81,6 +82,7 @@ const Kanban = () => {
         closeModal={closeModal}
         currentModalProcess={currentModalProcessName}
         fetchedProcessData={fetchedProcessData}
+        applicationInfo={applicationInfo}
       />
       <div>
         <KanbanHeaderContainer>
