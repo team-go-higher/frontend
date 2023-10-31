@@ -1,15 +1,32 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Calendar from './calendar/Calendar';
 import Kanban from './kanban/Kanban';
 import calendarToggle from 'assets/main/main_calendar_toggle.svg';
 import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
+  const navigate = useNavigate();
   const [isCalendar, setCalendar] = useState(true);
+  const userInfo = localStorage.getItem('userInfo');
+
   const toggleHandler = () => {
     setCalendar(!isCalendar);
   };
+
+  const handlePage = useCallback(() => {
+    if (userInfo) {
+      const accessToken = JSON.parse(userInfo).accessToken;
+      if (!accessToken) {
+        navigate('/login');
+      }
+    }
+  }, [navigate, userInfo]);
+
+  useEffect(() => {
+    handlePage();
+  }, [handlePage]);
 
   return (
     <div>
