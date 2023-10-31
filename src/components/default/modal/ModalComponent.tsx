@@ -20,6 +20,12 @@ interface IProps {
   applicationInfo: any;
 }
 
+/*
+TODO
+  1. as 타입 추론 제거
+  2. any 타입 제거
+  3. 옵셔널 체이닝 제거
+*/
 const ModalComponent = ({
   mode,
   modalIsOpen,
@@ -81,8 +87,8 @@ const ModalComponent = ({
       companyName: applicationInfo?.companyName || '',
       processStage: currentModalProcess
         ? (formatProcessToKorean(currentModalProcess) as string)
-        : applicationInfo?.process?.description,
-      detailedProcessStage: applicationInfo?.processDescription || '',
+        : formatProcessToKorean(applicationInfo?.process?.type as string),
+      detailedProcessStage: applicationInfo?.process?.description || '',
       position: applicationInfo?.position || '',
       scheduled: applicationInfo?.process?.schedule || '',
       recruitUrl: applicationInfo?.recruitUrl || '',
@@ -95,8 +101,8 @@ const ModalComponent = ({
       companyName: applicationInfo?.companyName || '',
       processStage: currentModalProcess
         ? (formatProcessToKorean(currentModalProcess) as string)
-        : applicationInfo?.process?.description,
-      detailedProcessStage: applicationInfo?.processDescription || '',
+        : formatProcessToKorean(applicationInfo?.process?.type as string),
+      detailedProcessStage: applicationInfo?.process?.description || '',
       position: applicationInfo?.position,
       scheduled: applicationInfo?.process?.schedule || '',
       recruitUrl: applicationInfo?.recruitUrl || '',
@@ -111,6 +117,7 @@ const ModalComponent = ({
   function ToggleHandler(dropDownId: string) {
     if (dropDownId === 'processStage') {
       setProcessStageToggle(!processStageToggle);
+      setdetailedProcessStageToggle(false);
     } else {
       setdetailedProcessStageToggle(!detailedprocessStageToggle);
     }
@@ -136,7 +143,7 @@ const ModalComponent = ({
         position: getValues('position'),
         url: getValues('recruitUrl'),
         currentProcess: {
-          type: fomatProcessTypeToEnglish(getValues('processStage')),
+          type: fomatProcessTypeToEnglish(getValues('processStage') as string),
           description:
             getValues('detailedProcessStage') === defaultValues?.detailedProcessStage
               ? getValues('processStage')
@@ -163,10 +170,9 @@ const ModalComponent = ({
     closeModal();
   }
 
-  console.log(applicationInfo);
   async function addNewProcess() {
     const requestData = {
-      type: fomatProcessTypeToEnglish(getValues('processStage')),
+      type: fomatProcessTypeToEnglish(getValues('processStage') as string),
       description: getValues('detailedProcessStage'),
     };
 
@@ -418,15 +424,17 @@ const ModalComponent = ({
 
               {detailedprocessStageToggle && (
                 <S.ModalDropdownItemBox>
-                  {processStage[getValues('processStage')].detailed?.map((process: string) => (
-                    <S.DropdownItem
-                      key={process}
-                      onClick={() => {
-                        dropDownItemHandler('detailedProcessStage', process);
-                      }}>
-                      {process}
-                    </S.DropdownItem>
-                  ))}
+                  {processStage[getValues('processStage') as string].detailed?.map(
+                    (process: string) => (
+                      <S.DropdownItem
+                        key={process}
+                        onClick={() => {
+                          dropDownItemHandler('detailedProcessStage', process);
+                        }}>
+                        {process}
+                      </S.DropdownItem>
+                    ),
+                  )}
                 </S.ModalDropdownItemBox>
               )}
               {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
@@ -466,10 +474,10 @@ const ModalComponent = ({
           </S.ModalHelperText>
           <S.ModalButtonWrapper>
             <S.InModalButton mode='common' onClick={closeModal}>
-              일반등록
+              {mode === 'edit' ? '취소' : '일반등록'}
             </S.InModalButton>
             <S.InModalButton mode='simple' type='submit' onClick={validationProcess}>
-              간편등록
+              {mode === 'edit' ? '수정완료' : '간편등록'}
             </S.InModalButton>
           </S.ModalButtonWrapper>
         </S.ModalForm>
