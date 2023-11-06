@@ -1,22 +1,25 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { kanbanProcessData2 } from 'data/mock/KanbanProcess';
-import { IkabanData, application } from 'types/interfaces/KanbanProcess';
-import { current } from '@reduxjs/toolkit';
+import { IRegisterNewApplication, IkabanData, application } from 'types/interfaces/KanbanProcess';
 
-const initialState: IkabanData[] = kanbanProcessData2;
+const initialState: IkabanData[] = [];
 
 export const kanbanSlice = createSlice({
   name: 'kanban',
   initialState,
   reducers: {
-    addResume: (
-      state,
-      { payload }: PayloadAction<{ processName: string; newResumeData: application }>,
-    ) => {
-      const filterdData = state.filter(data => data.processType === payload.processName)[0];
-
-      filterdData.applications.push(payload.newResumeData);
+    setApplications: (state, { payload }) => {
+      return payload;
     },
+    // addSimpleApplication: (
+    //   state,
+    //   {
+    //     payload,
+    //   }: PayloadAction<{ processName: string; newApplicationData: IRegisterNewApplication }>,
+    // ) => {
+    //   const filterdData = state.filter(data => data.processType === payload.processName)[0];
+
+    //   // filterdData.applications.push(payload.newApplicationData);
+    // },
     updateProcess: (
       state,
       {
@@ -38,12 +41,12 @@ export const kanbanSlice = createSlice({
         ) as IkabanData;
 
         const targetIndex = currentProcessData.applications.findIndex(
-          item => item.id === target.id,
+          item => item.applicationId === target.applicationId,
         );
 
         if (targetIndex !== -1) {
           const updatedCurrentProcessApplications = currentProcessData.applications.filter(
-            app => app.id !== target.id,
+            app => app.applicationId !== target.applicationId,
           );
 
           const updatedTarget = {
@@ -72,5 +75,5 @@ export const kanbanSlice = createSlice({
   },
 });
 
-export const { addResume, updateProcess } = kanbanSlice.actions;
+export const { setApplications, updateProcess } = kanbanSlice.actions;
 export default kanbanSlice.reducer;

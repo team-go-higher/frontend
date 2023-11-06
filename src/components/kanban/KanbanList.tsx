@@ -2,15 +2,21 @@ import React, { ReactElement } from 'react';
 import { styled } from 'styled-components';
 import { useDrop } from 'react-dnd';
 import { formatProcessToKorean } from 'utils/process';
+import { modalMode } from 'hooks/useModal';
+
 interface IProps {
   processName: string;
+  openModal: (parameter: { mode: modalMode; processName?: string; applicationInfo?: any }) => void;
   children: ReactElement[];
 }
 
-const KanbanList = ({ processName, children }: IProps) => {
+const KanbanList = ({ processName, openModal, children }: IProps) => {
   const [, ref] = useDrop({
     accept: 'card', // useDrag의 type과 같아야함
-    drop: () => ({ processName }),
+    drop: () => {
+      return { processName };
+    },
+
     collect: monitor => ({
       isOver: monitor.isOver(), // drag 진행동안 canDrop : true
       canDrop: monitor.canDrop(), // drop할 영역 접근시 isOver : true
