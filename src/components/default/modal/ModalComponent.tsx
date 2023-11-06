@@ -68,6 +68,7 @@ const ModalComponent = ({
     {
       onSuccess() {
         queryClient.invalidateQueries('fetchApplications');
+        closeModal();
       },
     },
   );
@@ -173,14 +174,16 @@ const ModalComponent = ({
   async function addNewProcess() {
     const requestData = {
       type: fomatProcessTypeToEnglish(getValues('processStage') as string),
-      description: getValues('detailedProcessStage'),
+      description:
+        getValues('detailedProcessStage') === ''
+          ? getValues('processStage')
+          : getValues('detailedProcessStage'),
     };
 
     const { data } = await goHigerApi.post(
       `v1/applications/${applicationInfo.applicationId}/processes`,
       requestData,
     );
-    console.log(data.success);
 
     if (data.success) {
       moveMutation.mutate({
@@ -215,15 +218,9 @@ const ModalComponent = ({
     }
   }
 
-  // useEffect(() => {
-  //   validationProcess();
-  // }, [getValues('processStage')]);
-
   useEffect(() => {
     validationDetailedProcess();
   }, [getValues('detailedProcessStage')]);
-
-  console.log(getValues('processStage'));
 
   if (mode === 'move') {
     return (
@@ -309,9 +306,9 @@ const ModalComponent = ({
                   <S.ModalDropdownItemBox>
                     {fetchedProcessData.data.map((process: any) => (
                       <S.DropdownItem
-                        key={process}
+                        key={process.id}
                         onClick={() => {
-                          dropDownItemHandler('detailedProcessStage', process);
+                          dropDownItemHandler('detailedProcessStage', process.description);
                         }}>
                         {process.description}
                       </S.DropdownItem>
@@ -396,49 +393,66 @@ const ModalComponent = ({
             </S.ModalDropdownBox>
 
             {/* 세부단계 */}
-            <S.ModalDropdownBox
-              type='button'
-              disabled={
-                mode === 'edit'
-                  ? true
-                  : getValues('processStage') === '지원예정' ||
-                    getValues('processStage') === '서류전형'
-              }
-              $showItem={detailedprocessStageToggle}
-              $error={errors.detailedProcessStage ? true : false}
-              onClick={() => {
-                ToggleHandler('detailedProcessStage');
-              }}>
-              <S.PlaceHolder
-                $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
-                $error={errors.detailedProcessStage ? true : false}>
-                {getValues('detailedProcessStage') === ''
-                  ? '세부 단계를 입력하세요'
-                  : getValues('detailedProcessStage')}
-              </S.PlaceHolder>
+            {userInputToggle ? (
+              <S.ModalInputBox>
+                <S.ModalInput
+                  type='text'
+                  $error={errors.detailedProcessStage ? true : false}
+                  placeholder='세부 단계 입력'
+                  {...register('detailedProcessStage')}
+                />
+                {errors.scheduled && <S.InvalidIcon>!</S.InvalidIcon>}
+              </S.ModalInputBox>
+            ) : (
+              <S.ModalDropdownBox
+                type='button'
+                disabled={
+                  mode === 'edit'
+                    ? true
+                    : getValues('processStage') === '지원예정' ||
+                      getValues('processStage') === '서류전형'
+                }
+                $showItem={detailedprocessStageToggle}
+                $error={errors.detailedProcessStage ? true : false}
+                onClick={() => {
+                  ToggleHandler('detailedProcessStage');
+                }}>
+                <S.PlaceHolder
+                  $color={defaultValues?.detailedProcessStage !== getValues('detailedProcessStage')}
+                  $error={errors.detailedProcessStage ? true : false}>
+                  {getValues('detailedProcessStage') === ''
+                    ? '세부 단계를 입력하세요'
+                    : getValues('detailedProcessStage')}
+                </S.PlaceHolder>
 
-              {mode === 'edit'
-                ? null
-                : getValues('processStage') !== '지원예정' &&
-                  getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
+                {mode === 'edit'
+                  ? null
+                  : getValues('processStage') !== '지원예정' &&
+                    getValues('processStage') !== '서류전형' && (
+                      <S.ArrowIcon src={SelectArrowIcon} />
+                    )}
 
-              {detailedprocessStageToggle && (
-                <S.ModalDropdownItemBox>
-                  {processStage[getValues('processStage') as string].detailed?.map(
-                    (process: string) => (
-                      <S.DropdownItem
-                        key={process}
-                        onClick={() => {
-                          dropDownItemHandler('detailedProcessStage', process);
-                        }}>
-                        {process}
-                      </S.DropdownItem>
-                    ),
-                  )}
-                </S.ModalDropdownItemBox>
-              )}
-              {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
-            </S.ModalDropdownBox>
+                {detailedprocessStageToggle && (
+                  <S.ModalDropdownItemBox>
+                    {processStage[getValues('processStage') as string].detailed?.map(
+                      (process: string) => (
+                        <S.DropdownItem
+                          key={process}
+                          onClick={() => {
+                            dropDownItemHandler('detailedProcessStage', process);
+                          }}>
+                          {process}
+                        </S.DropdownItem>
+                      ),
+                    )}
+                    <S.DropdownItem onClick={() => setUserInputToggle(true)}>
+                      직접 입력
+                    </S.DropdownItem>
+                  </S.ModalDropdownItemBox>
+                )}
+                {errors.detailedProcessStage && <S.InvalidIcon>!</S.InvalidIcon>}
+              </S.ModalDropdownBox>
+            )}
 
             {/* 직무 */}
             <S.ModalInputBox>
