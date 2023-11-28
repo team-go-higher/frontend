@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -15,14 +15,14 @@ import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 
 const Kanban = () => {
-  const [fetchedProcessData, setFethedProcessData] = useState();
   const dispatch = useAppDispatch();
-  const { data, isLoading, isSuccess } = useQuery('fetchApplications', fetchKanbanList);
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const kanbanList = useAppSelector(state => state.kanban);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode, applicationInfo } =
     useModal();
+  const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
+
+  const [fetchedProcessData, setFethedProcessData] = useState();
 
   function kanbanListHandler(processName: string): ReactElement[] {
     const filterdData = kanbanList?.filter(data => data.processType === processName)[0];
@@ -70,7 +70,7 @@ const Kanban = () => {
   }
 
   if (!isLoading && isSuccess) {
-    const kanbanList = data.data.data;
+    const kanbanList = data.data;
     dispatch(setApplications(kanbanList));
   }
 

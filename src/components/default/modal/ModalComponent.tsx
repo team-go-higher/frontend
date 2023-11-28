@@ -43,7 +43,7 @@ const ModalComponent = ({
     (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
     {
       onSuccess() {
-        queryClient.invalidateQueries('fetchApplications');
+        queryClient.invalidateQueries('fetchKanbanList');
       },
     },
   );
@@ -55,7 +55,7 @@ const ModalComponent = ({
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('fetchApplications');
+        queryClient.invalidateQueries('fetchKanbanList');
       },
     },
   );
@@ -67,7 +67,7 @@ const ModalComponent = ({
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('fetchApplications');
+        queryClient.invalidateQueries('fetchKanbanList');
         closeModal();
       },
     },
