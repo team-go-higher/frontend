@@ -31,6 +31,14 @@ goHigerApi.interceptors.request.use(
   },
 );
 
+goHigerApi.interceptors.response.use(
+  async (response: any) => {
+    return response.data;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 export default {
   kanban,
 };
