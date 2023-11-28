@@ -5,16 +5,16 @@ import { formatProcessToKorean } from 'utils/process';
 import { modalMode } from 'hooks/useModal';
 
 interface IProps {
-  processName: string;
+  processType: string;
   openModal: (parameter: { mode: modalMode; processName?: string; applicationInfo?: any }) => void;
-  children: ReactElement[];
+  children: ReactElement[] | ReactElement;
 }
 
-const KanbanList = ({ processName, openModal, children }: IProps) => {
+const KanbanList = ({ processType, openModal, children }: IProps) => {
   const [, ref] = useDrop({
     accept: 'card', // useDrag의 type과 같아야함
     drop: () => {
-      return { processName };
+      return { processType };
     },
 
     collect: monitor => ({
@@ -25,7 +25,7 @@ const KanbanList = ({ processName, openModal, children }: IProps) => {
 
   return (
     <KanbanListContainer ref={ref}>
-      <ProcessTitle $processName={processName}>{formatProcessToKorean(processName)}</ProcessTitle>
+      <ProcessTitle $processType={processType}>{formatProcessToKorean(processType)}</ProcessTitle>
       <KanbanCardContainer>{children}</KanbanCardContainer>
     </KanbanListContainer>
   );
@@ -39,13 +39,13 @@ const KanbanListContainer = styled.div`
   overflow-x: auto;
 `;
 
-const ProcessTitle = styled.div<{ $processName: string }>`
+const ProcessTitle = styled.div<{ $processType: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
   border-radius: 15px 15px 0 0;
-  background: ${({ $processName }) => `rgb(var(--${$processName}))`};
+  background: ${({ $processType }) => `rgb(var(--${$processType}))`};
   font-size: 20px;
   color: rgb(var(--grayText));
 `;

@@ -1,4 +1,4 @@
-export type processType = undefined | 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+export type processType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 export interface IkabanData {
   processType: processType;

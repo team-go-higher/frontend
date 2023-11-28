@@ -10,16 +10,6 @@ export const kanbanSlice = createSlice({
     setApplications: (state, { payload }) => {
       return payload;
     },
-    // addSimpleApplication: (
-    //   state,
-    //   {
-    //     payload,
-    //   }: PayloadAction<{ processName: string; newApplicationData: IRegisterNewApplication }>,
-    // ) => {
-    //   const filterdData = state.filter(data => data.processType === payload.processName)[0];
-
-    //   // filterdData.applications.push(payload.newApplicationData);
-    // },
     updateProcess: (
       state,
       {

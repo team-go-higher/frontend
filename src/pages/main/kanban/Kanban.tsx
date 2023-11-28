@@ -13,44 +13,61 @@ import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
+import { IkabanData } from 'types/interfaces/KanbanProcess';
 
 const Kanban = () => {
   const dispatch = useAppDispatch();
-  const kanbanList = useAppSelector(state => state.kanban);
+  const kanbanList: IkabanData[] = useAppSelector(state => state.kanban);
   const containerRef = useRef<HTMLDivElement>(null);
   const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode, applicationInfo } =
     useModal();
-  const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
 
   const [fetchedProcessData, setFethedProcessData] = useState();
+  const processTypeList = ['TO_APPLY', 'DOCUMENT', 'TEST', 'INTERVIEW', 'COMPLETE'];
 
-  function kanbanListHandler(processName: string): ReactElement[] {
-    const filterdData = kanbanList?.filter(data => data.processType === processName)[0];
-    let cards: ReactElement[] = [];
+  const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
 
-    if (filterdData?.applications.length > 0) {
-      cards = filterdData?.applications.map((item, i) => (
-        <KanbanCard
-          key={`${i} key`}
-          item={item}
-          currentProcessName={processName}
-          openModal={openModal}
-          setFethedProcessData={setFethedProcessData}
-        />
-      ));
-    }
+  if (!isLoading && isSuccess) {
+    const kanbanList = data.data;
+    dispatch(setApplications(kanbanList));
+  }
 
-    const addButton = (
-      <PlusButton key={processName} onClick={() => openModal({ mode: 'add', processName })}>
-        <Circle>+</Circle>
-      </PlusButton>
-    );
+  function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
+    if (kanbanList) {
+      console.log(kanbanList);
+      console.log(processType);
+      const kanbanListByProcessType = kanbanList.filter(
+        data => data.processType === processType,
+      )[0];
+      console.log(kanbanListByProcessType);
+      let cards: ReactElement[] = [];
 
-    if (filterdData?.applications.length > 0) {
-      return [...cards, addButton];
-    } else {
-      return [addButton];
-    }
+      if (kanbanListByProcessType) {
+        cards = kanbanListByProcessType.applications.map((item, i) => (
+          <KanbanCard
+            key={`${i} key`}
+            item={item}
+            currentProcessName={processType}
+            openModal={openModal}
+            setFethedProcessData={setFethedProcessData}
+          />
+        ));
+      }
+
+      const addButton = (
+        <PlusButton
+          key={processType}
+          onClick={() => openModal({ mode: 'add', processName: processType })}>
+          <Circle>+</Circle>
+        </PlusButton>
+      );
+
+      if (kanbanListByProcessType) {
+        return [...cards, addButton];
+      } else {
+        return [addButton];
+      }
+    } else return <></>;
   }
 
   function scrollButtonHandler(type: 'prev' | 'next') {
@@ -69,47 +86,34 @@ const Kanban = () => {
     }
   }
 
-  if (!isLoading && isSuccess) {
-    const kanbanList = data.data;
-    dispatch(setApplications(kanbanList));
-  }
-
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <ModalComponent
-        mode={mode}
-        modalIsOpen={modalIsOpen}
-        closeModal={closeModal}
-        currentModalProcess={currentModalProcessName}
-        fetchedProcessData={fetchedProcessData}
-        applicationInfo={applicationInfo}
-      />
-      <div>
-        <KanbanHeaderContainer>
-          <ScrollButton src={LeftIcon} onClick={() => scrollButtonHandler('prev')} />
-          <Paragraph>채용보드</Paragraph>
-          <ScrollButton src={RightIcon} onClick={() => scrollButtonHandler('next')} />
-        </KanbanHeaderContainer>
-        <KanbanBoardContainer ref={containerRef}>
-          <KanbanList processName={'TO_APPLY'} openModal={openModal}>
-            {kanbanListHandler('TO_APPLY')}
-          </KanbanList>
-          <KanbanList processName={'DOCUMENT'} openModal={openModal}>
-            {kanbanListHandler('DOCUMENT')}
-          </KanbanList>
-          <KanbanList processName={'TEST'} openModal={openModal}>
-            {kanbanListHandler('TEST')}
-          </KanbanList>
-          <KanbanList processName={'INTERVIEW'} openModal={openModal}>
-            {kanbanListHandler('INTERVIEW')}
-          </KanbanList>
-          <KanbanList processName={'COMPLETE'} openModal={openModal}>
-            {kanbanListHandler('COMPLETE')}
-          </KanbanList>
-        </KanbanBoardContainer>
-      </div>
-    </DndProvider>
-  );
+  if (isLoading) return <div>로딩중...</div>;
+  else
+    return (
+      <DndProvider backend={HTML5Backend}>
+        <ModalComponent
+          mode={mode}
+          modalIsOpen={modalIsOpen}
+          closeModal={closeModal}
+          currentModalProcess={currentModalProcessName}
+          fetchedProcessData={fetchedProcessData}
+          applicationInfo={applicationInfo}
+        />
+        <div>
+          <KanbanHeaderContainer>
+            <ScrollButton src={LeftIcon} onClick={() => scrollButtonHandler('prev')} />
+            <Paragraph>채용보드</Paragraph>
+            <ScrollButton src={RightIcon} onClick={() => scrollButtonHandler('next')} />
+          </KanbanHeaderContainer>
+          <KanbanBoardContainer ref={containerRef}>
+            {processTypeList.map(processType => (
+              <KanbanList key={processType} processType={processType} openModal={openModal}>
+                {kanbanListHandler(processType)}
+              </KanbanList>
+            ))}
+          </KanbanBoardContainer>
+        </div>
+      </DndProvider>
+    );
 };
 
 const KanbanHeaderContainer = styled.div`

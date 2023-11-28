@@ -27,5 +27,7 @@ export const fomatProcessTypeToEnglish = (process: string): processType => {
       return 'INTERVIEW';
     case '완료':
       return 'COMPLETE';
+    default:
+      return 'TO_APPLY';
   }
 };
