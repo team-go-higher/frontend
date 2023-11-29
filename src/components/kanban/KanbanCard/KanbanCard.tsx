@@ -5,14 +5,14 @@ import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.sv
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import * as S from './KanbanCardStyledComponents';
 import { application } from 'types/interfaces/KanbanProcess';
-import { fetchApplicationProcessType } from 'apis/kanban';
+import { fetchApplicationStagesByProcessType } from 'apis/kanban';
 import { modalMode } from 'hooks/useModal';
 import { formatDataType } from 'utils/date';
 
 interface IProps {
   item: application;
   currentProcessType: string;
-  openModal: (parameter: { mode: modalMode; processName?: string; applicationInfo?: any }) => void;
+  openModal: (parameter: { mode: modalMode; processType?: string; applicationInfo?: any }) => void;
   setFethedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -24,7 +24,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFethedProcessData 
   }
 
   function handleEditButton() {
-    openModal({ mode: 'edit', applicationInfo: item });
+    openModal({ mode: 'simpleEdit', applicationInfo: item });
     setMoreMenuShow(false);
   }
 
@@ -40,17 +40,17 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFethedProcessData 
       const dropResult: any = monitor.getDropResult();
 
       if (dropResult) {
-        const { data } = await fetchApplicationProcessType(
+        const response = await fetchApplicationStagesByProcessType(
           draggedItem.applicationId,
-          dropResult.processName,
+          dropResult.processType,
         );
 
-        if (data.success) {
-          setFethedProcessData(data);
+        if (response.success) {
+          setFethedProcessData(response);
           openModal({
-            mode: 'move',
+            mode: 'updateCurrentProcess',
             applicationInfo: { applicationId: draggedItem.applicationId },
-            processName: dropResult.processName,
+            processType: dropResult.processName,
           });
         }
       }

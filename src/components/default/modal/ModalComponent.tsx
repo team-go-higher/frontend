@@ -3,19 +3,23 @@ import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 
-import { processTypeInfo, processTypeListToKorean } from 'constants/process';
-import * as S from './ModalStyledComponents';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
-import { fomatProcessTypeToEnglish, formatProcessToKorean } from 'utils/process';
-import { editSimpleApplication, registerSimpleApplication } from 'apis/kanban';
+import * as S from './ModalStyledComponents';
+import { processTypeInfo, processTypeListToKorean } from 'constants/process';
 import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
+import { fomatProcessTypeToEnglish, formatProcessToKorean } from 'utils/process';
+import {
+  registerSimpleApplication,
+  editSimpleApplication,
+  updateApplicationProcess,
+} from 'apis/kanban';
 import { goHigerApi } from 'apis';
 
 interface IProps {
   mode: string;
   modalIsOpen: boolean;
   closeModal: () => void;
-  currentModalProcess: string;
+  currentProcessType: string;
   fetchedProcessData: any;
   applicationInfo: any;
 }
@@ -30,49 +34,17 @@ const ModalComponent = ({
   mode,
   modalIsOpen,
   closeModal,
-  currentModalProcess,
+  currentProcessType,
   fetchedProcessData,
   applicationInfo,
 }: IProps) => {
   const queryClient = useQueryClient();
-  const [processStageToggle, setProcessStageToggle] = useState(false);
-  const [detailedprocessStageToggle, setdetailedProcessStageToggle] = useState(false);
+  const [dropDownToggle, setDropDownToggle] = useState(false);
+  const [detailDropDownToggle, setDetailDropDownToggle] = useState(false);
   const [userInputToggle, setUserInputToggle] = useState(false);
 
-  const addMutation = useMutation(
-    (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries('fetchKanbanList');
-      },
-    },
-  );
-
-  const editMutation = useMutation(
-    (data: any) => {
-      const { editApplicationData, applicationId } = data;
-      return editSimpleApplication(editApplicationData, applicationId);
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries('fetchKanbanList');
-      },
-    },
-  );
-
-  const moveMutation = useMutation(
-    (data: any) => {
-      const { applicationId, processId } = data;
-      return goHigerApi.patch(`v1/applications/current-process`, { applicationId, processId });
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries('fetchKanbanList');
-        closeModal();
-      },
-    },
-  );
-
+  console.log(currentProcessType.length);
+  console.log(applicationInfo);
   const {
     register,
     handleSubmit,
@@ -84,43 +56,49 @@ const ModalComponent = ({
     formState: { errors, defaultValues },
   } = useForm({
     mode: 'onSubmit',
-    defaultValues: {
-      companyName: applicationInfo?.companyName || '',
-      processStage: currentModalProcess
-        ? (formatProcessToKorean(currentModalProcess) as string)
-        : formatProcessToKorean(applicationInfo?.process?.type as string),
-      detailedProcessStage: applicationInfo?.process?.description || '',
-      position: applicationInfo?.position || '',
-      scheduled: applicationInfo?.process?.schedule || '',
-      recruitUrl: applicationInfo?.recruitUrl || '',
-    },
   });
 
-  // 모달close시 안의 내용 reset
-  useEffect(() => {
-    reset({
-      companyName: applicationInfo?.companyName || '',
-      processStage: currentModalProcess
-        ? (formatProcessToKorean(currentModalProcess) as string)
-        : formatProcessToKorean(applicationInfo?.process?.type as string),
-      detailedProcessStage: applicationInfo?.process?.description || '',
-      position: applicationInfo?.position,
-      scheduled: applicationInfo?.process?.schedule || '',
-      recruitUrl: applicationInfo?.recruitUrl || '',
-    });
+  const registerMutation = useMutation(
+    (newApplicationData: IRegisterNewApplication) => registerSimpleApplication(newApplicationData),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('fetchKanbanList');
+      },
+    },
+  );
 
-    setProcessStageToggle(false);
-    setdetailedProcessStageToggle(false);
-    setUserInputToggle(false);
-  }, [modalIsOpen]);
+  const editMutation = useMutation(
+    (editData: any) => {
+      const { editApplicationData, applicationId } = editData;
+      return editSimpleApplication(editApplicationData, applicationId);
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('fetchKanbanList');
+      },
+    },
+  );
+
+  const updateProcessMutation = useMutation(
+    (updateData: any) => {
+      const { applicationId, processId } = updateData;
+      return updateApplicationProcess(applicationId, processId);
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('fetchKanbanList');
+        closeModal();
+      },
+    },
+  );
 
   // 전형 or 세부단계 드롭박스 토글 함수
   function ToggleHandler(dropDownId: string) {
     if (dropDownId === 'processStage') {
-      setProcessStageToggle(!processStageToggle);
-      setdetailedProcessStageToggle(false);
+      setDropDownToggle(!dropDownToggle);
+      setDetailDropDownToggle(false);
     } else {
-      setdetailedProcessStageToggle(!detailedprocessStageToggle);
+      setDetailDropDownToggle(!detailDropDownToggle);
     }
   }
 
@@ -129,10 +107,10 @@ const ModalComponent = ({
     if (dropDownId === 'processStage') {
       setValue('processStage', process);
       setValue('detailedProcessStage', defaultValues?.detailedProcessStage as string);
-      setProcessStageToggle(!processStageToggle);
+      setDropDownToggle(!dropDownToggle);
     } else {
       setValue('detailedProcessStage', process);
-      setdetailedProcessStageToggle(!detailedprocessStageToggle);
+      setDetailDropDownToggle(!detailDropDownToggle);
     }
   }
 
@@ -153,7 +131,7 @@ const ModalComponent = ({
         },
       };
 
-      addMutation.mutate(newApplicationData);
+      registerMutation.mutate(newApplicationData);
     } else if (mode === 'edit') {
       const editApplicationData = {
         companyName: getValues('companyName'),
@@ -186,7 +164,7 @@ const ModalComponent = ({
     );
 
     if (data.success) {
-      moveMutation.mutate({
+      updateProcessMutation.mutate({
         applicationId: applicationInfo.applicationId,
         processId: data.data.id,
       });
@@ -217,6 +195,24 @@ const ModalComponent = ({
       clearErrors('detailedProcessStage');
     }
   }
+  // 모달close시 안의 내용 reset
+  useEffect(() => {
+    reset({
+      companyName: applicationInfo?.companyName || '',
+      processStage:
+        currentProcessType.length > 1
+          ? processTypeInfo[currentProcessType].korean
+          : processTypeInfo[applicationInfo?.process?.type].korean,
+      detailedProcessStage: applicationInfo?.process?.description || '',
+      position: applicationInfo?.position,
+      scheduled: applicationInfo?.process?.schedule || '',
+      recruitUrl: applicationInfo?.recruitUrl || '',
+    });
+
+    setDropDownToggle(false);
+    setDetailDropDownToggle(false);
+    setUserInputToggle(false);
+  }, [modalIsOpen]);
 
   useEffect(() => {
     validationDetailedProcess();
@@ -229,7 +225,7 @@ const ModalComponent = ({
         onRequestClose={closeModal}
         contentLabel='간편수정'
         style={S.editModalStyles}
-        id={currentModalProcess}
+        id={currentProcessType}
         appElement={document.getElementById('root') as HTMLBodyElement}>
         <S.ModalForm onSubmit={handleSubmit(addNewProcess)}>
           {fetchedProcessData.data.length === 0 ? (
@@ -242,7 +238,7 @@ const ModalComponent = ({
             <S.ModalDropdownBox
               type='button'
               onChange={validationProcess}
-              $showItem={processStageToggle}
+              $showItem={dropDownToggle}
               $error={errors.processStage ? true : false}
               onClick={() => {
                 ToggleHandler('processStage');
@@ -253,7 +249,7 @@ const ModalComponent = ({
                 {getValues('processStage')}
               </S.PlaceHolder>
               <S.ArrowIcon src={SelectArrowIcon} />
-              {processStageToggle && (
+              {dropDownToggle && (
                 <S.ModalDropdownItemBox>
                   {processTypeListToKorean.map((process: string) => (
                     <S.DropdownItem
@@ -287,7 +283,7 @@ const ModalComponent = ({
                   getValues('processStage') === '지원예정' ||
                   getValues('processStage') === '서류전형'
                 }
-                $showItem={detailedprocessStageToggle}
+                $showItem={detailDropDownToggle}
                 $error={errors.detailedProcessStage ? true : false}
                 onClick={() => {
                   ToggleHandler('detailedProcessStage');
@@ -302,7 +298,7 @@ const ModalComponent = ({
                 {getValues('processStage') !== '지원예정' &&
                   getValues('processStage') !== '서류전형' && <S.ArrowIcon src={SelectArrowIcon} />}
 
-                {detailedprocessStageToggle && (
+                {detailDropDownToggle && (
                   <S.ModalDropdownItemBox>
                     {fetchedProcessData.data.map((process: any) => (
                       <S.DropdownItem
@@ -341,7 +337,7 @@ const ModalComponent = ({
         onRequestClose={closeModal}
         contentLabel='간편등록'
         style={S.normalModalStyles}
-        id={currentModalProcess}
+        id={currentProcessType}
         appElement={document.getElementById('root') as HTMLBodyElement}>
         <S.ModalForm onSubmit={handleSubmit(simpleResisterHandler)}>
           <S.ModalTitle>{mode === 'add' ? '간편등록' : '간편수정'}</S.ModalTitle>
@@ -365,7 +361,7 @@ const ModalComponent = ({
               type='button'
               disabled={mode === 'edit' ? true : false}
               onChange={validationProcess}
-              $showItem={processStageToggle}
+              $showItem={dropDownToggle}
               $error={errors.processStage ? true : false}
               onClick={() => {
                 ToggleHandler('processStage');
@@ -376,7 +372,7 @@ const ModalComponent = ({
                 {getValues('processStage')}
               </S.PlaceHolder>
               {mode === 'edit' ? null : <S.ArrowIcon src={SelectArrowIcon} />}
-              {processStageToggle && (
+              {dropDownToggle && (
                 <S.ModalDropdownItemBox>
                   {processTypeListToKorean.map((process: string) => (
                     <S.DropdownItem
@@ -412,7 +408,7 @@ const ModalComponent = ({
                     : getValues('processStage') === '지원예정' ||
                       getValues('processStage') === '서류전형'
                 }
-                $showItem={detailedprocessStageToggle}
+                $showItem={detailDropDownToggle}
                 $error={errors.detailedProcessStage ? true : false}
                 onClick={() => {
                   ToggleHandler('detailedProcessStage');
@@ -432,7 +428,7 @@ const ModalComponent = ({
                       <S.ArrowIcon src={SelectArrowIcon} />
                     )}
 
-                {detailedprocessStageToggle && (
+                {detailDropDownToggle && (
                   <S.ModalDropdownItemBox>
                     {processTypeInfo[getValues('processStage') as string].detailed?.map(
                       (process: string) => (

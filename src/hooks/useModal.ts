@@ -1,24 +1,25 @@
 import { useState } from 'react';
 
-export type modalMode = 'add' | 'edit' | 'move';
+export type modalMode = 'simpleRegister' | 'simpleEdit' | 'updateCurrentProcess';
 
 export function useModal() {
-  const [mode, setMode] = useState<modalMode>('add');
-  const [applicationInfo, setApplicationInfo] = useState<any>();
+  const [mode, setMode] = useState<modalMode>('simpleRegister');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [currentModalProcessName, setCurrentModalProcess] = useState('');
+  const [applicationInfo, setApplicationInfo] = useState<any>();
+  const [currentProcessType, setCurrentProcessType] = useState('');
 
   const openModal = (parameter: {
     mode: modalMode;
-    processName?: string;
+    processType?: string;
     applicationInfo?: any;
   }) => {
-    const { mode, processName, applicationInfo } = parameter;
+    const { mode, processType, applicationInfo } = parameter;
+
     setMode(mode);
     setModalIsOpen(true);
 
-    if (processName) {
-      setCurrentModalProcess(processName);
+    if (processType) {
+      setCurrentProcessType(processType);
     }
 
     if (applicationInfo) {
@@ -27,11 +28,11 @@ export function useModal() {
   };
 
   const closeModal = () => {
-    setCurrentModalProcess('');
+    setCurrentProcessType('');
     setModalIsOpen(false);
     setApplicationInfo({});
   };
 
   // 모달 열기/닫기 상태와 함수를 반환
-  return { modalIsOpen, openModal, closeModal, mode, applicationInfo, currentModalProcessName };
+  return { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType };
 }

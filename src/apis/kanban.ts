@@ -22,7 +22,7 @@ export const editSimpleApplication = async (
   return data;
 };
 
-export const fetchApplicationProcessType = async (applicationId: any, processType: any) => {
+export const fetchApplicationStagesByProcessType = async (applicationId: any, processType: any) => {
   const data: any = await goHigerApi.get(
     `/v1/applications/${applicationId}/processes?processType=${processType}`,
   );

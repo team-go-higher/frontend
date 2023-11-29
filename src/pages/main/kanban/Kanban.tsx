@@ -20,7 +20,7 @@ const Kanban = () => {
   const dispatch = useAppDispatch();
   const kanbanList: IkabanData[] = useAppSelector(state => state.kanban);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode, applicationInfo } =
+  const { modalIsOpen, openModal, closeModal, currentProcessType, mode, applicationInfo } =
     useModal();
 
   const [fetchedProcessData, setFetchedProcessData] = useState();
@@ -34,7 +34,7 @@ const Kanban = () => {
 
   function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
     if (kanbanList) {
-      const kanbanListByProcessType = kanbanList.filter(
+      const applicationListByProcessType = kanbanList.filter(
         data => data.processType === processType,
       )[0];
       let cards: ReactElement[] = [];
@@ -42,13 +42,13 @@ const Kanban = () => {
       const addButton = (
         <S.PlusButton
           key={processType}
-          onClick={() => openModal({ mode: 'add', processName: processType })}>
+          onClick={() => openModal({ mode: 'simpleRegister', processType })}>
           <S.Circle>+</S.Circle>
         </S.PlusButton>
       );
 
-      if (kanbanListByProcessType) {
-        cards = kanbanListByProcessType.applications.map((item, i) => (
+      if (applicationListByProcessType) {
+        cards = applicationListByProcessType.applications.map((item, i) => (
           <KanbanCard
             key={`${i} key`}
             item={item}
@@ -89,7 +89,7 @@ const Kanban = () => {
           mode={mode}
           modalIsOpen={modalIsOpen}
           closeModal={closeModal}
-          currentModalProcess={currentModalProcessName}
+          currentProcessType={currentProcessType}
           fetchedProcessData={fetchedProcessData}
           applicationInfo={applicationInfo}
         />
