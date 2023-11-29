@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 
-import { processStage, processStageKeys } from 'data/RecruitProcess';
+import { processTypeInfo, processTypeListToKorean } from 'constants/process';
 import * as S from './ModalStyledComponents';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 import { fomatProcessTypeToEnglish, formatProcessToKorean } from 'utils/process';
@@ -255,7 +255,7 @@ const ModalComponent = ({
               <S.ArrowIcon src={SelectArrowIcon} />
               {processStageToggle && (
                 <S.ModalDropdownItemBox>
-                  {processStageKeys.map((process: string) => (
+                  {processTypeListToKorean.map((process: string) => (
                     <S.DropdownItem
                       key={process}
                       onClick={() => {
@@ -378,7 +378,7 @@ const ModalComponent = ({
               {mode === 'edit' ? null : <S.ArrowIcon src={SelectArrowIcon} />}
               {processStageToggle && (
                 <S.ModalDropdownItemBox>
-                  {processStageKeys.map((process: string) => (
+                  {processTypeListToKorean.map((process: string) => (
                     <S.DropdownItem
                       key={process}
                       onClick={() => {
@@ -434,7 +434,7 @@ const ModalComponent = ({
 
                 {detailedprocessStageToggle && (
                   <S.ModalDropdownItemBox>
-                    {processStage[getValues('processStage') as string].detailed?.map(
+                    {processTypeInfo[getValues('processStage') as string].detailed?.map(
                       (process: string) => (
                         <S.DropdownItem
                           key={process}
