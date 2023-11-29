@@ -1,5 +1,4 @@
 import { ReactElement, useRef, useState } from 'react';
-import styled from 'styled-components';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from 'react-query';
@@ -9,11 +8,13 @@ import RightIcon from 'assets/main/main_right_arrow.svg';
 import KanbanList from 'components/kanban/KanbanList';
 import KanbanCard from 'components/kanban/KanbanCard';
 import ModalComponent from 'components/default/modal/ModalComponent';
+import * as S from './KanbanStyledComponents';
 import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 import { IkabanData } from 'types/interfaces/KanbanProcess';
+import { processTypeList } from 'constants/process';
 
 const Kanban = () => {
   const dispatch = useAppDispatch();
@@ -22,8 +23,7 @@ const Kanban = () => {
   const { modalIsOpen, openModal, closeModal, currentModalProcessName, mode, applicationInfo } =
     useModal();
 
-  const [fetchedProcessData, setFethedProcessData] = useState();
-  const processTypeList = ['TO_APPLY', 'DOCUMENT', 'TEST', 'INTERVIEW', 'COMPLETE'];
+  const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
 
@@ -34,13 +34,18 @@ const Kanban = () => {
 
   function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
     if (kanbanList) {
-      console.log(kanbanList);
-      console.log(processType);
       const kanbanListByProcessType = kanbanList.filter(
         data => data.processType === processType,
       )[0];
-      console.log(kanbanListByProcessType);
       let cards: ReactElement[] = [];
+
+      const addButton = (
+        <S.PlusButton
+          key={processType}
+          onClick={() => openModal({ mode: 'add', processName: processType })}>
+          <S.Circle>+</S.Circle>
+        </S.PlusButton>
+      );
 
       if (kanbanListByProcessType) {
         cards = kanbanListByProcessType.applications.map((item, i) => (
@@ -49,20 +54,10 @@ const Kanban = () => {
             item={item}
             currentProcessName={processType}
             openModal={openModal}
-            setFethedProcessData={setFethedProcessData}
+            setFethedProcessData={setFetchedProcessData}
           />
         ));
-      }
 
-      const addButton = (
-        <PlusButton
-          key={processType}
-          onClick={() => openModal({ mode: 'add', processName: processType })}>
-          <Circle>+</Circle>
-        </PlusButton>
-      );
-
-      if (kanbanListByProcessType) {
         return [...cards, addButton];
       } else {
         return [addButton];
@@ -70,7 +65,7 @@ const Kanban = () => {
     } else return <></>;
   }
 
-  function scrollButtonHandler(type: 'prev' | 'next') {
+  function handleArrowButton(type: 'prev' | 'next') {
     if (!containerRef.current) return;
 
     if (type === 'prev') {
@@ -99,72 +94,21 @@ const Kanban = () => {
           applicationInfo={applicationInfo}
         />
         <div>
-          <KanbanHeaderContainer>
-            <ScrollButton src={LeftIcon} onClick={() => scrollButtonHandler('prev')} />
-            <Paragraph>채용보드</Paragraph>
-            <ScrollButton src={RightIcon} onClick={() => scrollButtonHandler('next')} />
-          </KanbanHeaderContainer>
-          <KanbanBoardContainer ref={containerRef}>
+          <S.KanbanHeaderContainer>
+            <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
+            <S.Paragraph>채용보드</S.Paragraph>
+            <S.ArrowButton src={RightIcon} onClick={() => handleArrowButton('next')} />
+          </S.KanbanHeaderContainer>
+          <S.KanbanBoardContainer ref={containerRef}>
             {processTypeList.map(processType => (
-              <KanbanList key={processType} processType={processType} openModal={openModal}>
+              <KanbanList key={processType} processType={processType}>
                 {kanbanListHandler(processType)}
               </KanbanList>
             ))}
-          </KanbanBoardContainer>
+          </S.KanbanBoardContainer>
         </div>
       </DndProvider>
     );
 };
-
-const KanbanHeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px auto;
-  width: 213px;
-  height: 50px;
-`;
-
-const Paragraph = styled.p`
-  font-size: 22px;
-  font-weight: 700;
-`;
-
-const ScrollButton = styled.img`
-  cursor: pointer;
-`;
-
-const KanbanBoardContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex: 1;
-  gap: 20px;
-  margin: 0 auto;
-  width: 1000px;
-  overflow-x: auto;
-`;
-
-const PlusButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 8.75rem;
-  border: 1px solid rgb(var(--border));
-  border-radius: 19px;
-  cursor: pointer;
-`;
-
-const Circle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: 1px solid rgb(var(--border));
-  color: rgb(var(--border));
-  background-color: rgb(var(--white));
-`;
 
 export default Kanban;
