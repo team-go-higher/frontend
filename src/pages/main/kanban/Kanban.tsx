@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 
 import LeftIcon from 'assets/main/main_left_arrow.svg';
 import RightIcon from 'assets/main/main_right_arrow.svg';
-import KanbanList from 'components/kanban/KanbanList';
+import KanbanList from 'components/kanban/KanbanList/KanbanList';
 import KanbanCard from 'components/kanban/KanbanCard';
 import ModalComponent from 'components/default/modal/ModalComponent';
 import * as S from './KanbanStyledComponents';
