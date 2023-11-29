@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import LeftIcon from 'assets/main/main_left_arrow.svg';
 import RightIcon from 'assets/main/main_right_arrow.svg';
 import KanbanList from 'components/kanban/KanbanList/KanbanList';
-import KanbanCard from 'components/kanban/KanbanCard';
+import KanbanCard from 'components/kanban/KanbanCard/KanbanCard';
 import ModalComponent from 'components/default/modal/ModalComponent';
 import * as S from './KanbanStyledComponents';
 import { useAppDispatch, useAppSelector } from 'redux/store';
@@ -52,7 +52,7 @@ const Kanban = () => {
           <KanbanCard
             key={`${i} key`}
             item={item}
-            currentProcessName={processType}
+            currentProcessType={processType}
             openModal={openModal}
             setFethedProcessData={setFetchedProcessData}
           />
