@@ -40,7 +40,9 @@ export const RenderDays = () => {
   return (
     <RenderDaysContainer>
       {date.map((day, i) => (
-        <div className={`daysRow ${i === 6 ? 'sat' : i === 0 ? 'sun' : ''}`}>{day}</div>
+        <div key={day} className={`daysRow ${i === 6 ? 'sat' : i === 0 ? 'sun' : ''}`}>
+          {day}
+        </div>
       ))}
     </RenderDaysContainer>
   );
@@ -81,9 +83,9 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
       days.push(
         <Cell
           day={day}
-          monthStart={monthStart}
-          selectedDate={selectedDate}
-          currentMonth={currentMonth}
+          $monthStart={monthStart}
+          $selectedDate={selectedDate}
+          $currentMonth={currentMonth}
           key={day.toDateString()}
           onClick={() => onDateClick(cloneDay)}>
           <div className='date'>{formattedDate.padStart(2, '0')}</div>
