@@ -1,4 +1,3 @@
-import Login from 'pages/login/Login';
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import routes from 'routes';
@@ -13,7 +12,6 @@ const AppContent = () => {
           (route, idx) =>
             route.element && <Route key={idx} path={route.path} element={<route.element />} />,
         )}
-        <Route path='/token' element={<Login />} />
       </Routes>
     </Suspense>
   );

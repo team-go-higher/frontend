@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import Calendar from './calendar/Calendar';
 import Kanban from './kanban/Kanban';
 import calendarToggle from 'assets/main/main_calendar_toggle.svg';
 import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
-import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const navigate = useNavigate();
