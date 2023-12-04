@@ -1,4 +1,4 @@
-import { ReactElement, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from 'react-query';
@@ -20,17 +20,11 @@ const Kanban = () => {
   const dispatch = useAppDispatch();
   const kanbanList: IkabanData[] = useAppSelector(state => state.kanban);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { modalIsOpen, openModal, closeModal, currentProcessType, mode, applicationInfo } =
-    useModal();
+  const { modalIsOpen, openModal, closeModal, mode, applicationInfo } = useModal();
 
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
-
-  if (!isLoading && isSuccess) {
-    const kanbanList = data.data;
-    dispatch(setApplications(kanbanList));
-  }
 
   function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
     if (kanbanList) {
@@ -81,34 +75,39 @@ const Kanban = () => {
     }
   }
 
-  if (isLoading) return <div>로딩중...</div>;
-  else
-    return (
-      <DndProvider backend={HTML5Backend}>
-        <ModalComponent
-          mode={mode}
-          modalIsOpen={modalIsOpen}
-          closeModal={closeModal}
-          currentProcessType={currentProcessType}
-          fetchedProcessData={fetchedProcessData}
-          applicationInfo={applicationInfo}
-        />
-        <div>
-          <S.KanbanHeaderContainer>
-            <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
-            <S.Paragraph>채용보드</S.Paragraph>
-            <S.ArrowButton src={RightIcon} onClick={() => handleArrowButton('next')} />
-          </S.KanbanHeaderContainer>
-          <S.KanbanBoardContainer ref={containerRef}>
-            {processTypeList.map(processType => (
-              <KanbanList key={processType} processType={processType}>
-                {kanbanListHandler(processType)}
-              </KanbanList>
-            ))}
-          </S.KanbanBoardContainer>
-        </div>
-      </DndProvider>
-    );
+  useEffect(() => {
+    if (!isLoading && isSuccess) {
+      const kanbanList = data.data;
+      dispatch(setApplications(kanbanList));
+    }
+  }, [isLoading, isSuccess, data, dispatch]);
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <ModalComponent
+        mode={mode}
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        // currentProcessType={currentProcessType}
+        fetchedProcessData={fetchedProcessData}
+        applicationInfo={applicationInfo}
+      />
+      <div>
+        <S.KanbanHeaderContainer>
+          <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
+          <S.Paragraph>채용보드</S.Paragraph>
+          <S.ArrowButton src={RightIcon} onClick={() => handleArrowButton('next')} />
+        </S.KanbanHeaderContainer>
+        <S.KanbanBoardContainer ref={containerRef}>
+          {processTypeList.map(processType => (
+            <KanbanList key={processType} processType={processType}>
+              {kanbanListHandler(processType)}
+            </KanbanList>
+          ))}
+        </S.KanbanBoardContainer>
+      </div>
+    </DndProvider>
+  );
 };
 
 export default Kanban;
