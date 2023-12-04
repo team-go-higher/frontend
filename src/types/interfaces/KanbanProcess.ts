@@ -1,11 +1,11 @@
 export type processType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
-export interface IkabanData {
+export interface IKabanData {
   processType: processType;
-  applications: application[];
+  applications: IApplication[];
 }
 
-export interface application {
+export interface IApplication {
   applicationId: number;
   companyName: string;
   position: string;

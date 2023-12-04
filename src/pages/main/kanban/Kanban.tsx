@@ -13,14 +13,15 @@ import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
-import { IkabanData } from 'types/interfaces/KanbanProcess';
+import { IKabanData } from 'types/interfaces/KanbanProcess';
 import { processTypeList } from 'constants/process';
 
 const Kanban = () => {
   const dispatch = useAppDispatch();
-  const kanbanList: IkabanData[] = useAppSelector(state => state.kanban);
+  const kanbanList: IKabanData[] = useAppSelector(state => state.kanban);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { modalIsOpen, openModal, closeModal, mode, applicationInfo } = useModal();
+  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
+    useModal();
 
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
@@ -33,6 +34,7 @@ const Kanban = () => {
       )[0];
       let cards: ReactElement[] = [];
 
+      console.log(processType);
       const addButton = (
         <S.PlusButton
           key={processType}
@@ -48,7 +50,7 @@ const Kanban = () => {
             item={item}
             currentProcessType={processType}
             openModal={openModal}
-            setFethedProcessData={setFetchedProcessData}
+            setFetchedProcessData={setFetchedProcessData}
           />
         ));
 
@@ -88,7 +90,7 @@ const Kanban = () => {
         mode={mode}
         modalIsOpen={modalIsOpen}
         closeModal={closeModal}
-        // currentProcessType={currentProcessType}
+        currentProcessType={currentProcessType}
         fetchedProcessData={fetchedProcessData}
         applicationInfo={applicationInfo}
       />

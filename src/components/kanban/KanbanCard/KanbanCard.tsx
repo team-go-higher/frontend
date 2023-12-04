@@ -4,19 +4,19 @@ import { useDrag } from 'react-dnd';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import * as S from './KanbanCardStyledComponents';
-import { application } from 'types/interfaces/KanbanProcess';
+import { IApplication } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
 import { modalMode } from 'hooks/useModal';
 import { formatDataType } from 'utils/date';
 
 interface IProps {
-  item: application;
+  item: IApplication;
   currentProcessType: string;
   openModal: (parameter: { mode: modalMode; processType?: string; applicationInfo?: any }) => void;
-  setFethedProcessData: React.Dispatch<React.SetStateAction<any>>;
+  setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const KanbanCard = ({ item, currentProcessType, openModal, setFethedProcessData }: IProps) => {
+const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData }: IProps) => {
   const [moreMenuShow, setMoreMenuShow] = useState(false);
 
   function handleMoreMenu() {
@@ -46,7 +46,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFethedProcessData 
         );
 
         if (response.success) {
-          setFethedProcessData(response);
+          setFetchedProcessData(response.data);
           openModal({
             mode: 'updateCurrentProcess',
             applicationInfo: { applicationId: draggedItem.applicationId },
@@ -62,7 +62,6 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFethedProcessData 
       ref={ref}
       $isdragging={isDragging}
       $currentProcessType={currentProcessType}>
-      {/* 드래그 가능한 요소의 내용 */}
       <S.DetailProcess $currentProcessType={currentProcessType}>
         {item.process.description}
       </S.DetailProcess>

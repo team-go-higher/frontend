@@ -5,7 +5,18 @@ export type modalMode = 'simpleRegister' | 'simpleEdit' | 'updateCurrentProcess'
 export function useModal() {
   const [mode, setMode] = useState<modalMode>('simpleRegister');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [applicationInfo, setApplicationInfo] = useState<any>();
+  const [applicationInfo, setApplicationInfo] = useState<any>({
+    applicationId: 0,
+    companyName: '',
+    position: '',
+    process: {
+      id: 0,
+      type: '',
+      description: '',
+      schedule: '',
+    },
+    specificPosition: null,
+  });
   const [currentProcessType, setCurrentProcessType] = useState('');
 
   const openModal = (parameter: {
@@ -17,11 +28,12 @@ export function useModal() {
 
     setMode(mode);
     setModalIsOpen(true);
-
+    console.log('processType', processType);
     if (processType) {
       setCurrentProcessType(processType);
     }
 
+    console.log(applicationInfo);
     if (applicationInfo) {
       setApplicationInfo(applicationInfo);
     }
