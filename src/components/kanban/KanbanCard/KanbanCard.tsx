@@ -46,11 +46,17 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
         );
 
         if (response.success) {
+          const applicationInfo = {
+            ...draggedItem,
+            processDescription: response.data,
+          };
+
           setFetchedProcessData(response.data);
+
           openModal({
             mode: 'updateCurrentProcess',
-            applicationInfo: { applicationId: draggedItem.applicationId },
-            processType: dropResult.processName,
+            applicationInfo,
+            processType: dropResult.processType,
           });
         }
       }

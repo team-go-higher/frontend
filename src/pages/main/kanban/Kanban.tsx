@@ -16,13 +16,25 @@ import { setApplications } from 'redux/kanbanSlice';
 import { IKabanData } from 'types/interfaces/KanbanProcess';
 import { processTypeList } from 'constants/process';
 
+const initialApplicationInfo = {
+  applicationId: 0,
+  companyName: '',
+  position: '',
+  process: {
+    id: 0,
+    type: '',
+    description: '',
+    schedule: '',
+  },
+  specificPosition: null,
+};
+
 const Kanban = () => {
   const dispatch = useAppDispatch();
   const kanbanList: IKabanData[] = useAppSelector(state => state.kanban);
   const containerRef = useRef<HTMLDivElement>(null);
   const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
     useModal();
-
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
@@ -34,11 +46,16 @@ const Kanban = () => {
       )[0];
       let cards: ReactElement[] = [];
 
-      console.log(processType);
       const addButton = (
         <S.PlusButton
           key={processType}
-          onClick={() => openModal({ mode: 'simpleRegister', processType })}>
+          onClick={() =>
+            openModal({
+              mode: 'simpleRegister',
+              processType,
+              applicationInfo: initialApplicationInfo,
+            })
+          }>
           <S.Circle>+</S.Circle>
         </S.PlusButton>
       );
