@@ -22,6 +22,7 @@ export const editSimpleApplication = async (
   return data;
 };
 
+// 지원서의 전형 타입에 따른 전형들 조회
 export const fetchApplicationStagesByProcessType = async (applicationId: any, processType: any) => {
   const data: any = await goHigerApi.get(
     `/v1/applications/${applicationId}/processes?processType=${processType}`,
@@ -29,10 +30,20 @@ export const fetchApplicationStagesByProcessType = async (applicationId: any, pr
   return data;
 };
 
+// 현재 진행 전형 변경
 export const updateApplicationProcess = async (applicationId: any, processId: any) => {
   const data: any = await goHigerApi.patch(`/v1/applications/current-process`, {
     applicationId,
     processId,
   });
+  return data;
+};
+
+// 전형 이동을 위한 새로운 전형 생성
+export const createNewProcess = async (applicationId: number, newProcessData: any) => {
+  const data: any = await goHigerApi.post(
+    `/v1/applications/${applicationId}/processes`,
+    newProcessData,
+  );
   return data;
 };
