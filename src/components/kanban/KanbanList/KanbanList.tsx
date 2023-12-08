@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { useDrop } from 'react-dnd';
 
 import * as S from './KanbanListStyledComponents';
-import { formatProcessToKorean } from 'utils/process';
+import { formatProcessToKor } from 'utils/process';
 
 interface IProps {
   processType: string;
@@ -24,9 +24,7 @@ const KanbanList = ({ processType, children }: IProps) => {
 
   return (
     <S.KanbanListContainer ref={ref}>
-      <S.ProcessTitle $processType={processType}>
-        {formatProcessToKorean(processType)}
-      </S.ProcessTitle>
+      <S.ProcessTitle $processType={processType}>{formatProcessToKor(processType)}</S.ProcessTitle>
       <S.KanbanCardContainer>{children}</S.KanbanCardContainer>
     </S.KanbanListContainer>
   );
