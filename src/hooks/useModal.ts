@@ -28,12 +28,10 @@ export function useModal() {
 
     setMode(mode);
     setModalIsOpen(true);
-    console.log('processType', processType);
     if (processType) {
       setCurrentProcessType(processType);
     }
 
-    console.log(applicationInfo);
     if (applicationInfo) {
       setApplicationInfo(applicationInfo);
     }
