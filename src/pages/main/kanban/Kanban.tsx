@@ -15,6 +15,8 @@ import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 import { IKabanData } from 'types/interfaces/KanbanProcess';
 import { processTypeList } from 'constants/process';
+import ModalViewModel from 'components/default/modal/ModalViewModel';
+import ModalView from 'components/default/modal/ModalView';
 
 const initialApplicationInfo = {
   applicationId: 0,
@@ -38,6 +40,14 @@ const Kanban = () => {
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
+  const modalViewModel = ModalViewModel({
+    mode,
+    modalIsOpen,
+    closeModal,
+    currentProcessType,
+    fetchedProcessData,
+    applicationInfo,
+  });
 
   function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
     if (kanbanList) {
@@ -103,14 +113,15 @@ const Kanban = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <ModalComponent
+      {/* <ModalComponent
         mode={mode}
         modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         currentProcessType={currentProcessType}
         fetchedProcessData={fetchedProcessData}
         applicationInfo={applicationInfo}
-      />
+      /> */}
+      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div>
         <S.KanbanHeaderContainer>
           <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
