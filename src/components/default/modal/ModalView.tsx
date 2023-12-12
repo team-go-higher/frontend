@@ -1,30 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormClearErrors,
+  UseFormSetError,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form';
+
 import * as S from './ModalStyledComponents';
 import { formatProcessToKor } from 'utils/process';
 import { processTypeInfo, processTypeList } from 'constants/process';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
-import { FieldValues, UseFormGetValues } from 'react-hook-form';
+import { modalMode } from 'hooks/useModal';
+import { processType } from 'types/interfaces/KanbanProcess';
 
 interface ModalViewModelProps {
-  register: any; // 적절한 타입으로 변경해주세요.
-  handleSubmit: any; // 적절한 타입으로 변경해주세요.
-  errors: any; // 적절한 타입으로 변경해주세요.
-  dropDownToggle: boolean;
-  detailDropDownToggle: boolean;
-  dropDownToggleHandler: (dropDownId: string) => void;
-  dropDownItemHandler: (dropDownId: string, process: string) => void; // 적절한 타입으로 변경해주세요.
-  userInputToggle: boolean;
-  setUserInputToggle: React.Dispatch<React.SetStateAction<boolean>>;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+  defaultValues: Readonly<{ [x: string]: any }> | undefined;
+  errors: FieldErrors<FieldValues>;
+  setError: UseFormSetError<FieldValues>;
+  clearErrors: UseFormClearErrors<FieldValues>;
+  reset: UseFormReset<FieldValues>;
+  watch: UseFormWatch<FieldValues>;
   handleApplicationSubmission: () => void;
   isDetailedProcessTypeRequired: () => boolean;
-  currentProcessType: any; // 적절한 타입으로 변경해주세요.
+  mode: modalMode;
+  currentProcessType: processType;
   fetchedProcessData: any; // 적절한 타입으로 변경해주세요.
   applicationInfo: any; // 적절한 타입으로 변경해주세요.
-  mode: any; // 적절한 타입으로 변경해주세요.
-  getValues: UseFormGetValues<FieldValues>;
-  defaultValues: any; // 적절한 타입으로 변경해주세요.
-  validationProcess: () => void;
 }
 
 interface IProps {
@@ -37,23 +49,109 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
+    defaultValues,
     errors,
-    dropDownToggle,
-    detailDropDownToggle,
-    dropDownToggleHandler,
-    dropDownItemHandler,
-    userInputToggle,
-    setUserInputToggle,
+    setError,
+    clearErrors,
+    reset,
+    watch,
     handleApplicationSubmission,
     isDetailedProcessTypeRequired,
+    mode,
     currentProcessType,
     fetchedProcessData,
     applicationInfo,
-    mode,
-    getValues,
-    defaultValues,
-    validationProcess,
   } = viewModel;
+
+  const [dropDownToggle, setDropDownToggle] = useState(false);
+  const [detailDropDownToggle, setDetailDropDownToggle] = useState(false);
+  const [userInputToggle, setUserInputToggle] = useState(false);
+
+  const detailedProcessType = watch('detailedProcessType');
+
+  function dropDownToggleHandler(dropDownId: string) {
+    if (dropDownId === 'processType') {
+      setDropDownToggle(!dropDownToggle);
+      setDetailDropDownToggle(false);
+    } else {
+      setDetailDropDownToggle(!detailDropDownToggle);
+    }
+  }
+
+  function dropDownItemHandler(dropDownId: string, process: string) {
+    if (dropDownId === 'processType') {
+      setValue('processType', process);
+      setValue('detailedProcessType', '');
+      setDropDownToggle(!dropDownToggle);
+    } else {
+      setValue('detailedProcessType', process);
+      setDetailDropDownToggle(!detailDropDownToggle);
+    }
+  }
+
+  function getResetValues() {
+    if (!modalIsOpen) {
+      return {
+        companyName: '',
+        processType: '',
+        detailedProcessType: '',
+        position: '',
+        schedule: '',
+        url: '',
+      };
+    }
+
+    const processType = currentProcessType ? currentProcessType : applicationInfo.process.type;
+
+    const detailedProcessType =
+      mode === 'updateCurrentProcess'
+        ? applicationInfo.processDescription.length > 0
+          ? applicationInfo.processDescription[0].description
+          : ''
+        : applicationInfo.process.description;
+
+    return {
+      companyName: applicationInfo.companyName,
+      processType,
+      detailedProcessType,
+      position: applicationInfo.position,
+      schedule: applicationInfo.process.schedule,
+      url: applicationInfo.url,
+    };
+  }
+
+  function validationProcess() {
+    if (isDetailedProcessTypeRequired()) {
+      if (!detailedProcessType) {
+        setError('detailedProcessType', {
+          type: 'required',
+          message: '세부 단계를 선택하세요',
+        });
+      } else {
+        clearErrors('detailedProcessType');
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (userInputToggle) {
+      setValue('detailedProcessType', '');
+    }
+  }, [userInputToggle]);
+
+  useEffect(() => {
+    reset(getResetValues());
+
+    setDropDownToggle(false);
+    setDetailDropDownToggle(false);
+    setUserInputToggle(false);
+  }, [modalIsOpen, mode]);
+
+  useEffect(() => {
+    validationProcess();
+  }, [detailedProcessType]);
 
   if (mode === 'updateCurrentProcess') {
     return (
@@ -253,15 +351,17 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
                 {detailDropDownToggle && (
                   <S.ModalDropdownItemBox>
-                    {processTypeInfo[getValues('processType')].detailed?.map((process: string) => (
-                      <S.DropdownItem
-                        key={process}
-                        onClick={() => {
-                          dropDownItemHandler('detailedProcessType', process);
-                        }}>
-                        {process}
-                      </S.DropdownItem>
-                    ))}
+                    {processTypeInfo[getValues('processType') as processType].detailed?.map(
+                      (process: string) => (
+                        <S.DropdownItem
+                          key={process}
+                          onClick={() => {
+                            dropDownItemHandler('detailedProcessType', process);
+                          }}>
+                          {process}
+                        </S.DropdownItem>
+                      ),
+                    )}
                     <S.DropdownItem onClick={() => setUserInputToggle(true)}>
                       직접 입력
                     </S.DropdownItem>

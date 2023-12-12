@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
-import ModalModel from './ModalModel';
-import { formatProcessToKor } from 'utils/process';
 
+import ModalModel from './ModalModel';
+import { modalMode } from 'hooks/useModal';
+import { formatProcessToKor } from 'utils/process';
+import { processType } from 'types/interfaces/KanbanProcess';
 interface IProps {
-  mode: string;
+  mode: modalMode;
   modalIsOpen: boolean;
   closeModal: () => void;
-  currentProcessType: string;
+  currentProcessType: processType;
   fetchedProcessData: any;
   applicationInfo: any;
 }
@@ -21,12 +22,8 @@ const ModalViewModel = ({
   fetchedProcessData,
   applicationInfo,
 }: IProps) => {
-  const queryClient = useQueryClient();
   const model = new ModalModel();
-
-  const [dropDownToggle, setDropDownToggle] = useState(false);
-  const [detailDropDownToggle, setDetailDropDownToggle] = useState(false);
-  const [userInputToggle, setUserInputToggle] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -41,8 +38,6 @@ const ModalViewModel = ({
   } = useForm({
     mode: 'onSubmit',
   });
-
-  const detailedProcessType = watch('detailedProcessType');
 
   function invalidateKanbanListOnSuccess() {
     queryClient.invalidateQueries('fetchKanbanList');
@@ -72,42 +67,6 @@ const ModalViewModel = ({
       return false;
     } else {
       return true;
-    }
-  }
-
-  // 전형 or 세부단계 드롭박스 토글 함수
-  function dropDownToggleHandler(dropDownId: string) {
-    if (dropDownId === 'processType') {
-      setDropDownToggle(!dropDownToggle);
-      setDetailDropDownToggle(false);
-    } else {
-      setDetailDropDownToggle(!detailDropDownToggle);
-    }
-  }
-
-  // 세부단계 유효성 검사 함수
-  function validationProcess() {
-    if (isDetailedProcessTypeRequired()) {
-      if (!detailedProcessType) {
-        setError('detailedProcessType', {
-          type: 'required',
-          message: '세부 단계를 선택하세요',
-        });
-      } else {
-        clearErrors('detailedProcessType');
-      }
-    }
-  }
-
-  // 전형 or 세부 단계 선택시 실행 함수
-  function dropDownItemHandler(dropDownId: string, process: string) {
-    if (dropDownId === 'processType') {
-      setValue('processType', process);
-      setValue('detailedProcessType', '');
-      setDropDownToggle(!dropDownToggle);
-    } else {
-      setValue('detailedProcessType', process);
-      setDetailDropDownToggle(!detailDropDownToggle);
     }
   }
 
@@ -162,78 +121,23 @@ const ModalViewModel = ({
     closeModal();
   }
 
-  function getResetValues() {
-    if (!modalIsOpen) {
-      return {
-        companyName: '',
-        processType: '',
-        detailedProcessType: '',
-        position: '',
-        schedule: '',
-        url: '',
-      };
-    }
-
-    const processType = currentProcessType ? currentProcessType : applicationInfo.process.type;
-
-    const detailedProcessType =
-      mode === 'updateCurrentProcess'
-        ? applicationInfo.processDescription.length > 0
-          ? applicationInfo.processDescription[0].description
-          : ''
-        : applicationInfo.process.description;
-
-    return {
-      companyName: applicationInfo.companyName,
-      processType,
-      detailedProcessType,
-      position: applicationInfo.position,
-      schedule: applicationInfo.process.schedule,
-      url: applicationInfo.url,
-    };
-  }
-
-  function resetInputValues() {
-    setValue('detailedProcessType', '');
-  }
-
-  useEffect(() => {
-    if (userInputToggle) {
-      resetInputValues();
-    }
-  }, [userInputToggle]);
-
-  useEffect(() => {
-    reset(getResetValues());
-
-    setDropDownToggle(false);
-    setDetailDropDownToggle(false);
-    setUserInputToggle(false);
-  }, [modalIsOpen, mode]);
-
-  useEffect(() => {
-    validationProcess();
-  }, [getValues('detailedProcessType')]);
-
   return {
     register,
     handleSubmit,
+    setValue,
+    getValues,
+    defaultValues,
     errors,
-    dropDownToggle,
-    detailDropDownToggle,
-    dropDownToggleHandler,
-    dropDownItemHandler,
-    userInputToggle,
-    setUserInputToggle,
+    setError,
+    clearErrors,
+    reset,
+    watch,
     handleApplicationSubmission,
     isDetailedProcessTypeRequired,
+    mode,
     currentProcessType,
     fetchedProcessData,
     applicationInfo,
-    mode,
-    getValues,
-    defaultValues,
-    validationProcess,
   };
 };
 

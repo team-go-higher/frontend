@@ -4,14 +4,14 @@ import { useDrag } from 'react-dnd';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import * as S from './KanbanCardStyledComponents';
-import { IApplication } from 'types/interfaces/KanbanProcess';
+import { IApplication, processType } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
 import { modalMode } from 'hooks/useModal';
 import { formatDataType } from 'utils/date';
 
 interface IProps {
   item: IApplication;
-  currentProcessType: string;
+  currentProcessType: processType;
   openModal: (parameter: { mode: modalMode; processType?: string; applicationInfo?: any }) => void;
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }

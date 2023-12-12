@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
-import { IKabanData } from 'types/interfaces/KanbanProcess';
+import { IKabanData, processType } from 'types/interfaces/KanbanProcess';
 import { processTypeList } from 'constants/process';
 import ModalViewModel from 'components/default/modal/ModalViewModel';
 import ModalView from 'components/default/modal/ModalView';
@@ -49,7 +49,7 @@ const Kanban = () => {
     applicationInfo,
   });
 
-  function kanbanListHandler(processType: string): ReactElement[] | ReactElement {
+  function kanbanListHandler(processType: processType): ReactElement[] | ReactElement {
     if (kanbanList) {
       const applicationListByProcessType = kanbanList.filter(
         data => data.processType === processType,
