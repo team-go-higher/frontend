@@ -18,7 +18,7 @@ export function useModal() {
     },
     specificPosition: null,
   });
-  const [currentProcessType, setCurrentProcessType] = useState<processType>();
+  const [currentProcessType, setCurrentProcessType] = useState<processType | string>('');
 
   const openModal = (parameter: {
     mode: modalMode;
