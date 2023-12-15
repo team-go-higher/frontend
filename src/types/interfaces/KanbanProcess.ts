@@ -30,3 +30,10 @@ export interface IRegisterNewApplication {
     schedule?: string;
   };
 }
+
+export interface IRegisterNewApplicationResponse {
+  id: number;
+  companyName: string;
+  currentProcessSchedule: null | string;
+  currentProcessDescription: string;
+}

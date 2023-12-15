@@ -13,7 +13,7 @@ class ModalModel {
 
   editApplication(editData: any) {
     const { editApplicationData, applicationId } = editData;
-    return editSimpleApplication(applicationId, editApplicationData);
+    return editSimpleApplication(editApplicationData, applicationId);
   }
 
   updateProcess(updateData: any) {
