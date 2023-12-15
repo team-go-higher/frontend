@@ -8,13 +8,17 @@ interface IUserInfo {
   role: string;
 }
 
+export default {
+  kanban,
+};
+
 export const goHigerApi = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   withCredentials: true,
 });
 
 goHigerApi.interceptors.request.use(
-  async (config: any) => {
+  async config => {
     try {
       const userInfoString: string = localStorage.getItem('userInfo') as string;
       const userInfoJson: IUserInfo = JSON.parse(userInfoString);
@@ -32,13 +36,10 @@ goHigerApi.interceptors.request.use(
 );
 
 goHigerApi.interceptors.response.use(
-  async (response: any) => {
+  async response => {
     return response.data;
   },
   error => {
     return Promise.reject(error);
   },
 );
-export default {
-  kanban,
-};

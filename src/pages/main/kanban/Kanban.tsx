@@ -3,20 +3,17 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from 'react-query';
 
-import LeftIcon from 'assets/main/main_left_arrow.svg';
-import RightIcon from 'assets/main/main_right_arrow.svg';
-import KanbanList from 'components/kanban/KanbanList/KanbanList';
-import KanbanCard from 'components/kanban/KanbanCard/KanbanCard';
-import ModalComponent from 'components/default/modal/ModalComponent';
-import * as S from './KanbanStyledComponents';
 import { useAppDispatch, useAppSelector } from 'redux/store';
 import { useModal } from 'hooks/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 import { IKabanData, processType } from 'types/interfaces/KanbanProcess';
 import { processTypeList } from 'constants/process';
-import ModalViewModel from 'components/default/modal/ModalViewModel';
-import ModalView from 'components/default/modal/ModalView';
+import LeftIcon from 'assets/main/main_left_arrow.svg';
+import RightIcon from 'assets/main/main_right_arrow.svg';
+import * as S from './KanbanStyledComponents';
+import { KanbanList, KanbanCard } from 'components/kanban';
+import { ModalViewModel, ModalView } from 'components/default';
 
 const initialApplicationInfo = {
   applicationId: 0,
