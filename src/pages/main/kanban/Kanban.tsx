@@ -110,14 +110,6 @@ const Kanban = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      {/* <ModalComponent
-        mode={mode}
-        modalIsOpen={modalIsOpen}
-        closeModal={closeModal}
-        currentProcessType={currentProcessType}
-        fetchedProcessData={fetchedProcessData}
-        applicationInfo={applicationInfo}
-      /> */}
       <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div>
         <S.KanbanHeaderContainer>

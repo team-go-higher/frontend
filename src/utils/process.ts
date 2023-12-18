@@ -12,6 +12,8 @@ export const formatProcessToKor = (process: string) => {
       return '면접전형';
     case 'COMPLETE':
       return '완료';
+    default:
+      return '';
   }
 };
 
