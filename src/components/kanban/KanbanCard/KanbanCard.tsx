@@ -6,13 +6,17 @@ import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_mor
 import * as S from './KanbanCardStyledComponents';
 import { IApplication, processType } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
-import { modalMode } from 'hooks/useModal';
+import { modalModeType } from 'hooks/useModal';
 import { formatDataType } from 'utils/date';
 
 interface IProps {
   item: IApplication;
   currentProcessType: processType;
-  openModal: (parameter: { mode: modalMode; processType?: string; applicationInfo?: any }) => void;
+  openModal: (parameter: {
+    mode: modalModeType;
+    processType?: string;
+    applicationInfo?: any;
+  }) => void;
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
