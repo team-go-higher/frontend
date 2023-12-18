@@ -2,11 +2,11 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 
 import ModalModel from './ModalModel';
-import { modalMode } from 'hooks/useModal';
+import { modalModeType } from 'hooks/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 interface IProps {
-  mode: modalMode;
+  mode: modalModeType;
   modalIsOpen: boolean;
   closeModal: () => void;
   currentProcessType: processType;

@@ -17,7 +17,7 @@ import * as S from './ModalStyledComponents';
 import { formatProcessToKor } from 'utils/process';
 import { processTypeInfo, processTypeList } from 'constants/process';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
-import { modalMode } from 'hooks/useModal';
+import { modalModeType } from 'hooks/useModal';
 import { processType } from 'types/interfaces/KanbanProcess';
 
 interface ModalViewModelProps {
@@ -33,7 +33,7 @@ interface ModalViewModelProps {
   watch: UseFormWatch<FieldValues>;
   handleApplicationSubmission: () => void;
   isDetailedProcessTypeRequired: () => boolean;
-  mode: modalMode;
+  mode: modalModeType;
   currentProcessType: processType;
   fetchedProcessData: any; // 적절한 타입으로 변경해주세요.
   applicationInfo: any; // 적절한 타입으로 변경해주세요.

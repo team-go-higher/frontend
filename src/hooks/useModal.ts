@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { processType } from 'types/interfaces/KanbanProcess';
 
-export type modalMode = 'simpleRegister' | 'simpleEdit' | 'updateCurrentProcess';
+export type modalModeType = 'simpleRegister' | 'simpleEdit' | 'updateCurrentProcess';
 
 export function useModal() {
-  const [mode, setMode] = useState<modalMode>('simpleRegister');
+  const [mode, setMode] = useState<modalModeType>('simpleRegister');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [applicationInfo, setApplicationInfo] = useState<any>({
     applicationId: 0,
@@ -21,7 +21,7 @@ export function useModal() {
   const [currentProcessType, setCurrentProcessType] = useState<processType | string>('');
 
   const openModal = (parameter: {
-    mode: modalMode;
+    mode: modalModeType;
     processType?: string;
     applicationInfo?: any;
   }) => {
