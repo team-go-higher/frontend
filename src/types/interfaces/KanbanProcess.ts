@@ -31,9 +31,18 @@ export interface IRegisterNewApplication {
   };
 }
 
-export interface IRegisterNewApplicationResponse {
+export interface IRegisterNewApplicationRes {
   id: number;
   companyName: string;
   currentProcessSchedule: null | string;
   currentProcessDescription: string;
+}
+
+export interface INewProcessRes {
+  description: string;
+  type: string;
+}
+export interface IApplicationStagesRes {
+  id: number;
+  description: string;
 }
