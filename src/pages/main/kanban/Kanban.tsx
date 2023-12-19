@@ -23,7 +23,6 @@ const Kanban = () => {
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
   const modalViewModel = ModalViewModel({
     mode,
-    modalIsOpen,
     closeModal,
     currentProcessType,
     fetchedProcessData,

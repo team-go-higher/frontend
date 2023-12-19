@@ -1,22 +1,30 @@
-import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 
 import ModalModel from './ModalModel';
 import { modalModeType } from 'hooks/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
+import { FieldValues } from 'react-hook-form';
 interface IProps {
   mode: modalModeType;
-  modalIsOpen: boolean;
   closeModal: () => void;
   currentProcessType: processType;
   fetchedProcessData: any;
   applicationInfo: any;
 }
+export interface IFormValues {
+  companyName: string;
+  position: string;
+  url: string;
+  processType: processType;
+  detailedProcessType: string;
+  schedule: string;
+}
+
+export type handleApplicationSubmissionType = (formValues: FieldValues) => Promise<void>;
 
 const ModalViewModel = ({
   mode,
-  modalIsOpen,
   closeModal,
   currentProcessType,
   fetchedProcessData,
@@ -24,20 +32,6 @@ const ModalViewModel = ({
 }: IProps) => {
   const model = new ModalModel();
   const queryClient = useQueryClient();
-
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    setValue,
-    reset,
-    setError,
-    clearErrors,
-    watch,
-    formState: { errors, defaultValues },
-  } = useForm({
-    mode: 'onSubmit',
-  });
 
   function invalidateKanbanListOnSuccess() {
     queryClient.invalidateQueries('fetchKanbanList');
@@ -62,55 +56,41 @@ const ModalViewModel = ({
     },
   });
 
-  function isDetailedProcessTypeRequired() {
-    if (getValues('processType') === 'TO_APPLY' || getValues('processType') === 'DOCUMENT') {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  const handleApplicationSubmission: handleApplicationSubmissionType = async formValues => {
+    const { companyName, position, url, processType, detailedProcessType, schedule } = formValues;
 
-  async function handleApplicationSubmission() {
     if (mode === 'simpleRegister') {
       const newApplicationData = {
-        companyName: getValues('companyName'),
-        position: getValues('position'),
-        url: getValues('url'),
+        companyName,
+        position,
+        url,
         currentProcess: {
-          type: getValues('processType'),
+          type: processType,
           description:
-            getValues('detailedProcessType') === ''
-              ? formatProcessToKor(getValues('processType'))
-              : getValues('detailedProcessType'),
-          schedule: getValues('schedule'),
+            detailedProcessType === '' ? formatProcessToKor(processType) : detailedProcessType,
+          schedule,
         },
       };
-
       registerMutation.mutate(newApplicationData);
     } else if (mode === 'simpleEdit') {
       const editApplicationData = {
-        companyName: getValues('companyName'),
-        position: getValues('position'),
+        companyName,
+        position,
         processId: applicationInfo.process.id,
-        schedule: getValues('schedule'),
-        url: getValues('url'),
+        schedule,
+        url,
       };
-
       editMutation.mutate({
         editApplicationData,
         applicationId: applicationInfo.applicationId,
       });
     } else if (mode === 'updateCurrentProcess') {
       const newProcessData = {
-        type: getValues('processType'),
-        description:
-          getValues('detailedProcessType') === ''
-            ? getValues('processType')
-            : getValues('detailedProcessType'),
+        type: processType,
+        description: detailedProcessType === '' ? processType : detailedProcessType,
       };
 
       const data = await model.createNewProcess(applicationInfo.applicationId, newProcessData);
-
       if (data.success) {
         updateProcessMutation.mutate({
           applicationId: applicationInfo.applicationId,
@@ -119,21 +99,10 @@ const ModalViewModel = ({
       }
     }
     closeModal();
-  }
+  };
 
   return {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    defaultValues,
-    errors,
-    setError,
-    clearErrors,
-    reset,
-    watch,
     handleApplicationSubmission,
-    isDetailedProcessTypeRequired,
     mode,
     currentProcessType,
     fetchedProcessData,
