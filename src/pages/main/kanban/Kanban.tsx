@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from 'react-query';
@@ -21,15 +21,19 @@ const Kanban = () => {
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
-  const modalViewModel = ModalViewModel({
-    mode,
-    closeModal,
-    currentProcessType,
-    fetchedProcessData,
-    applicationInfo,
-  });
+  const modalViewModel = useMemo(
+    () =>
+      ModalViewModel({
+        mode,
+        closeModal,
+        currentProcessType,
+        fetchedProcessData,
+        applicationInfo,
+      }),
+    [mode, closeModal, currentProcessType, fetchedProcessData, applicationInfo],
+  );
 
-  function handleArrowButton(type: 'prev' | 'next') {
+  const handleArrowButton = (type: 'prev' | 'next') => {
     if (!containerRef.current) return;
 
     if (type === 'prev') {
@@ -43,7 +47,7 @@ const Kanban = () => {
         behavior: 'smooth',
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (!isLoading && isSuccess) {
