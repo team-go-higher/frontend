@@ -5,6 +5,7 @@ import { modalModeType } from 'hooks/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
+
 interface IProps {
   mode: modalModeType;
   closeModal: () => void;
@@ -12,6 +13,7 @@ interface IProps {
   fetchedProcessData: any;
   applicationInfo: any;
 }
+
 export interface IFormValues {
   companyName: string;
   position: string;
