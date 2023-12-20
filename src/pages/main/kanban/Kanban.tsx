@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from 'react-query';
 
 import { useAppDispatch } from 'redux/store';
-import { useModal } from 'hooks/useModal';
+import { useModal } from 'hooks/feature/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 import LeftIcon from 'assets/main/main_left_arrow.svg';
@@ -21,17 +21,13 @@ const Kanban = () => {
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
-  const modalViewModel = useMemo(
-    () =>
-      ModalViewModel({
-        mode,
-        closeModal,
-        currentProcessType,
-        fetchedProcessData,
-        applicationInfo,
-      }),
-    [mode, closeModal, currentProcessType, fetchedProcessData, applicationInfo],
-  );
+  const modalViewModel = ModalViewModel({
+    mode,
+    closeModal,
+    currentProcessType,
+    fetchedProcessData,
+    applicationInfo,
+  });
 
   const handleArrowButton = (type: 'prev' | 'next') => {
     if (!containerRef.current) return;

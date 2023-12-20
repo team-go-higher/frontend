@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from 'react-query';
 
 import ModalModel from './ModalModel';
-import { modalModeType } from 'hooks/useModal';
+import { modalModeType } from 'hooks/feature/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
-
 interface IProps {
   mode: modalModeType;
   closeModal: () => void;
@@ -13,7 +12,6 @@ interface IProps {
   fetchedProcessData: any;
   applicationInfo: any;
 }
-
 export interface IFormValues {
   companyName: string;
   position: string;

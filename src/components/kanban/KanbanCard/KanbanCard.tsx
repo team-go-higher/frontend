@@ -6,7 +6,7 @@ import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_mor
 import * as S from './KanbanCardStyledComponents';
 import { IApplication, processType } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
-import { modalModeType } from 'hooks/useModal';
+import { modalModeType } from 'hooks/feature/useModal';
 import { formatDataType } from 'utils/date';
 
 interface IProps {

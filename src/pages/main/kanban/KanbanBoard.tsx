@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { useAppSelector } from 'redux/store';
-import { modalModeType } from 'hooks/useModal';
+import { modalModeType } from 'hooks/feature/useModal';
 import { processTypeList } from 'constants/process';
 import { IKabanData, processType } from 'types/interfaces/KanbanProcess';
 import * as S from './KanbanStyledComponents';

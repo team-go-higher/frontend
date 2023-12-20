@@ -2,7 +2,6 @@ import React from 'react';
 import * as S from './ModalStyledComponents';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 import { formatProcessToKor } from 'utils/process';
-
 interface IProps {
   dropDownId: string;
   disabled?: boolean;
@@ -12,10 +11,9 @@ interface IProps {
   isPlaceHolder: boolean;
   isArrowIconRequired: boolean;
   itemList: string[] | null;
-  isInputToggle?: boolean;
   inputToggleHandler?: () => void;
   dropDownToggleHandler: (dropDownId: string) => void;
-  dropDownItemHandler: (dropDownId: string, process: string) => void;
+  dropDownItemHandler: (process: string) => void;
 }
 
 const ModalDropDown = ({
@@ -27,7 +25,6 @@ const ModalDropDown = ({
   isPlaceHolder,
   isArrowIconRequired,
   itemList,
-  isInputToggle,
   inputToggleHandler,
   dropDownToggleHandler,
   dropDownItemHandler,
@@ -51,13 +48,13 @@ const ModalDropDown = ({
             <S.DropdownItem
               key={process}
               onClick={() => {
-                dropDownItemHandler(dropDownId, process);
+                dropDownItemHandler(process);
               }}>
               {dropDownId === 'processType' ? formatProcessToKor(process) : process}
             </S.DropdownItem>
           ))}
 
-          {isInputToggle && (
+          {dropDownId === 'detailedProcessType' && (
             <S.DropdownItem onClick={inputToggleHandler}>직접 입력 </S.DropdownItem>
           )}
         </S.ModalDropdownItemBox>
