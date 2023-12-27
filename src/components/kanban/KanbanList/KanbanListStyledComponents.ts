@@ -5,11 +5,14 @@ export const KanbanListContainer = styled.div`
   height: 835px;
   background-color: rgb(var(--kanbanBackground));
   border-radius: 15px;
-  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
 `;
 
 export const ProcessTitle = styled.div<{ $processType: string }>`
   display: flex;
+  flex: 0 0 auto;
   justify-content: center;
   align-items: center;
   height: 50px;
@@ -24,4 +27,5 @@ export const KanbanCardContainer = styled.div`
   flex-direction: column;
   gap: 15px;
   padding: 18px 14px;
+  overflow-y: auto;
 `;

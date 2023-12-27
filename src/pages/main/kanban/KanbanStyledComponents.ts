@@ -31,6 +31,7 @@ export const KanbanBoardContainer = styled.div`
 
 export const PlusButton = styled.button`
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   height: 8.75rem;
