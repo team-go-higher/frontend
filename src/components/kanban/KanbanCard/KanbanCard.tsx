@@ -41,10 +41,11 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
     }),
 
     end: async (draggedItem, monitor) => {
-      const dropResult: any = monitor.getDropResult();
+      const dropResult: { dropEffect: string; processType: processType } | null =
+        monitor.getDropResult();
 
       if (dropResult) {
-        if (dropResult.processType === 'DOCUMENT' || dropResult.processType === 'TO_APPLY') return;
+        if (dropResult.processType === 'TO_APPLY' || dropResult.processType === 'DOCUMENT') return;
 
         const response = await fetchApplicationStagesByProcessType(
           draggedItem.applicationId,
