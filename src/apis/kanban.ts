@@ -1,4 +1,5 @@
-import { goHigerApi } from 'apis';
+import ApiService from 'apis';
+
 import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
 import {
   IKabanData,
@@ -7,21 +8,13 @@ import {
   INewProcessRes,
 } from 'types/interfaces/KanbanProcess';
 
-interface IResponse<T> {
-  success: boolean;
-  error: any;
-  data: T;
-}
-
-export const fetchKanbanList = async (): Promise<IResponse<IKabanData[]>> => {
-  const data: IResponse<IKabanData[]> = await goHigerApi.get('/v1/applications/kanban');
+export const fetchKanbanList = async () => {
+  const data = await ApiService.Get<IKabanData[]>('/v1/applications/kanban');
   return data;
 };
 
-export const registerSimpleApplication = async (
-  newApplicationData: IRegisterNewApplication,
-): Promise<IResponse<IRegisterNewApplicationRes>> => {
-  const data: IResponse<IRegisterNewApplicationRes> = await goHigerApi.post(
+export const registerSimpleApplication = async (newApplicationData: IRegisterNewApplication) => {
+  const data = await ApiService.Post<IRegisterNewApplicationRes>(
     '/v1/applications/simple',
     newApplicationData,
   );
@@ -31,8 +24,8 @@ export const registerSimpleApplication = async (
 export const editSimpleApplication = async (
   newApplicationData: IRegisterNewApplication,
   applicationId: number,
-): Promise<IResponse<null>> => {
-  const data: IResponse<null> = await goHigerApi.put(
+) => {
+  const data = await ApiService.Put<null>(
     `/v1/applications/${applicationId}/simple`,
     newApplicationData,
   );
@@ -43,19 +36,16 @@ export const editSimpleApplication = async (
 export const fetchApplicationStagesByProcessType = async (
   applicationId: number,
   processType: string,
-): Promise<IResponse<IApplicationStagesRes[]>> => {
-  const data: IResponse<IApplicationStagesRes[]> = await goHigerApi.get(
+) => {
+  const data = await ApiService.Get<IApplicationStagesRes[]>(
     `/v1/applications/${applicationId}/processes?processType=${processType}`,
   );
   return data;
 };
 
 // 현재 진행 전형 변경
-export const updateApplicationProcess = async (
-  applicationId: number,
-  processId: number,
-): Promise<IResponse<null>> => {
-  const data: IResponse<null> = await goHigerApi.patch(`/v1/applications/current-process`, {
+export const updateApplicationProcess = async (applicationId: number, processId: number) => {
+  const data = await ApiService.Patch<null>(`/v1/applications/current-process`, {
     applicationId,
     processId,
   });
@@ -63,11 +53,8 @@ export const updateApplicationProcess = async (
 };
 
 // 전형 이동을 위한 새로운 전형 생성
-export const createNewProcess = async (
-  applicationId: number,
-  newProcessData: INewProcessRes,
-): Promise<IResponse<IApplicationStagesRes>> => {
-  const data: IResponse<IApplicationStagesRes> = await goHigerApi.post(
+export const createNewProcess = async (applicationId: number, newProcessData: INewProcessRes) => {
+  const data = await ApiService.Post<IApplicationStagesRes>(
     `/v1/applications/${applicationId}/processes`,
     newProcessData,
   );
