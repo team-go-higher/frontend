@@ -1,45 +1,78 @@
-import axios from 'axios';
-
-import * as kanban from './kanban';
-
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 interface IUserInfo {
   accessToken: string;
   expireDate: string;
   role: string;
 }
+interface ICommonResponse<T> {
+  success: boolean;
+  error: any;
+  data: T;
+}
+class ApiService {
+  private api;
 
-export default {
-  kanban,
-};
+  constructor() {
+    this.api = axios.create({
+      baseURL: process.env.REACT_APP_BASE_URL,
+      withCredentials: true,
+    });
 
-export const goHigerApi = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
-  withCredentials: true,
-});
+    this.api.interceptors.request.use(
+      async (config: InternalAxiosRequestConfig) => {
+        try {
+          const userInfoString: string = localStorage.getItem('userInfo') as string;
+          const userInfoJson: IUserInfo = JSON.parse(userInfoString);
+          const accessToken = userInfoJson.accessToken;
 
-goHigerApi.interceptors.request.use(
-  async config => {
-    try {
-      const userInfoString: string = localStorage.getItem('userInfo') as string;
-      const userInfoJson: IUserInfo = JSON.parse(userInfoString);
-      const accessToken = userInfoJson.accessToken;
+          if (accessToken) config.headers.Authorization = 'Bearer ' + accessToken;
+        } catch {
+          return config;
+        }
+        return config;
+      },
+      error => {
+        Promise.reject(error);
+      },
+    );
 
-      if (accessToken) config.headers.Authorization = 'Bearer ' + accessToken;
-    } catch {
-      return config;
-    }
-    return config;
-  },
-  error => {
-    Promise.reject(error);
-  },
-);
+    this.api.interceptors.response.use(
+      async (response: AxiosResponse) => {
+        if (!response.data.success) {
+          throw new Error(response.data.error);
+        }
+        return response;
+      },
+      error => {
+        return Promise.reject(error);
+      },
+    );
+  }
 
-goHigerApi.interceptors.response.use(
-  async response => {
+  public async commonRequest<T>(
+    method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+    url: string,
+    data?: any,
+    config?: InternalAxiosRequestConfig,
+  ): Promise<ICommonResponse<T>> {
+    const response = await this.api[method](url, data, config);
     return response.data;
-  },
-  error => {
-    return Promise.reject(error);
-  },
-);
+  }
+
+  public Get = async <T>(url: string, config?: InternalAxiosRequestConfig) =>
+    this.commonRequest<T>('get', url, undefined, config);
+
+  public Post = async <T>(url: string, data?: any, config?: InternalAxiosRequestConfig) =>
+    this.commonRequest<T>('post', url, data, config);
+
+  public Put = async <T>(url: string, data?: any, config?: InternalAxiosRequestConfig) =>
+    this.commonRequest<T>('put', url, data, config);
+
+  public Patch = async <T>(url: string, data?: any, config?: InternalAxiosRequestConfig) =>
+    this.commonRequest<T>('patch', url, data, config);
+
+  public Delete = async <T>(url: string, config?: InternalAxiosRequestConfig) =>
+    this.commonRequest<T>('delete', url, undefined, config);
+}
+
+export default new ApiService();
