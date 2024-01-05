@@ -6,11 +6,13 @@ import {
 } from './HeaderStyledComponents';
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
+import { useNavigate } from 'react-router-dom';
 
 const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추가'];
 
 const Header = () => {
   const [isSelect, setIsSelect] = useState('공고리스트');
+  const navigate = useNavigate();
 
   return (
     <HeaderContainer>
@@ -36,6 +38,13 @@ const Header = () => {
               <div className='profileName'>사용자</div>
               <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
             </div>
+            <button
+              onClick={() => {
+                navigate('/login');
+                localStorage.removeItem('userInfo');
+              }}>
+              로그아웃
+            </button>
           </HeaderPersonalContainer>
         </div>
       </div>

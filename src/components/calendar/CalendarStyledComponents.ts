@@ -62,9 +62,9 @@ export const RenderCellsContainer = styled.div`
 
 interface CellProps {
   day: Date;
-  monthStart: Date;
-  selectedDate: Date;
-  currentMonth: Date;
+  $monthStart: Date;
+  $selectedDate: Date;
+  $currentMonth: Date;
   onClick: () => void;
 }
 
@@ -79,19 +79,19 @@ export const Cell = styled.div<CellProps>`
     margin: 5px 7px 5px 80px;
   }
   ${props =>
-    !isSameMonth(props.day, props.monthStart) &&
+    !isSameMonth(props.day, props.$monthStart) &&
     `
     color: #D9D9D9;
   `}
   ${props =>
-    isSameDay(props.day, props.selectedDate) &&
+    isSameDay(props.day, props.$selectedDate) &&
     `
     border: 0.5px solid #3253FF;
     color: #3253FF;
     box-shadow: 0 0 6px 3px rgba(50, 83, 255, 0.225);
   `}
   ${props =>
-    format(props.currentMonth, 'M') !== format(props.day, 'M') &&
+    format(props.$currentMonth, 'M') !== format(props.day, 'M') &&
     `
     color: #D9D9D9;
   `}
