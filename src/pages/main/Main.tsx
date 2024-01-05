@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Calendar from './calendar/Calendar';
-import Kanban from './kanban/Kanban';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Header from 'components/default/header/Header';
 import calendarToggle from 'assets/main/main_calendar_toggle.svg';
 import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
 
@@ -10,32 +9,41 @@ const Main = () => {
   const navigate = useNavigate();
   const [isCalendar, setCalendar] = useState(true);
   const userInfo = localStorage.getItem('userInfo');
-
   const toggleHandler = () => {
     setCalendar(!isCalendar);
   };
 
-  const handlePage = useCallback(() => {
-    if (!userInfo) {
-      navigate('/login');
-    }
-  }, [navigate, userInfo]);
-
   useEffect(() => {
-    handlePage();
-  }, [handlePage]);
+    if (isCalendar) {
+      navigate('/calendar');
+    } else navigate('/kanban');
+  }, [isCalendar]);
 
   return (
-    <div>
+    <Root>
+      {userInfo && <Header />}
       <ToggleContainer onClick={toggleHandler}>
         <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
           <img src={isCalendar ? calendarToggle : kanbanToggle} alt='toggle' />
         </div>
       </ToggleContainer>
-      {isCalendar ? <Calendar></Calendar> : <Kanban></Kanban>}
-    </div>
+      <Outlet />
+    </Root>
+    // <div>
+    //   <ToggleContainer onClick={toggleHandler}>
+    //     <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
+    //       <img src={isCalendar ? calendarToggle : kanbanToggle} alt='toggle' />
+    //     </div>
+    //   </ToggleContainer>
+    //   {/* {isCalendar ? <Calendar></Calendar> : <Kanban></Kanban>} */}
+    // </div>
   );
 };
+
+const Root = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const ToggleContainer = styled.div`
   position: absolute;

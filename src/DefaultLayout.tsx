@@ -4,7 +4,7 @@ import AppContent from './components/default/Content';
 
 function DefaultLayout() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-
+  console.log(!!userInfo);
   return (
     <Root>
       {userInfo && <Header />}
