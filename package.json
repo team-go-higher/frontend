@@ -19,6 +19,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "build:dev": "react-scripts build",
     "postinstall": "husky install",
     "lint": "eslint --cache .",
     "start": "cp ./.env.local ./.env && react-scripts start",
