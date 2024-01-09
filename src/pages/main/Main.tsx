@@ -7,10 +7,13 @@ import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
 
 const Main = () => {
   const navigate = useNavigate();
-  const [isCalendar, setCalendar] = useState(true);
+  const [isCalendar, setCalendar] = useState(localStorage.getItem('isCalendar') === 'true');
   const userInfo = localStorage.getItem('userInfo');
+
   const toggleHandler = () => {
-    setCalendar(!isCalendar);
+    const newIsCalendar = !isCalendar;
+    setCalendar(newIsCalendar);
+    localStorage.setItem('isCalendar', newIsCalendar.toString());
   };
 
   useEffect(() => {
@@ -29,14 +32,6 @@ const Main = () => {
       </ToggleContainer>
       <Outlet />
     </Root>
-    // <div>
-    //   <ToggleContainer onClick={toggleHandler}>
-    //     <div className={`toggle-circle ${isCalendar ? '' : 'false'}`}>
-    //       <img src={isCalendar ? calendarToggle : kanbanToggle} alt='toggle' />
-    //     </div>
-    //   </ToggleContainer>
-    //   {/* {isCalendar ? <Calendar></Calendar> : <Kanban></Kanban>} */}
-    // </div>
   );
 };
 
