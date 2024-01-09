@@ -26,17 +26,17 @@ export const RenderDetail: React.FC<RenderDetailProps> = ({
   nextDay,
   detailData,
 }) => {
-  const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
+  // const { modalIsOpen, openModal, closeModal, currentModalProcess } = useModal();
 
-  function calendarHandler() {
-    const addButton = (
-      <PlusButton key={1} onClick={() => openModal('')}>
-        <Circle>+</Circle>
-      </PlusButton>
-    );
+  // function calendarHandler() {
+  //   const addButton = (
+  //     <PlusButton key={1} onClick={() => openModal('')}>
+  //       <Circle>+</Circle>
+  //     </PlusButton>
+  //   );
 
-    return addButton;
-  }
+  //   return addButton;
+  // }
 
   return (
     <DetailContainer>
@@ -45,15 +45,15 @@ export const RenderDetail: React.FC<RenderDetailProps> = ({
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
         <img src={dayRight} alt='dayRight' onClick={nextDay} />
       </div>
-      <ModalComponent
+      {/* <ModalComponent
         modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         currentModalProcess={currentModalProcess}
-      />
+      /> */}
       <div className='cardContainer'>
         {detailData &&
           detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
-        <div>{calendarHandler()}</div>
+        {/* <div>{calendarHandler()}</div> */}
       </div>
     </DetailContainer>
   );

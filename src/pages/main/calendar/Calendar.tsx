@@ -12,6 +12,8 @@ import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } fro
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
+import { Input } from 'components/default/input/Input';
+
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -63,6 +65,7 @@ const Calendar = () => {
 
   return (
     <CalendarPage>
+      <Input id='yourInputId' placeholder='Type something...' />
       <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
       <div className='calendar-detail'>
         <CalendarContainer>
