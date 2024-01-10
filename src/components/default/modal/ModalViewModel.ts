@@ -9,7 +9,7 @@ interface IProps {
   mode: modalModeType;
   closeModal: () => void;
   currentProcessType: processType;
-  fetchedProcessData: any;
+  fetchedProcessData?: any;
   applicationInfo: any;
 }
 export interface IFormValues {
