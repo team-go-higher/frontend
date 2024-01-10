@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
-import data from './dummy.json';
 import headerLeft from 'assets/main/main_left_arrow.svg';
 import headerRight from 'assets/main/main_right_arrow.svg';
 import {
@@ -11,6 +10,7 @@ import {
   Row,
   RenderCellsContainer,
 } from './CalendarStyledComponents';
+import { ICalendarData } from 'types/interfaces/CalendarProcess';
 
 // RenderHeader(월)
 interface RenderHeaderProps {
@@ -40,7 +40,7 @@ export const RenderDays = () => {
   return (
     <RenderDaysContainer>
       {date.map((day, i) => (
-        <div key={day} className={`daysRow ${i === 6 ? 'sat' : i === 0 ? 'sun' : ''}`}>
+        <div className={`daysRow ${i === 6 ? 'sat' : i === 0 ? 'sun' : ''}`} key={i}>
           {day}
         </div>
       ))}
@@ -53,19 +53,21 @@ interface RenderCellsProps {
   currentMonth: Date;
   selectedDate: Date;
   onDateClick: (date: Date) => void;
+  calendarData: [];
 }
 
 export const RenderCells: React.FC<RenderCellsProps> = ({
   currentMonth,
   selectedDate,
   onDateClick,
+  calendarData,
 }) => {
-  const events = data.data;
   const monthStart = startOfMonth(currentMonth); //8월 1일
-  const monthEnd = endOfMonth(monthStart); //8월 31일
+  const monthEnd = endOfMonth(currentMonth); //8월 31일
   const startDate = startOfWeek(monthStart); //7월 30일
   const endDate = endOfWeek(monthEnd); //9월 2일
 
+  // 달력 만들기
   const rows = [];
   let days = [];
   let day = startDate;
@@ -75,25 +77,29 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, 'd');
       const cloneDay = new Date(day);
-
-      const eventsOnThisDate = events.filter(event => {
-        return format(new Date(event.eventDate), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
-      });
-
+      let eventsOnThisDate: ICalendarData[] = [];
+      if (calendarData && calendarData.length) {
+        eventsOnThisDate = calendarData.filter((data: ICalendarData) => {
+          return format(new Date(data.schedule), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
+        });
+      }
       days.push(
         <Cell
-          day={day}
-          $monthStart={monthStart}
+          $day={day}
           $selectedDate={selectedDate}
           $currentMonth={currentMonth}
           key={day.toDateString()}
           onClick={() => onDateClick(cloneDay)}>
           <div className='date'>{formattedDate.padStart(2, '0')}</div>
-          {eventsOnThisDate.map(event => (
-            <Event key={event.id} process={event.process}>
-              {event.title}
-            </Event>
-          ))}
+          {eventsOnThisDate &&
+            eventsOnThisDate.slice(0, 3).map((event, i) => (
+              <Event key={i} $processType={event.processType}>
+                {event.name}
+              </Event>
+            ))}
+          {eventsOnThisDate.length > 3 && (
+            <div className='plus'>+{eventsOnThisDate.length - 3}</div>
+          )}
         </Cell>,
       );
       day = addDays(day, 1);

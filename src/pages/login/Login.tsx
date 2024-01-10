@@ -82,7 +82,7 @@ export const Wrapper = styled.div`
   align-items: center;
   margin-top: 135px;
   .loginTitle {
-    color: #3253ff;
+    color: rgb(var(--main));
     text-align: center;
     font-size: 30px;
     font-weight: 700;

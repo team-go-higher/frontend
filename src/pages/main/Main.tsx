@@ -48,7 +48,7 @@ const ToggleContainer = styled.div`
   top: 77px;
   right: calc((100vw - 996px) / 2);
   border-radius: 17.5px;
-  background: #d9d9d9;
+  background: rgb(var(--border));
 
   .toggle-circle {
     position: absolute;
@@ -57,7 +57,7 @@ const ToggleContainer = styled.div`
     width: 31px;
     height: 31px;
     border-radius: 50%;
-    background-color: rgba(50, 83, 255, 1);
+    background-color: rgb(var(--main));
     transition: 0.3s;
     display: flex;
     justify-content: center;
