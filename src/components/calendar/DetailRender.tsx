@@ -10,6 +10,8 @@ import {
   RenderUnscheduledContainer,
 } from './CalendarStyledComponents';
 import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
+import { useModal } from 'hooks/feature/useModal';
+import { ModalView, ModalViewModel } from 'components/default';
 
 // 일별로 띄우기
 interface RenderDetailProps {
@@ -20,8 +22,19 @@ interface RenderDetailProps {
 }
 
 export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
+  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
+    useModal();
+
+  const modalViewModel = ModalViewModel({
+    mode,
+    closeModal,
+    currentProcessType,
+    applicationInfo,
+  });
+
   return (
     <DetailContainer>
+      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div className='selectDate'>
         <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
@@ -30,7 +43,18 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
       <div className='cardContainer'>
         {detailData &&
           detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
-        {/* <div>{calendarHandler()}</div> 모달 띄우는 함수였음*/}
+        <PlusButton>
+          <Circle
+            onClick={() =>
+              openModal({
+                mode: 'simpleRegister',
+                processType: 'TO_APPLY',
+                applicationInfo,
+              })
+            }>
+            +
+          </Circle>
+        </PlusButton>
       </div>
     </DetailContainer>
   );
