@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { format, isSameMonth, isSameDay } from 'date-fns';
+import { isSameMonth, isSameDay } from 'date-fns';
 
 //Calendar
 export const CalendarPage = styled.div`

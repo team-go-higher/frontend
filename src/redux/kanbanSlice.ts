@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IRegisterNewApplication, IkabanData, application } from 'types/interfaces/KanbanProcess';
+import { IKabanData, IApplication } from 'types/interfaces/KanbanProcess';
 
-const initialState: IkabanData[] = [];
+const initialState: IKabanData[] = [];
 
 export const kanbanSlice = createSlice({
   name: 'kanban',
@@ -10,35 +10,25 @@ export const kanbanSlice = createSlice({
     setApplications: (state, { payload }) => {
       return payload;
     },
-    // addSimpleApplication: (
-    //   state,
-    //   {
-    //     payload,
-    //   }: PayloadAction<{ processName: string; newApplicationData: IRegisterNewApplication }>,
-    // ) => {
-    //   const filterdData = state.filter(data => data.processType === payload.processName)[0];
-
-    //   // filterdData.applications.push(payload.newApplicationData);
-    // },
     updateProcess: (
       state,
       {
         payload,
       }: PayloadAction<{
         currentProcessName: string;
-        target: application;
+        target: IApplication;
         nextProcessName: string;
       }>,
-    ): IkabanData[] => {
+    ): IKabanData[] => {
       const { currentProcessName, target, nextProcessName } = payload;
 
       if (currentProcessName !== nextProcessName) {
         const currentProcessData = state.find(
           data => data.processType === currentProcessName,
-        ) as IkabanData;
+        ) as IKabanData;
         const nextProcessData = state.find(
           data => data.processType === nextProcessName,
-        ) as IkabanData;
+        ) as IKabanData;
 
         const targetIndex = currentProcessData.applications.findIndex(
           item => item.applicationId === target.applicationId,
@@ -55,7 +45,7 @@ export const kanbanSlice = createSlice({
             processDescription: nextProcessName,
           };
 
-          const newState: IkabanData[] = state.map(processData => {
+          const newState: IKabanData[] = state.map(processData => {
             if (processData.processType === currentProcessName) {
               return { ...processData, applications: updatedCurrentProcessApplications };
             } else if (processData.processType === nextProcessName) {

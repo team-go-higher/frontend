@@ -16,3 +16,20 @@ export interface IDetailData {
     schedule: string;
   };
 }
+export interface IUnscheduledData {
+  hasNext: boolean;
+  content: IUnscheduledContent[];
+}
+
+export interface IUnscheduledContent {
+  applicationId: number;
+  companyName: string;
+  position: string;
+  specificPosition: string | null;
+  process: {
+    id: number;
+    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+    description: string;
+    schedule: string;
+  };
+}

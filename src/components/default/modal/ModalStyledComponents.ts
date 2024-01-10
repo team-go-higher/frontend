@@ -134,7 +134,7 @@ export const ModalDropdownBox = styled.button<{ $showItem?: boolean; $error?: bo
   cursor: pointer;
 `;
 
-export const PlaceHolder = styled.p<{ $color: boolean; $error: boolean }>`
+export const PlaceHolder = styled.p<{ $color?: boolean; $error: boolean }>`
   color: ${({ $color, $error }) =>
     $error ? 'rgb(var(--redText));' : $color ? 'black;' : 'rgb(var(--placeholder));'};
   font-size: 17px;

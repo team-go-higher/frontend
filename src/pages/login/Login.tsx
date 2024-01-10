@@ -1,9 +1,9 @@
-import { styled } from 'styled-components';
-import KakaoImg from 'assets/login/login_kakao.svg';
-import GoogleImg from 'assets/login/login_google.svg';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
 import moment from 'moment';
+import KakaoImg from 'assets/login/login_kakao.svg';
+import GoogleImg from 'assets/login/login_google.svg';
 
 const Login = () => {
   const location = window.location;
@@ -24,14 +24,16 @@ const Login = () => {
           role: role,
           expireDate: expireDate,
         };
+
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         if (role === 'GUEST') {
           navigate('/signUp/desiredPosition');
         } else {
-          navigate('/');
+          navigate('/calendar');
         }
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

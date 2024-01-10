@@ -12,34 +12,27 @@ import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } fro
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
-import { useForm } from 'react-hook-form';
-import { RadioInput } from 'components/default/input/RadioInput';
-
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
-  const { data: calendarData } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
+  const { data: calendarData = [] } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
     fetchMonthCalendar(
       parseInt(format(currentMonth, 'yyyy')),
       parseInt(format(currentMonth, 'MM')),
     ),
   );
-  const { data: detailData } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
+
+  const { data: detailData = [] } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
     fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   );
+
   const { data: unscheduledData } = useQuery([currentPage, queryKey.UNSCHEDULEDDATA], () =>
     fetchUnscheduledCalendar(currentPage, 2),
   );
 
-  //달력 값 변경
-  useEffect(() => {
-    if (format(selectedDate, 'yyyy-MM') !== format(currentMonth, 'yyyy-MM')) {
-      setCurrentMonth(selectedDate);
-    }
-  }, [selectedDate]);
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
@@ -64,19 +57,15 @@ const Calendar = () => {
     setCurrentPage(currentPage + 1);
   };
 
-  const { control, handleSubmit } = useForm();
-
-  const onSubmit = (data: any) => {
-    // Handle form submission with the data
-    console.log(data);
-  };
+  //달력 값 변경
+  useEffect(() => {
+    if (format(selectedDate, 'yyyy-MM') !== format(currentMonth, 'yyyy-MM')) {
+      setCurrentMonth(selectedDate);
+    }
+  }, [selectedDate]);
 
   return (
     <CalendarPage>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <RadioInput label='Option 1' name='radioOption' control={control} radioValue='option1' />
-        <RadioInput label='Option 2' name='radioOption' control={control} radioValue='option2' />
-      </form>
       <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
       <div className='calendar-detail'>
         <CalendarContainer>
