@@ -33,13 +33,7 @@ interface InputProps extends UseControllerProps {
   error?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({
-  control,
-  name,
-  defaultValue = '',
-  error,
-  ...rest
-}) => {
+export const Input = ({ control, name, defaultValue = '', error, ...rest }: InputProps) => {
   const { field } = useController({
     control,
     defaultValue,

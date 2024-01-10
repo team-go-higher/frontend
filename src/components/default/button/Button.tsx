@@ -36,6 +36,6 @@ const StyledButton = styled.button<Props>`
   ${({ variant }) => variant && TYPE_VARIANTS[variant]};
 `;
 
-export function Button({ variant = 'primary', ...props }: Props) {
+export const Button = ({ variant = 'primary', ...props }: Props) => {
   return <StyledButton variant={variant} {...props} />;
-}
+};
