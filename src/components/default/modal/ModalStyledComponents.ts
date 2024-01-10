@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Styles } from 'react-modal';
 
-export const modalStyles: Styles = {
+export const normalModalStyles: Styles = {
   overlay: {
     backgroundColor: 'rgba(var(--grayText), 0.8)',
     zIndex: 1000,
@@ -12,6 +12,22 @@ export const modalStyles: Styles = {
     transform: 'translate(-50%, -50%)',
     width: '21.25rem',
     height: '580px',
+    padding: '32px 50px 38px',
+    borderRadius: '15px',
+  },
+};
+
+export const editModalStyles: Styles = {
+  overlay: {
+    backgroundColor: 'rgba(var(--grayText), 0.8)',
+    zIndex: 1000,
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '21.25rem',
+    height: '300px',
     padding: '32px 50px 38px',
     borderRadius: '15px',
   },
