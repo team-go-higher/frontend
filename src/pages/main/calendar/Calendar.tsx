@@ -12,7 +12,8 @@ import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } fro
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
-import { Input } from 'components/default/input/Input';
+import { useForm } from 'react-hook-form';
+import { RadioInput } from 'components/default/input/RadioInput';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -63,9 +64,19 @@ const Calendar = () => {
     setCurrentPage(currentPage + 1);
   };
 
+  const { control, handleSubmit } = useForm();
+
+  const onSubmit = (data: any) => {
+    // Handle form submission with the data
+    console.log(data);
+  };
+
   return (
     <CalendarPage>
-      <Input id='yourInputId' placeholder='Type something...' />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <RadioInput label='Option 1' name='radioOption' control={control} radioValue='option1' />
+        <RadioInput label='Option 2' name='radioOption' control={control} radioValue='option2' />
+      </form>
       <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
       <div className='calendar-detail'>
         <CalendarContainer>
