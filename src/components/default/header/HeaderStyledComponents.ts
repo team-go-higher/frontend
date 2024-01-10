@@ -40,9 +40,10 @@ export const HeaderMenuContainer = styled.div`
     height: 50px;
   }
   .active {
-    color: #3253ff;
+    color: rgb(var(--main));
+    width: fit-content;
     font-weight: 700;
-    border-bottom: 3px solid #3253ff;
+    border-bottom: 3px solid rgb(var(--main));
   }
 `;
 export const HeaderPersonalContainer = styled.div`
@@ -62,7 +63,7 @@ export const HeaderPersonalContainer = styled.div`
     width: 80px;
     align-items: center;
     border-radius: 42px;
-    border: 0.5px solid #3253ff;
+    border: 0.5px solid rgb(var(--main));
     cursor: pointer;
     box-sizing: border-box;
     width: 95px;
