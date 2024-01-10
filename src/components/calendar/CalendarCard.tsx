@@ -15,7 +15,7 @@ interface CalendarCardProps {
   };
 }
 
-export const CalendarCard: React.FC<CalendarCardProps> = ({ event }) => {
+export const CalendarCard = ({ event }: CalendarCardProps) => {
   return (
     <EventContainer $processType={event.process.type}>
       <div>{event.companyName}</div>

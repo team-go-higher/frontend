@@ -1,8 +1,8 @@
 import ApiService from 'apis';
 
-import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
 import {
   IKabanData,
+  IRegisterNewApplication,
   IRegisterNewApplicationRes,
   IApplicationStagesRes,
   INewProcessRes,

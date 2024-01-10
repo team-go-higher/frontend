@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import headerLeft from 'assets/main/main_left_arrow.svg';
 import headerRight from 'assets/main/main_right_arrow.svg';
@@ -19,11 +19,7 @@ interface RenderHeaderProps {
   nextMonth: () => void;
 }
 
-export const RenderHeader: React.FC<RenderHeaderProps> = ({
-  currentMonth,
-  prevMonth,
-  nextMonth,
-}) => {
+export const RenderHeader = ({ currentMonth, prevMonth, nextMonth }: RenderHeaderProps) => {
   return (
     <RenderHeaderContainer>
       <img src={headerLeft} alt='headerLeft' onClick={prevMonth} />
@@ -53,15 +49,15 @@ interface RenderCellsProps {
   currentMonth: Date;
   selectedDate: Date;
   onDateClick: (date: Date) => void;
-  calendarData: [];
+  calendarData: ICalendarData[];
 }
 
-export const RenderCells: React.FC<RenderCellsProps> = ({
+export const RenderCells = ({
   currentMonth,
   selectedDate,
   onDateClick,
   calendarData,
-}) => {
+}: RenderCellsProps) => {
   const monthStart = startOfMonth(currentMonth); //8월 1일
   const monthEnd = endOfMonth(currentMonth); //8월 31일
   const startDate = startOfWeek(monthStart); //7월 30일
@@ -78,11 +74,13 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
       formattedDate = format(day, 'd');
       const cloneDay = new Date(day);
       let eventsOnThisDate: ICalendarData[] = [];
+
       if (calendarData && calendarData.length) {
         eventsOnThisDate = calendarData.filter((data: ICalendarData) => {
           return format(new Date(data.schedule), 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
         });
       }
+
       days.push(
         <Cell
           $day={day}
@@ -104,6 +102,7 @@ export const RenderCells: React.FC<RenderCellsProps> = ({
       );
       day = addDays(day, 1);
     }
+
     rows.push(<Row key={day.toDateString()}>{days}</Row>);
     days = [];
   }

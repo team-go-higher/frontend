@@ -18,25 +18,21 @@ const Calendar = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
-  const { data: calendarData } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
+  const { data: calendarData = [] } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
     fetchMonthCalendar(
       parseInt(format(currentMonth, 'yyyy')),
       parseInt(format(currentMonth, 'MM')),
     ),
   );
-  const { data: detailData } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
+
+  const { data: detailData = [] } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
     fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   );
+
   const { data: unscheduledData } = useQuery([currentPage, queryKey.UNSCHEDULEDDATA], () =>
     fetchUnscheduledCalendar(currentPage, 2),
   );
 
-  //달력 값 변경
-  useEffect(() => {
-    if (format(selectedDate, 'yyyy-MM') !== format(currentMonth, 'yyyy-MM')) {
-      setCurrentMonth(selectedDate);
-    }
-  }, [selectedDate]);
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
@@ -60,6 +56,13 @@ const Calendar = () => {
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
   };
+
+  //달력 값 변경
+  useEffect(() => {
+    if (format(selectedDate, 'yyyy-MM') !== format(currentMonth, 'yyyy-MM')) {
+      setCurrentMonth(selectedDate);
+    }
+  }, [selectedDate]);
 
   return (
     <CalendarPage>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { CalendarCard } from './CalendarCard';
 import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
@@ -9,23 +9,17 @@ import {
   Circle,
   RenderUnscheduledContainer,
 } from './CalendarStyledComponents';
-import ModalComponent from 'components/default/modal/ModalComponent';
-import { useModal } from 'hooks/useModal';
+import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
 
 // 일별로 띄우기
 interface RenderDetailProps {
   selectedDate: Date;
   prevDay: () => void;
   nextDay: () => void;
-  detailData: [];
+  detailData: IDetailData[];
 }
 
-export const RenderDetail: React.FC<RenderDetailProps> = ({
-  selectedDate,
-  prevDay,
-  nextDay,
-  detailData,
-}) => {
+export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
   return (
     <DetailContainer>
       <div className='selectDate'>
@@ -44,18 +38,18 @@ export const RenderDetail: React.FC<RenderDetailProps> = ({
 
 // 전형일 없는 것 띄우기
 interface RenderUnscheduledProps {
-  unscheduledData: { hasNext: boolean; content: any[] };
+  unscheduledData: IUnscheduledData;
   currentPage: number;
   prevPage: () => void;
   nextPage: () => void;
 }
 
-export const RenderUnscheduled: React.FC<RenderUnscheduledProps> = ({
+export const RenderUnscheduled = ({
   unscheduledData,
   currentPage,
   prevPage,
   nextPage,
-}) => {
+}: RenderUnscheduledProps) => {
   return (
     <RenderUnscheduledContainer>
       <div>
