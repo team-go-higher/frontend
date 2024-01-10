@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { InputHTMLAttributes } from 'react';
+import { UseControllerProps, useController } from 'react-hook-form';
 
 interface StyledTextFieldProps {
   error?: boolean;
@@ -29,12 +29,26 @@ const StyledTextField = styled.input<StyledTextFieldProps>`
   }
 `;
 
-export const Input = ({ ...props }) => {
+interface InputProps extends UseControllerProps {
+  error?: boolean;
+}
+
+export const Input: React.FC<InputProps> = ({
+  control,
+  name,
+  defaultValue = '',
+  error,
+  ...rest
+}) => {
+  const { field } = useController({
+    control,
+    defaultValue,
+    name,
+  });
+
   return (
     <div>
-      <StyledTextField {...props} />
+      <StyledTextField {...field} error={error} {...rest} />
     </div>
   );
 };
-
-export default Input;
