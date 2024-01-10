@@ -1,6 +1,6 @@
 import { processType } from 'types/interfaces/KanbanProcess';
 
-export const formatProcessToKorean = (process: string) => {
+export const formatProcessToKor = (process: string) => {
   switch (process) {
     case 'TO_APPLY':
       return '지원예정';
@@ -12,10 +12,12 @@ export const formatProcessToKorean = (process: string) => {
       return '면접전형';
     case 'COMPLETE':
       return '완료';
+    default:
+      return '';
   }
 };
 
-export const fomatProcessTypeToEnglish = (process: string): processType => {
+export const fomatProcessTypeToEng = (process: string): processType => {
   switch (process) {
     case '지원예정':
       return 'TO_APPLY';
@@ -27,5 +29,7 @@ export const fomatProcessTypeToEnglish = (process: string): processType => {
       return 'INTERVIEW';
     case '완료':
       return 'COMPLETE';
+    default:
+      return 'TO_APPLY';
   }
 };
