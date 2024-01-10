@@ -90,8 +90,8 @@ export const RenderCells = ({
           onClick={() => onDateClick(cloneDay)}>
           <div className='date'>{formattedDate.padStart(2, '0')}</div>
           {eventsOnThisDate &&
-            eventsOnThisDate.slice(0, 3).map((event, i) => (
-              <Event key={i} $processType={event.processType}>
+            eventsOnThisDate.slice(0, 3).map(event => (
+              <Event key={event.processId} $processType={event.processType}>
                 {event.name}
               </Event>
             ))}

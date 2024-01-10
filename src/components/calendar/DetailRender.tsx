@@ -29,7 +29,9 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
       </div>
       <div className='cardContainer'>
         {detailData &&
-          detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
+          detailData.map(event => (
+            <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+          ))}
         {/* <div>{calendarHandler()}</div> 모달 띄우는 함수였음*/}
       </div>
     </DetailContainer>
