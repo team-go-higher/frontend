@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { GlobalStyles } from './styles/GlobalStyles';
 import { theme } from './styles/theme';
@@ -17,6 +18,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <Provider store={store}>
           <App />
         </Provider>
