@@ -34,7 +34,7 @@ const Calendar = () => {
 
   const { data: unscheduledData } = useQuery({
     queryKey: [currentPage, queryKey.UNSCHEDULEDDATA],
-    queryFn: () => fetchUnscheduledCalendar(currentPage, 2),
+    queryFn: () => fetchUnscheduledCalendar(currentPage, 4),
   });
 
   const prevMonth = () => {
