@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useAppDispatch } from 'redux/store';
 import { useModal } from 'hooks/feature/useModal';
@@ -20,7 +20,11 @@ const Kanban = () => {
     useModal();
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
-  const { data, isLoading, isSuccess } = useQuery('fetchKanbanList', fetchKanbanList);
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ['fetchKanbanList'],
+    queryFn: fetchKanbanList,
+  });
+
   const modalViewModel = ModalViewModel({
     mode,
     closeModal,

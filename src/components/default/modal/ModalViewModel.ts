@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import ModalModel from './ModalModel';
 import { modalModeType } from 'hooks/feature/useModal';
@@ -34,26 +34,22 @@ const ModalViewModel = ({
   const queryClient = useQueryClient();
 
   function invalidateKanbanListOnSuccess() {
-    queryClient.invalidateQueries('fetchKanbanList');
+    queryClient.invalidateQueries({ queryKey: ['fetchKanbanList'] });
   }
 
-  const registerMutation = useMutation(model.registerApplication, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-    },
+  const registerMutation = useMutation({
+    mutationFn: model.registerApplication,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
-  const editMutation = useMutation(model.editApplication, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-    },
+  const editMutation = useMutation({
+    mutationFn: model.editApplication,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
-  const updateProcessMutation = useMutation(model.updateProcess, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-      closeModal();
-    },
+  const updateProcessMutation = useMutation({
+    mutationFn: model.updateProcess,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
   const handleApplicationSubmission: handleApplicationSubmissionType = async formValues => {
