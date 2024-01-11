@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
 import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
@@ -9,7 +10,6 @@ import {
   UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
 import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
-import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
 const Calendar = () => {
@@ -18,20 +18,24 @@ const Calendar = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
-  const { data: calendarData = [] } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
-    fetchMonthCalendar(
-      parseInt(format(currentMonth, 'yyyy')),
-      parseInt(format(currentMonth, 'MM')),
-    ),
-  );
+  const { data: calendarData = [] } = useQuery({
+    queryKey: [queryKey.CALENDARDATA, currentMonth],
+    queryFn: () =>
+      fetchMonthCalendar(
+        parseInt(format(currentMonth, 'yyyy')),
+        parseInt(format(currentMonth, 'MM')),
+      ),
+  });
 
-  const { data: detailData = [] } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
-    fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
-  );
+  const { data: detailData = [] } = useQuery({
+    queryKey: [queryKey.DETAILDATA, selectedDate],
+    queryFn: () => fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
+  });
 
-  const { data: unscheduledData } = useQuery([currentPage, queryKey.UNSCHEDULEDDATA], () =>
-    fetchUnscheduledCalendar(currentPage, 2),
-  );
+  const { data: unscheduledData } = useQuery({
+    queryKey: [currentPage, queryKey.UNSCHEDULEDDATA],
+    queryFn: () => fetchUnscheduledCalendar(currentPage, 2),
+  });
 
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
