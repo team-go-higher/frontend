@@ -237,16 +237,22 @@ export const UnscheduledContainer = styled.div`
 `;
 
 export const RenderUnscheduledContainer = styled.div`
+  .arrow-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 77px 0px 30px 0px;
+  }
+  .arrow {
+    cursor: pointer;
+  }
   .text {
     color: #333;
     font-size: 25px;
     font-weight: 700;
-    margin: 77px 0 29px 0;
-    display: flex;
-    justify-content: center;
   }
   .card {
-    width: 996px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
