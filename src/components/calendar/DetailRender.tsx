@@ -50,6 +50,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
                 mode: 'simpleRegister',
                 processType: 'TO_APPLY',
                 applicationInfo,
+                schedule: format(selectedDate, "yyyy-MM-dd'T'00:00"),
               })
             }>
             +
@@ -76,15 +77,27 @@ export const RenderUnscheduled = ({
 }: RenderUnscheduledProps) => {
   return (
     <RenderUnscheduledContainer>
-      <div>
-        <div className='text'>전형일을 기다리고 있어요</div>
-        <div className='card'>
-          {currentPage > 1 && <div onClick={prevPage}>◁</div>}
-          {unscheduledData.content.map((event: any) => (
-            <CalendarCard key={event.applicationId} event={event}></CalendarCard>
-          ))}
-          {unscheduledData.hasNext && <div onClick={nextPage}>▷</div>}
-        </div>
+      <div className='arrow-wrap'>
+        {currentPage > 1 ? (
+          <div className='arrow' onClick={prevPage}>
+            ◁
+          </div>
+        ) : (
+          <div></div>
+        )}
+        <p className='text'>전형일을 기다리고 있어요</p>
+        {unscheduledData.hasNext ? (
+          <div className='arrow' onClick={nextPage}>
+            ▷
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <div className='card'>
+        {unscheduledData.content.map((event: any) => (
+          <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+        ))}
       </div>
     </RenderUnscheduledContainer>
   );
