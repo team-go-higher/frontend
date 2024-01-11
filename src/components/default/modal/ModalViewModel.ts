@@ -5,6 +5,8 @@ import { modalModeType } from 'hooks/feature/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
+import { queryKey } from 'apis/queryKey';
+
 interface IProps {
   mode: modalModeType;
   closeModal: () => void;
@@ -34,7 +36,7 @@ const ModalViewModel = ({
   const queryClient = useQueryClient();
 
   function invalidateKanbanListOnSuccess() {
-    queryClient.invalidateQueries({ queryKey: ['fetchKanbanList'] });
+    queryClient.invalidateQueries({ queryKey: [queryKey.KANBANLIST] });
   }
 
   const registerMutation = useMutation({

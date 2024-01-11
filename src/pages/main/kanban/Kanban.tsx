@@ -12,6 +12,7 @@ import RightIcon from 'assets/main/main_right_arrow.svg';
 import * as S from './KanbanStyledComponents';
 import { ModalViewModel, ModalView } from 'components/default';
 import KanbanBoard from './KanbanBoard';
+import { queryKey } from 'apis/queryKey';
 
 const Kanban = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +22,7 @@ const Kanban = () => {
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery({
-    queryKey: ['fetchKanbanList'],
+    queryKey: [queryKey.KANBANLIST],
     queryFn: fetchKanbanList,
   });
 
