@@ -9,7 +9,11 @@ import {
   DayContainer,
   UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
-import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
+import {
+  fetchApplicationByMonth,
+  fetchApplicationByDate,
+  fetchApplicationUnscheduled,
+} from 'apis/calendar';
 import { queryKeys } from 'apis/queryKeys';
 
 const Calendar = () => {
@@ -21,7 +25,7 @@ const Calendar = () => {
   const { data: calendarData = [] } = useQuery({
     queryKey: [queryKeys.CALENDARDATA, currentMonth],
     queryFn: () =>
-      fetchMonthCalendar(
+      fetchApplicationByMonth(
         parseInt(format(currentMonth, 'yyyy')),
         parseInt(format(currentMonth, 'MM')),
       ),
@@ -29,12 +33,12 @@ const Calendar = () => {
 
   const { data: detailData = [] } = useQuery({
     queryKey: [queryKeys.DETAILDATA, selectedDate],
-    queryFn: () => fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
+    queryFn: () => fetchApplicationByDate(format(selectedDate, 'yyyy-MM-dd')),
   });
 
   const { data: unscheduledData } = useQuery({
     queryKey: [currentPage, queryKeys.UNSCHEDULEDDATA],
-    queryFn: () => fetchUnscheduledCalendar(currentPage, 4),
+    queryFn: () => fetchApplicationUnscheduled(currentPage, 4),
   });
 
   const prevMonth = () => {
