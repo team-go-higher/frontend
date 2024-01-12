@@ -23,3 +23,7 @@ const postPositions = async (positionIds: number[]) => {
 export const usePostPositions = () => {
   return useMutation({ mutationFn: postPositions });
 };
+
+export const fetchUserInfo = async () => {
+  const { data }: any = await apiService.Get('/v1/users/me');
+};
