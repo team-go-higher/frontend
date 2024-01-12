@@ -1,17 +1,14 @@
-import { usePositions, usePostPositions } from 'apis/signUp';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { usePositions, usePostPositions } from 'apis/auth';
+import { IPosition } from 'types/interfaces/Auth';
 
-interface IPositionList {
-  id: number;
-  position: string;
-}
 const DesiredPosition = () => {
   const navigate = useNavigate();
 
   const [position, setPosition] = useState<number[]>([]);
-  const [positionList, setPositionList] = useState<IPositionList[]>([]);
+  const [positionList, setPositionList] = useState<IPosition[]>([]);
 
   const { status, data } = usePositions();
   const { mutate: postPostions } = usePostPositions();
