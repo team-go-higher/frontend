@@ -23,7 +23,7 @@ const Calendar = () => {
 
   //api 연결
   const { data: calendarData = [] } = useQuery({
-    queryKey: [queryKeys.CALENDARDATA, currentMonth],
+    queryKey: [queryKeys.CALENDAR, 'fetchApplicationByMonth', currentMonth],
     queryFn: () =>
       fetchApplicationByMonth(
         parseInt(format(currentMonth, 'yyyy')),
@@ -32,12 +32,12 @@ const Calendar = () => {
   });
 
   const { data: detailData = [] } = useQuery({
-    queryKey: [queryKeys.DETAILDATA, selectedDate],
+    queryKey: [queryKeys.CALENDAR, 'fetchApplicationByDate', selectedDate],
     queryFn: () => fetchApplicationByDate(format(selectedDate, 'yyyy-MM-dd')),
   });
 
   const { data: unscheduledData } = useQuery({
-    queryKey: [currentPage, queryKeys.UNSCHEDULEDDATA],
+    queryKey: [queryKeys.UNSCHEDULED, 'fetchApplicationUnscheduled', currentPage],
     queryFn: () => fetchApplicationUnscheduled(currentPage, 4),
   });
 

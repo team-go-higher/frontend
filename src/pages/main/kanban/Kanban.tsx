@@ -22,13 +22,13 @@ const Kanban = () => {
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const { data, isLoading, isSuccess } = useQuery({
-    queryKey: [queryKeys.KANBANLIST],
+    queryKey: [queryKeys.KANBAN, 'fetchKanbanList'],
     queryFn: fetchKanbanList,
   });
 
   const modalViewModel = ModalViewModel({
     mode,
-    queryKey: queryKeys.KANBANLIST,
+    queryKey: [queryKeys.KANBAN],
     closeModal,
     currentProcessType,
     fetchedProcessData,

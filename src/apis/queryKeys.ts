@@ -1,7 +1,6 @@
 export const queryKeys = {
-  CALENDARDATA: 'calendarData',
-  DETAILDATA: 'detailData',
-  UNSCHEDULEDDATA: 'unscheduledData',
-  POSITON: 'position',
-  KANBANLIST: 'KanbanList',
+  AUTH: 'auth',
+  KANBAN: 'kanban',
+  CALENDAR: 'calendar',
+  UNSCHEDULED: 'unscheduled',
 };

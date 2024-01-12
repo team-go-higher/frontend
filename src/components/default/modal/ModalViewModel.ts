@@ -5,10 +5,10 @@ import { modalModeType } from 'hooks/feature/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
-import { queryKey } from 'apis/queryKey';
 
 interface IProps {
   mode: modalModeType;
+  queryKey: string[];
   closeModal: () => void;
   currentProcessType: processType;
   fetchedProcessData?: any;
@@ -27,6 +27,7 @@ export type handleApplicationSubmissionType = (formValues: FieldValues) => Promi
 
 const ModalViewModel = ({
   mode,
+  queryKey,
   closeModal,
   currentProcessType,
   fetchedProcessData,
@@ -36,7 +37,9 @@ const ModalViewModel = ({
   const queryClient = useQueryClient();
 
   function invalidateKanbanListOnSuccess() {
-    queryClient.invalidateQueries({ queryKey: [queryKey.KANBANLIST] });
+    queryKey.forEach(key => {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    });
   }
 
   const registerMutation = useMutation({

@@ -12,6 +12,7 @@ import {
 import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
 import { useModal } from 'hooks/feature/useModal';
 import { ModalView, ModalViewModel } from 'components/default';
+import { queryKeys } from 'apis/queryKeys';
 
 // 일별로 띄우기
 interface RenderDetailProps {
@@ -27,6 +28,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
 
   const modalViewModel = ModalViewModel({
     mode,
+    queryKey: [queryKeys.CALENDAR],
     closeModal,
     currentProcessType,
     applicationInfo,

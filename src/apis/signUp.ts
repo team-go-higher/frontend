@@ -8,7 +8,7 @@ const getPositions = async () => {
 };
 
 export const usePositions = () => {
-  return useQuery({ queryKey: [queryKeys.POSITON], queryFn: getPositions });
+  return useQuery({ queryKey: [queryKeys.AUTH, 'getPositions'], queryFn: getPositions });
 };
 
 const postPositions = async (positionIds: number[]) => {
