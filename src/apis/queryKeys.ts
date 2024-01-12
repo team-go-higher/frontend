@@ -1,4 +1,4 @@
-export const queryKey = {
+export const queryKeys = {
   CALENDARDATA: 'calendarData',
   DETAILDATA: 'detailData',
   UNSCHEDULEDDATA: 'unscheduledData',

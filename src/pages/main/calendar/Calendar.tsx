@@ -10,7 +10,7 @@ import {
   UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
 import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
-import { queryKey } from 'apis/queryKey';
+import { queryKeys } from 'apis/queryKeys';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -19,7 +19,7 @@ const Calendar = () => {
 
   //api 연결
   const { data: calendarData = [] } = useQuery({
-    queryKey: [queryKey.CALENDARDATA, currentMonth],
+    queryKey: [queryKeys.CALENDARDATA, currentMonth],
     queryFn: () =>
       fetchMonthCalendar(
         parseInt(format(currentMonth, 'yyyy')),
@@ -28,12 +28,12 @@ const Calendar = () => {
   });
 
   const { data: detailData = [] } = useQuery({
-    queryKey: [queryKey.DETAILDATA, selectedDate],
+    queryKey: [queryKeys.DETAILDATA, selectedDate],
     queryFn: () => fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
   });
 
   const { data: unscheduledData } = useQuery({
-    queryKey: [currentPage, queryKey.UNSCHEDULEDDATA],
+    queryKey: [currentPage, queryKeys.UNSCHEDULEDDATA],
     queryFn: () => fetchUnscheduledCalendar(currentPage, 4),
   });
 
