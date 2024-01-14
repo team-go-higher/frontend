@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Login = React.lazy(() => import('./pages/signIn/SignIn'));
+const SignIn = React.lazy(() => import('./pages/signIn/SignIn'));
 const Calendar = React.lazy(() => import('./pages/main/calendar/Calendar'));
 const Kanban = React.lazy(() => import('./pages/main/kanban/Kanban'));
 const Page404 = React.lazy(() => import('./pages/page404/Page404'));
@@ -15,7 +15,7 @@ export const privateRoutes = [
 export const publicRoutes = [
   { path: '/404', element: <Page404 /> },
   { path: '/500', element: <Page500 /> },
-  { path: '/login', element: <Login /> },
-  { path: '/token', element: <Login /> },
+  { path: '/signIn', element: <SignIn /> },
+  { path: '/token', element: <SignIn /> },
   { path: '/signUp/desiredPosition', element: <DesiredPosition /> },
 ];
