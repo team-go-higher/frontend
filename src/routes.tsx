@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Login = React.lazy(() => import('./pages/login/Login'));
+const Login = React.lazy(() => import('./pages/signIn/SignIn'));
 const Calendar = React.lazy(() => import('./pages/main/calendar/Calendar'));
 const Kanban = React.lazy(() => import('./pages/main/kanban/Kanban'));
 const Page404 = React.lazy(() => import('./pages/page404/Page404'));
