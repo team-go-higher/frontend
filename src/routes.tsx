@@ -13,9 +13,9 @@ export const privateRoutes = [
 ];
 
 export const publicRoutes = [
-  { path: '/404', element: <Page404 /> },
-  { path: '/500', element: <Page500 /> },
   { path: '/signIn', element: <SignIn /> },
   { path: '/token', element: <SignIn /> },
   { path: '/signUp/desiredPosition', element: <DesiredPosition /> },
+  { path: '/500', element: <Page500 /> },
+  { path: '*', element: <Page404 /> },
 ];
