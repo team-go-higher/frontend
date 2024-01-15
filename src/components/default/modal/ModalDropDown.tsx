@@ -10,7 +10,7 @@ interface IProps {
   value: string;
   isPlaceHolder: boolean;
   isArrowIconRequired: boolean;
-  itemList: string[] | null;
+  itemList: string[] | null | undefined;
   inputToggleHandler?: () => void;
   dropDownToggleHandler: (dropDownId: string) => void;
   dropDownItemHandler: (process: string) => void;
@@ -29,6 +29,15 @@ const ModalDropDown = ({
   dropDownToggleHandler,
   dropDownItemHandler,
 }: IProps) => {
+  const formatItemList = () => {
+    let newItemList: string[] | null | undefined = [];
+
+    if (dropDownId === 'processType') {
+      newItemList = itemList?.map(process => formatProcessToKor(process));
+      return newItemList;
+    } else return itemList;
+  };
+
   return (
     <S.ModalDropdownBox
       disabled={disabled}
@@ -44,13 +53,13 @@ const ModalDropDown = ({
       {isArrowIconRequired && <S.ArrowIcon src={SelectArrowIcon} />}
       {toggle && (
         <S.ModalDropdownItemBox>
-          {itemList?.map((process: string) => (
+          {formatItemList()?.map((item: string) => (
             <S.DropdownItem
-              key={process}
+              key={item}
               onClick={() => {
-                dropDownItemHandler(process);
+                dropDownItemHandler(item);
               }}>
-              {dropDownId === 'processType' ? formatProcessToKor(process) : process}
+              {item}
             </S.DropdownItem>
           ))}
 

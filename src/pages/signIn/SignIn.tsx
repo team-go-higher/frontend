@@ -4,17 +4,10 @@ import { styled } from 'styled-components';
 import moment from 'moment';
 import KakaoImg from 'assets/auth/auth_kakao.svg';
 import GoogleImg from 'assets/auth/auth_google.svg';
-import { fetchUserPoistionInfo } from 'apis/auth';
 
 const Login = () => {
   const location = window.location;
   const navigate = useNavigate();
-
-  const storeUserPositionInfo = async () => {
-    const userPositionInfo = await fetchUserPoistionInfo();
-    console.log('userPositionInfo', userPositionInfo);
-    localStorage.setItem('userPositionInfo', JSON.stringify(userPositionInfo));
-  };
 
   useEffect(() => {
     if (location.pathname !== '/signIn') {
@@ -33,7 +26,6 @@ const Login = () => {
         };
 
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        // storeUserPositionInfo();
         if (role === 'GUEST') {
           navigate('/signUp/desiredPosition');
         } else {

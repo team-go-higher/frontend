@@ -53,10 +53,20 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     dropDownToggleHandler: detailedDropDownToggleHandler,
     dropDownItemHandler: detailedDropDownItemHandler,
   } = useDropDownHandler(setValue, 'detailedProcessType');
+  const {
+    dropDownToggle: positionDropDownToggle,
+    setDropDownToggle: setPositionDropDownToggle,
+    dropDownToggleHandler: positionDropDownToggleHandler,
+    dropDownItemHandler: positionDropDownItemHandler,
+  } = useDropDownHandler(setValue, 'position');
 
   const processType = watch('processType');
   const detailedProcessType = watch('detailedProcessType');
   const [userInputToggle, setUserInputToggle] = useState(false);
+  const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') as string);
+  const desiredPositionList = desiredPositions.map(
+    (item: { id: number; position: string }) => item.position,
+  );
 
   function isDetailedProcessTypeRequired() {
     if (getValues('processType') === 'TO_APPLY' || getValues('processType') === 'DOCUMENT') {
@@ -76,7 +86,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
         companyName: '',
         processType: '',
         detailedProcessType: '',
-        position: '',
+        position: [],
         schedule: '',
         url: '',
       };
@@ -91,11 +101,14 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
           : ''
         : applicationInfo.process.description;
 
+    const position =
+      applicationInfo.position !== '' ? applicationInfo.position : desiredPositionList[0];
+
     return {
       companyName: applicationInfo.companyName,
       processType,
       detailedProcessType,
-      position: applicationInfo.position,
+      position,
       schedule: applicationInfo.process.schedule,
       url: applicationInfo.url,
     };
@@ -128,8 +141,13 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
   // 전형단계 변경시 세부단계 초기화
   useEffect(() => {
-    setUserInputToggle(false);
-    setValue('detailedProcessType', '');
+    console.log(processType, 'processType');
+    console.log(currentProcessType, 'currentProcessType');
+    if (processType !== currentProcessType) {
+      setUserInputToggle(false);
+      setValue('detailedProcessType', '');
+    }
+    console.log(getValues('detailedProcessType'));
   }, [processType]);
 
   // 모달 닫힐때 초기화
@@ -139,6 +157,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     setDropDownToggle(false);
     setDetailedDropDownToggle(false);
     setUserInputToggle(false);
+    setPositionDropDownToggle(false);
   }, [modalIsOpen, mode]);
 
   if (mode === 'updateCurrentProcess') {
@@ -287,17 +306,18 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             )}
 
             {/* 직무 */}
-            <S.ModalInputBox>
-              <S.ModalInput
-                type='text'
-                $error={errors.position ? true : false}
-                placeholder='직무를 선택하세요'
-                {...register('position', {
-                  required: true,
-                })}
-              />
-              {errors.position && <S.InvalidIcon>!</S.InvalidIcon>}
-            </S.ModalInputBox>
+            <ModalDropDown
+              dropDownId='position'
+              disabled={false}
+              toggle={positionDropDownToggle}
+              isError={isError('position')}
+              isPlaceHolder={defaultValues?.position !== getValues('position')}
+              isArrowIconRequired={true}
+              value={getValues('position')}
+              itemList={desiredPositionList}
+              dropDownToggleHandler={positionDropDownToggleHandler}
+              dropDownItemHandler={positionDropDownItemHandler}
+            />
 
             {/* 마감일 */}
             <S.ModalInputBox>
