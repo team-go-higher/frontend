@@ -7,8 +7,9 @@ import kanbanToggle from 'assets/main/main_kanban_toggle.svg';
 
 const Main = () => {
   const navigate = useNavigate();
-  const [isCalendar, setCalendar] = useState(localStorage.getItem('isCalendar') === 'true');
   const userInfo = localStorage.getItem('userInfo');
+  const isCalendarFromLocalStorage = localStorage.getItem('isCalendar');
+  const [isCalendar, setCalendar] = useState(isCalendarFromLocalStorage !== 'false');
 
   const toggleHandler = () => {
     const newIsCalendar = !isCalendar;
