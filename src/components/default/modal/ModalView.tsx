@@ -124,6 +124,8 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
       } else {
         clearErrors('detailedProcessType');
       }
+    } else {
+      clearErrors('detailedProcessType');
     }
   }
 
@@ -137,17 +139,20 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   // 세부단계 유효성 검사
   useEffect(() => {
     validateProcessType();
-  }, [detailedProcessType]);
+  }, [processType, detailedProcessType]);
 
   // 전형단계 변경시 세부단계 초기화
   useEffect(() => {
-    console.log(processType, 'processType');
-    console.log(currentProcessType, 'currentProcessType');
+    // console.log(processType, 'processType');
+    // console.log(currentProcessType, 'currentProcessType');
+    // console.log(detailedProcessType, 'detailedProcessType');
+    // console.log(defaultValues?.detailedProcessType);
+
     if (processType !== currentProcessType) {
       setUserInputToggle(false);
       setValue('detailedProcessType', '');
     }
-    console.log(getValues('detailedProcessType'));
+    // console.log(getValues('detailedProcessType'));
   }, [processType]);
 
   // 모달 닫힐때 초기화
