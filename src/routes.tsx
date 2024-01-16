@@ -6,14 +6,12 @@ const Kanban = React.lazy(() => import('./pages/main/kanban/Kanban'));
 const Page404 = React.lazy(() => import('./pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./pages/page500/Page500'));
 const DesiredPosition = React.lazy(() => import('./pages/signUp/DesiredPosition'));
-const ApplicationDetail = React.lazy(() => import('./pages/applications/ApplicationDetail'));
-const ApplicationEdit = React.lazy(() => import('./pages/applications/ApplicationEdit'));
+const Application = React.lazy(() => import('./pages/applications/index'));
 
 export const privateRoutes = [
   { path: '/calendar', element: <Calendar /> },
   { path: '/kanban', element: <Kanban /> },
-  { path: '/applicationDetail', element: <ApplicationDetail /> },
-  { path: '/applicatioEdit', element: <ApplicationEdit /> },
+  { path: '/application/*', element: <Application /> },
 ];
 
 export const publicRoutes = [

@@ -56,7 +56,7 @@ const ApplicationLayout = ({ type }: ApplicationLayoutProps) => {
     e.preventDefault();
 
     if (type === 'edit') {
-      navigate('/applicatioEdit');
+      navigate('/application/edit');
       return;
     }
 
