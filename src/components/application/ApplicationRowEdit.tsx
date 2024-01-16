@@ -1,17 +1,41 @@
+import { Control, FieldPath, FieldValues, useController } from 'react-hook-form';
 import styled from 'styled-components';
 
 interface ApplicationRowProps {
   label: string;
-  name: string;
-  value?: string;
+  control: Control<FieldValues>;
+  name: FieldPath<FieldValues>;
+  isRequired: boolean;
 }
 
-const ApplicationRowEdit = ({ label, name, value }: ApplicationRowProps) => {
+const ApplicationRowEdit = ({ label, name, control, isRequired }: ApplicationRowProps) => {
+  const {
+    field,
+    // fieldState: { error },
+  } = useController({
+    name,
+    control,
+    rules: isRequired
+      ? {
+          required: { value: true, message: '값을 입력해주세요' },
+        }
+      : {},
+  });
+
   return (
     <RowContainer>
       <label>{label}</label>
       {/* TODO input component 교체 필요 */}
-      <input className='content' name={name} value={value} placeholder='선택 입력' />
+      <input
+        className='content'
+        placeholder='선택 입력'
+        name={field.name}
+        value={field.value}
+        id={field.name}
+        onChange={field.onChange}
+      />
+      {/* TODO error 처리 필요할 경우 사용 */}
+      {/* {error && <div>{error.message}</div>} */}
     </RowContainer>
   );
 };
