@@ -29,15 +29,6 @@ const ModalDropDown = ({
   dropDownToggleHandler,
   dropDownItemHandler,
 }: IProps) => {
-  const formatItemList = () => {
-    let newItemList: string[] | null | undefined = [];
-
-    if (dropDownId === 'processType') {
-      newItemList = itemList?.map(process => formatProcessToKor(process));
-      return newItemList;
-    } else return itemList;
-  };
-
   return (
     <S.ModalDropdownBox
       disabled={disabled}
@@ -53,13 +44,13 @@ const ModalDropDown = ({
       {isArrowIconRequired && <S.ArrowIcon src={SelectArrowIcon} />}
       {toggle && (
         <S.ModalDropdownItemBox>
-          {formatItemList()?.map((item: string) => (
+          {itemList?.map((item: string) => (
             <S.DropdownItem
               key={item}
               onClick={() => {
                 dropDownItemHandler(item);
               }}>
-              {item}
+              {dropDownId === 'processType' ? formatProcessToKor(item) : item}
             </S.DropdownItem>
           ))}
 
