@@ -87,7 +87,15 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
 
         {/* TODO Radio Component 교체 필요 */}
         {RadioContentArr.map((e, index) => {
-          return <ApplicationRow key={index} label={e.label} name={e.name} value={data[e.name]} />;
+          return (
+            <ApplicationRowEdit
+              key={index}
+              label={e.label}
+              name={e.name}
+              control={control}
+              isRequired={false}
+            />
+          );
         })}
 
         {/* TODO button component 교체 필요 */}
