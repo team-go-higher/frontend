@@ -3,10 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 
 const ApplicationDetail = React.lazy(() => import('./ApplicationDetail'));
 const ApplicationEdit = React.lazy(() => import('./ApplicationEdit'));
+const ApplicationAdd = React.lazy(() => import('./ApplicationAdd'));
 
 const routes = [
   { path: '/detail', element: <ApplicationDetail /> },
   { path: '/edit', element: <ApplicationEdit /> },
+  { path: '/add', element: <ApplicationAdd /> },
 ];
 
 const loading = <div>화면을 불러오는 중 입니다.</div>;
