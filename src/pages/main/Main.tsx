@@ -39,6 +39,7 @@ const Main = () => {
 const Root = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 `;
 
 const ToggleContainer = styled.div`
