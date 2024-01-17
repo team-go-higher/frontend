@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { ButtonHTMLAttributes } from 'react';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'tertiary';
 }
 
@@ -20,7 +20,7 @@ export const TYPE_VARIANTS = {
   `,
 };
 
-const StyledButton = styled.button<Props>`
+const StyledButton = styled.button<ButtonProps>`
   width: 115px;
   height: 37px;
   outline: none;
@@ -36,6 +36,6 @@ const StyledButton = styled.button<Props>`
   ${({ variant }) => variant && TYPE_VARIANTS[variant]};
 `;
 
-export const Button = ({ variant = 'primary', ...props }: Props) => {
+export const Button = ({ variant = 'primary', ...props }: ButtonProps) => {
   return <StyledButton variant={variant} {...props} />;
 };
