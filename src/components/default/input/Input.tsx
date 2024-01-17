@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { UseControllerProps, useController } from 'react-hook-form';
+import {
+  UseControllerProps,
+  useController,
+  Control,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form';
 
 interface StyledTextFieldProps {
   error?: boolean;
@@ -31,18 +37,32 @@ const StyledTextField = styled.input<StyledTextFieldProps>`
 
 interface InputProps extends UseControllerProps {
   error?: boolean;
+  placeholder?: string;
+  label: string;
+  control: Control<FieldValues>;
+  name: FieldPath<FieldValues>;
+  isRequired: boolean;
 }
 
-export const Input = ({ control, name, defaultValue = '', error, ...rest }: InputProps) => {
+export const Input = ({
+  control,
+  name,
+  defaultValue = '',
+  error,
+  placeholder,
+  isRequired,
+  ...rest
+}: InputProps) => {
   const { field } = useController({
-    control,
     defaultValue,
     name,
+    control,
+    rules: isRequired
+      ? {
+          required: { value: true, message: '값을 입력해주세요' },
+        }
+      : {},
   });
 
-  return (
-    <div>
-      <StyledTextField {...field} error={error} {...rest} />
-    </div>
-  );
+  return <StyledTextField {...field} error={error} placeholder={placeholder} {...rest} />;
 };
