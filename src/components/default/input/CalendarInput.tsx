@@ -45,7 +45,7 @@ const StyledCalendarInput = styled.div<CalendarInputProps>`
   }
 `;
 
-const CalendarInput = ({ process = 'DOCUMENT', detailProcess }: CalendarInputProps) => {
+export const CalendarInput = ({ process = 'DOCUMENT', detailProcess }: CalendarInputProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDateChange = (date: Date | null) => {
@@ -75,5 +75,3 @@ const CalendarInput = ({ process = 'DOCUMENT', detailProcess }: CalendarInputPro
     </StyledCalendarInput>
   );
 };
-
-export default CalendarInput;

@@ -102,12 +102,7 @@ const CheckboxLabel = styled.label<{
   }
 `;
 
-export const DropDown = ({
-  process = 'DOCUMENT',
-  options,
-  selectedOptions,
-  onSelect,
-}: DropdownProps) => {
+export const DropDown = ({ process, options, selectedOptions, onSelect }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -148,7 +143,7 @@ export const DropDown = ({
   return (
     <DropdownContainer ref={dropdownRef}>
       <DropdownButton isOpen={isOpen} process={process} onClick={handleButtonClick}>
-        {formatProcessToKor(process)} ▼
+        {process && formatProcessToKor(process)} ▼
       </DropdownButton>
       <DropdownContent isOpen={isOpen} process={process}>
         {options.map(option => (
