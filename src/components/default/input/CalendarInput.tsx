@@ -13,16 +13,16 @@ interface CalendarInputProps {
 
 export const TYPE_PROCESS = {
   DOCUMENT: css`
-    color: rgba(255, 171, 196, 1);
+    color: rgb(var(--defaultPink));
   `,
   TEST: css`
-    color: rgba(149, 112, 226, 1);
+    color: rgb(var(--defaultPurple));
   `,
   INTERVIEW: css`
-    color: rgba(96, 207, 254, 1);
+    color: rgb(var(--defaultSkyblue));
   `,
   COMPLETE: css`
-    color: rgba(255, 85, 85, 1);
+    color: rgb(var(--defaultRed));
   `,
 };
 

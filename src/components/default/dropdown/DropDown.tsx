@@ -11,10 +11,10 @@ interface DropdownProps {
 }
 
 export const TYPE_PROCESS = {
-  DOCUMENT: 'rgba(255, 171, 196, 1)',
-  TEST: 'rgba(149, 112, 226, 1)',
-  INTERVIEW: 'rgba(96, 207, 254, 1)',
-  COMPLETE: 'rgba(255, 85, 85, 1)',
+  DOCUMENT: 'rgb(var(--defaultPink));',
+  TEST: 'rgb(var(--defaultPurple));',
+  INTERVIEW: 'rgb(var(--defaultSkyblue));',
+  COMPLETE: 'rgb(var(--defaultRed));',
 };
 
 const DropdownContainer = styled.div`
