@@ -12,8 +12,6 @@ import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } fro
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
-import { DropDown } from 'components/default/dropdown/DropDown';
-
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -66,36 +64,8 @@ const Calendar = () => {
     }
   }, [selectedDate]);
 
-  const process = 'COMPLETE';
-  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-
-  const handleSelectRadio = (option: string) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions([]);
-    } else {
-      setSelectedOptions([option]);
-    }
-  };
-
-  const handleSelectCheckbox = (option: string) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter(selected => selected !== option));
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
-    }
-  };
-
   return (
     <CalendarPage>
-      <form>
-        <DropDown
-          process={process}
-          options={options}
-          selectedOptions={selectedOptions}
-          onSelect={process === 'COMPLETE' ? handleSelectRadio : handleSelectCheckbox}
-        />
-      </form>
       <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
       <div className='calendar-detail'>
         <CalendarContainer>

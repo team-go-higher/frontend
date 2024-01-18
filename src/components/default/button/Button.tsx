@@ -33,7 +33,7 @@ const StyledButton = styled.button<ButtonProps>`
   font-size: 14px;
   font-weight: 400;
   line-height: 37px;
-  ${({ variant }) => variant && TYPE_VARIANTS[variant]};
+  ${props => props.variant && TYPE_VARIANTS[props.variant]};
 `;
 
 export const Button = ({ variant = 'primary', ...props }: ButtonProps) => {

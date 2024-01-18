@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+// 색상 바꾸기
+// export 바꾸기
 interface CalendarInputProps {
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
   detailProcess?: string;
@@ -33,11 +35,11 @@ const StyledCalendarInput = styled.div<CalendarInputProps>`
       width: 300px;
       font-size: 14px;
       font-weight: 500;
-      ${({ process }) => process && TYPE_PROCESS[process]};
+      ${props => props.process && TYPE_PROCESS[props.process]};
       &::placeholder {
         font-size: 14px;
         font-weight: 500;
-        ${({ process }) => process && TYPE_PROCESS[process]};
+        ${props => props.process && TYPE_PROCESS[props.process]};
       }
     }
   }

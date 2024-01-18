@@ -8,11 +8,7 @@ import {
   FieldValues,
 } from 'react-hook-form';
 
-interface StyledTextFieldProps {
-  error?: boolean;
-}
-
-const StyledTextField = styled.input<StyledTextFieldProps>`
+const StyledTextField = styled.input<{ error?: boolean }>`
   width: 100%;
   height: 40px;
   padding: 0 18px;
@@ -20,7 +16,7 @@ const StyledTextField = styled.input<StyledTextFieldProps>`
   line-height: 48px;
   margin: 0;
   outline: none;
-  border: 0.5px solid ${({ error }) => (error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
+  border: 0.5px solid ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
   border-radius: 10px;
   transition:
     background 0.2s ease,
@@ -28,7 +24,7 @@ const StyledTextField = styled.input<StyledTextFieldProps>`
     box-shadow 0.2s ease;
   &:focus {
     box-shadow: inset 0 0 0 2px
-      ${({ error }) => (error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
+      ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
   }
   &::placeholder {
     color: rgb(var(--inputBorder));
