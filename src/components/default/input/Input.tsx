@@ -8,6 +8,15 @@ import {
   FieldValues,
 } from 'react-hook-form';
 
+interface InputProps extends UseControllerProps {
+  error?: boolean;
+  placeholder?: string;
+  label: string;
+  control: Control<FieldValues>;
+  name: FieldPath<FieldValues>;
+  isRequired: boolean;
+}
+
 const StyledTextField = styled.input<{ error?: boolean }>`
   width: 100%;
   height: 40px;
@@ -31,15 +40,6 @@ const StyledTextField = styled.input<{ error?: boolean }>`
   }
 `;
 
-interface InputProps extends UseControllerProps {
-  error?: boolean;
-  placeholder?: string;
-  label: string;
-  control: Control<FieldValues>;
-  name: FieldPath<FieldValues>;
-  isRequired: boolean;
-}
-
 export const Input = ({
   control,
   name,
@@ -53,11 +53,7 @@ export const Input = ({
     defaultValue,
     name,
     control,
-    rules: isRequired
-      ? {
-          required: { value: true, message: '값을 입력해주세요' },
-        }
-      : {},
+    rules: isRequired ? { required: '값을 입력해주세요' } : {},
   });
 
   return <StyledTextField {...field} error={error} placeholder={placeholder} {...rest} />;

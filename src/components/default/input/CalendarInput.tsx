@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import { format } from 'date-fns';
+import { Controller, UseControllerProps, FieldValues, Control, FieldPath } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
 
-// 색상 바꾸기
-// export 바꾸기
-interface CalendarInputProps {
+interface CalendarInputProps extends UseControllerProps {
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
   detailProcess?: string;
+  control: Control<FieldValues>;
+  name: FieldPath<FieldValues>;
 }
 
 export const TYPE_PROCESS = {
@@ -35,43 +36,51 @@ const StyledCalendarInput = styled.div<CalendarInputProps>`
       width: 300px;
       font-size: 14px;
       font-weight: 500;
-      ${props => props.process && TYPE_PROCESS[props.process]};
+      ${({ process }) => process && TYPE_PROCESS[process]};
       &::placeholder {
         font-size: 14px;
         font-weight: 500;
-        ${props => props.process && TYPE_PROCESS[props.process]};
+        ${({ process }) => process && TYPE_PROCESS[process]};
       }
     }
   }
 `;
 
-export const CalendarInput = ({ process = 'DOCUMENT', detailProcess }: CalendarInputProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
-  const getFormattedDate = () => {
-    if (selectedDate) {
-      const formattedDate = format(selectedDate, 'MM월 dd일');
-      const formattedTime = format(selectedDate, 'HH시 mm분');
+export const CalendarInput = ({
+  control,
+  name,
+  process,
+  detailProcess,
+  ...rest
+}: CalendarInputProps) => {
+  const getFormattedDate = (date: Date | null) => {
+    if (date) {
+      const formattedDate = format(date, "MM'월' dd'일'");
+      const formattedTime = format(date, "HH'시' mm'분'");
       return `${detailProcess} ${formattedDate} ${formattedTime}`;
     }
     return `${detailProcess} 일정을 선택하세요`;
   };
 
   return (
-    <StyledCalendarInput process={process}>
-      <DatePicker
-        selected={selectedDate}
-        onChange={handleDateChange}
-        placeholderText={getFormattedDate()}
-        dateFormat={getFormattedDate()}
-        showTimeSelect
-        timeFormat='HH:mm'
-        timeIntervals={10}
-      />
-    </StyledCalendarInput>
+    <Controller
+      control={control}
+      name={name}
+      defaultValue=''
+      render={({ field }) => (
+        <StyledCalendarInput control={control} process={process} {...field} {...rest}>
+          <DatePicker
+            value={''}
+            selected={field.value}
+            onChange={date => field.onChange(date)}
+            placeholderText={getFormattedDate(field.value)}
+            dateFormat={getFormattedDate(field.value)}
+            showTimeSelect //시간도 선택할 수 있게
+            timeFormat='HH:mm'
+            timeIntervals={10}
+          />
+        </StyledCalendarInput>
+      )}
+    />
   );
 };
