@@ -12,9 +12,6 @@ import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } fro
 import { useQuery } from 'react-query';
 import { queryKey } from 'apis/queryKey';
 
-import { useForm } from 'react-hook-form';
-import { CalendarInput } from 'components/default/input/CalendarInput';
-
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -67,23 +64,8 @@ const Calendar = () => {
     }
   }, [selectedDate]);
 
-  const { control, handleSubmit } = useForm();
-
-  const onSubmit = (data: any) => {
-    // Handle form submission with the data
-    console.log(data);
-  };
-
   return (
     <CalendarPage>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CalendarInput
-          control={control}
-          name='yourDateFieldName'
-          process='DOCUMENT'
-          detailProcess='YourDetailProcess'
-        />
-      </form>
       <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
       <div className='calendar-detail'>
         <CalendarContainer>

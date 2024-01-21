@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { formatProcessToKor } from 'utils/process';
-import check_icon from 'assets/default/check_icon.svg';
-import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
+import { useDropdown } from 'hooks/feature/useDropDown';
+import CheckIcon from 'assets/default/check_icon.svg';
+import { ReactComponent as SelectArrowIcon } from 'assets/main/main_modal_select_arrow.svg';
 
 interface DropdownProps {
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
@@ -12,10 +13,10 @@ interface DropdownProps {
 }
 
 export const TYPE_PROCESS = {
-  DOCUMENT: 'rgb(var(--defaultPink));',
-  TEST: 'rgb(var(--defaultPurple));',
-  INTERVIEW: 'rgb(var(--defaultSkyblue));',
-  COMPLETE: 'rgb(var(--defaultRed));',
+  DOCUMENT: 'rgb(var(--defaultPink))',
+  TEST: 'rgb(var(--defaultPurple))',
+  INTERVIEW: 'rgb(var(--defaultSkyblue))',
+  COMPLETE: 'rgb(var(--defaultRed))',
 };
 
 const DropdownContainer = styled.div`
@@ -104,47 +105,22 @@ const CheckboxLabel = styled.label<{
 `;
 
 export const DropDown = ({ process, options, selectedOptions, onSelect }: DropdownProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const { isOpen, toggleDropdown, dropdownRef } = useDropdown();
 
   const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setIsOpen(!isOpen);
+    toggleDropdown();
   };
 
   const handleCheckboxChange = (option: any) => {
     onSelect(option);
   };
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    const targetNode = event.target as Node;
-    if (dropdownRef.current && !isDescendant(dropdownRef.current, targetNode)) {
-      setIsOpen(false);
-    }
-  };
-
-  const isDescendant: any = (parent: Node, child: Node | null): boolean => {
-    let node = child;
-    while (node !== null) {
-      if (node === parent) {
-        return true;
-      }
-      node = node.parentNode;
-    }
-    return false;
-  };
-
-  useEffect(() => {
-    document.addEventListener('click', handleOutsideClick);
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, []);
-
   return (
     <DropdownContainer ref={dropdownRef}>
       <DropdownButton isOpen={isOpen} process={process} onClick={handleButtonClick}>
-        {process && formatProcessToKor(process)} <img src={SelectArrowIcon} alt='아래 화살표' />
+        {process && formatProcessToKor(process)}{' '}
+        <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : process && TYPE_PROCESS[process]} />
       </DropdownButton>
       <DropdownContent isOpen={isOpen} process={process}>
         {options.map(option => (
@@ -156,7 +132,7 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
               onChange={() => handleCheckboxChange(option)}
             />
             <span className='custom-checkbox'>
-              <img src={check_icon} alt='체크 아이콘' />
+              <img src={CheckIcon} alt='체크 아이콘' />
             </span>
             {option}
           </CheckboxLabel>
