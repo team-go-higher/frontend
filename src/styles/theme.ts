@@ -19,10 +19,10 @@ export const theme = {
     placeholder: '200, 200, 200',
     dropDownHover: '237, 237, 237',
     main: '50, 83, 255',
-    defaultPink: '255, 174, 198, 1',
-    defaultPurple: '149, 112, 226, 1',
-    defaultSkyblue: '96, 207, 254, 1',
-    defaultRed: '255, 85, 85, 1',
+    defaultPink: '255, 174, 198',
+    defaultPurple: '149, 112, 226',
+    defaultSkyblue: '96, 207, 254',
+    defaultRed: '255, 85, 85',
   },
 };
 

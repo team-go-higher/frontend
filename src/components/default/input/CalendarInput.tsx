@@ -2,8 +2,9 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { Controller, UseControllerProps, FieldValues, Control, FieldPath } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
+import { StyledCalendarInput } from './CalendarInputStyledComponents';
 
 interface CalendarInputProps extends UseControllerProps {
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
@@ -11,40 +12,6 @@ interface CalendarInputProps extends UseControllerProps {
   control: Control<FieldValues>;
   name: FieldPath<FieldValues>;
 }
-
-export const TYPE_PROCESS = {
-  DOCUMENT: css`
-    color: rgb(var(--defaultPink));
-  `,
-  TEST: css`
-    color: rgb(var(--defaultPurple));
-  `,
-  INTERVIEW: css`
-    color: rgb(var(--defaultSkyblue));
-  `,
-  COMPLETE: css`
-    color: rgb(var(--defaultRed));
-  `,
-};
-
-const StyledCalendarInput = styled.div<CalendarInputProps>`
-  .react-datepicker__input-container {
-    height: 30px;
-    border-radius: 5px;
-    line-height: 30px;
-    input {
-      width: 300px;
-      font-size: 14px;
-      font-weight: 500;
-      ${({ process }) => process && TYPE_PROCESS[process]};
-      &::placeholder {
-        font-size: 14px;
-        font-weight: 500;
-        ${({ process }) => process && TYPE_PROCESS[process]};
-      }
-    }
-  }
-`;
 
 export const CalendarInput = ({
   control,
@@ -68,7 +35,7 @@ export const CalendarInput = ({
       name={name}
       defaultValue=''
       render={({ field }) => (
-        <StyledCalendarInput control={control} process={process} {...field} {...rest}>
+        <StyledCalendarInput process={process} {...field} {...rest}>
           <DatePicker
             value={''}
             selected={field.value}
