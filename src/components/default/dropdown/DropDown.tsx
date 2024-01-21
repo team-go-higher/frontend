@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { formatProcessToKor } from 'utils/process';
-import check_icon from 'assets/default/check_icon.png';
+import check_icon from 'assets/default/check_icon.svg';
+import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 
 interface DropdownProps {
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
@@ -143,7 +144,7 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
   return (
     <DropdownContainer ref={dropdownRef}>
       <DropdownButton isOpen={isOpen} process={process} onClick={handleButtonClick}>
-        {process && formatProcessToKor(process)} ▼
+        {process && formatProcessToKor(process)} <img src={SelectArrowIcon} alt='아래 화살표' />
       </DropdownButton>
       <DropdownContent isOpen={isOpen} process={process}>
         {options.map(option => (
