@@ -143,17 +143,13 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
   // 전형단계 변경시 세부단계 초기화
   useEffect(() => {
-    // console.log(processType, 'processType');
-    // console.log(currentProcessType, 'currentProcessType');
-    // console.log(detailedProcessType, 'detailedProcessType');
-    // console.log(defaultValues?.detailedProcessType);
-
-    if (processType !== currentProcessType) {
-      setUserInputToggle(false);
-      setValue('detailedProcessType', '');
+    if (mode === 'simpleRegister') {
+      if (processType !== currentProcessType) {
+        setUserInputToggle(false);
+        setValue('detailedProcessType', '');
+      }
     }
-    // console.log(getValues('detailedProcessType'));
-  }, [processType]);
+  }, [processType, mode]);
 
   // 모달 닫힐때 초기화
   useEffect(() => {
