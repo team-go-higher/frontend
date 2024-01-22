@@ -44,7 +44,9 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
       </div>
       <div className='cardContainer'>
         {detailData &&
-          detailData.map((event, i) => <CalendarCard key={i} event={event}></CalendarCard>)}
+          detailData.map((event, i) => (
+            <CalendarCard key={i} event={event} openModal={openModal}></CalendarCard>
+          ))}
         <PlusButton>
           <Circle
             onClick={() =>

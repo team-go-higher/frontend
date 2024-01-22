@@ -200,6 +200,7 @@ export const Circle = styled.div`
 `;
 
 export const EventContainer = styled.div<EventProps>`
+  position: relative;
   box-sizing: border-box;
   width: 222px;
   height: 110px;
