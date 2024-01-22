@@ -1,4 +1,5 @@
 import React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
 import {
   UseControllerProps,
@@ -10,33 +11,33 @@ import {
 
 interface InputProps extends UseControllerProps {
   error?: boolean;
-  placeholder?: string;
   label: string;
   control: Control<FieldValues>;
   name: FieldPath<FieldValues>;
   isRequired: boolean;
 }
 
-const StyledTextField = styled.input<{ error?: boolean }>`
+const StyledTextarea = styled(TextareaAutosize)<{ error?: boolean }>`
   width: 100%;
-  height: 40px;
-  padding: 0 18px;
+  padding: 10px 18px;
   font-size: 15px;
-  line-height: 48px;
-  margin: 0;
-  outline: none;
   border: 0.5px solid ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
   border-radius: 10px;
-  transition:
-    background 0.2s ease,
-    color 0.1s ease,
-    box-shadow 0.2s ease;
-  &:focus {
-    box-shadow: inset 0 0 0 2px
-      ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
+  resize: none;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 8px;
   }
-  &::placeholder {
-    color: rgb(var(--inputBorder));
+
+  &::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: rgba(92, 92, 92, 0.4);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(92, 92, 92, 0.1); /*스크롤바 뒷 배경 색상*/
   }
 `;
 
@@ -45,10 +46,11 @@ export const Input = ({
   name,
   defaultValue = '',
   error,
-  placeholder,
   isRequired,
   ...rest
 }: InputProps) => {
+  const placeholder = isRequired ? '필수 입력' : '선택 입력';
+
   const { field } = useController({
     defaultValue,
     name,
@@ -56,5 +58,14 @@ export const Input = ({
     rules: isRequired ? { required: '값을 입력해주세요' } : {},
   });
 
-  return <StyledTextField {...field} error={error} placeholder={placeholder} {...rest} />;
+  return (
+    <StyledTextarea
+      minRows={1}
+      maxRows={7}
+      {...field}
+      error={error}
+      placeholder={placeholder}
+      {...rest}
+    />
+  );
 };
