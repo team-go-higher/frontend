@@ -12,7 +12,6 @@ const Main = () => {
   const [isCalendar, setCalendar] = useState(isCalendarFromLocalStorage !== 'false');
   const { pathname } = useLocation();
 
-
   const toggleHandler = () => {
     const newIsCalendar = !isCalendar;
     setCalendar(newIsCalendar);
