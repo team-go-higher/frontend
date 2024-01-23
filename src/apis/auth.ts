@@ -1,5 +1,6 @@
+import { useQuery, useMutation } from '@tanstack/react-query';
 import apiService from 'apis';
-import { useQuery, useMutation } from 'react-query';
+import { queryKeys } from './queryKeys';
 
 const getPositions = async () => {
   const { data }: any = await apiService.Get('/v1/positions');
@@ -7,7 +8,7 @@ const getPositions = async () => {
 };
 
 export const usePositions = () => {
-  return useQuery('positions', getPositions);
+  return useQuery({ queryKey: [queryKeys.AUTH, 'getPositions'], queryFn: getPositions });
 };
 
 const postPositions = async (positionIds: number[]) => {
@@ -20,5 +21,10 @@ const postPositions = async (positionIds: number[]) => {
 };
 
 export const usePostPositions = () => {
-  return useMutation(postPositions);
+  return useMutation({ mutationFn: postPositions });
+};
+
+export const fetchUserPoistionInfo = async () => {
+  const { data }: any = await apiService.Get('/v1/users/me');
+  return data;
 };

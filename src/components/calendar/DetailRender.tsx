@@ -10,6 +10,9 @@ import {
   RenderUnscheduledContainer,
 } from './CalendarStyledComponents';
 import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
+import { useModal } from 'hooks/feature/useModal';
+import { ModalView, ModalViewModel } from 'components/default';
+import { queryKeys } from 'apis/queryKeys';
 
 // 일별로 띄우기
 interface RenderDetailProps {
@@ -20,8 +23,20 @@ interface RenderDetailProps {
 }
 
 export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
+  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
+    useModal();
+
+  const modalViewModel = ModalViewModel({
+    mode,
+    queryKey: [queryKeys.CALENDAR],
+    closeModal,
+    currentProcessType,
+    applicationInfo,
+  });
+
   return (
     <DetailContainer>
+      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div className='selectDate'>
         <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
         <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
@@ -29,10 +44,22 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
       </div>
       <div className='cardContainer'>
         {detailData &&
-          detailData.map(event => (
-            <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+          detailData.map((event, i) => (
+            <CalendarCard key={i} event={event} openModal={openModal}></CalendarCard>
           ))}
-        {/* <div>{calendarHandler()}</div> 모달 띄우는 함수였음*/}
+        <PlusButton>
+          <Circle
+            onClick={() =>
+              openModal({
+                mode: 'simpleRegister',
+                processType: 'TO_APPLY',
+                applicationInfo,
+                schedule: format(selectedDate, "yyyy-MM-dd'T'00:00"),
+              })
+            }>
+            +
+          </Circle>
+        </PlusButton>
       </div>
     </DetailContainer>
   );
@@ -54,15 +81,27 @@ export const RenderUnscheduled = ({
 }: RenderUnscheduledProps) => {
   return (
     <RenderUnscheduledContainer>
-      <div>
-        <div className='text'>전형일을 기다리고 있어요</div>
-        <div className='card'>
-          {currentPage > 1 && <div onClick={prevPage}>◁</div>}
-          {unscheduledData.content.map((event: any) => (
-            <CalendarCard key={event.applicationId} event={event}></CalendarCard>
-          ))}
-          {unscheduledData.hasNext && <div onClick={nextPage}>▷</div>}
-        </div>
+      <div className='arrow-wrap'>
+        {currentPage > 1 ? (
+          <div className='arrow' onClick={prevPage}>
+            ◁
+          </div>
+        ) : (
+          <div></div>
+        )}
+        <p className='text'>전형일을 기다리고 있어요</p>
+        {unscheduledData.hasNext ? (
+          <div className='arrow' onClick={nextPage}>
+            ▷
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <div className='card'>
+        {unscheduledData.content.map((event: any) => (
+          <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+        ))}
       </div>
     </RenderUnscheduledContainer>
   );

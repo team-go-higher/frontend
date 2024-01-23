@@ -15,7 +15,7 @@ interface IProps {
   openModal: (parameter: {
     mode: modalModeType;
     processType?: string;
-    applicationInfo?: any;
+    applicationInfo: IApplication;
   }) => void;
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
