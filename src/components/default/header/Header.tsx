@@ -48,7 +48,7 @@ const Header = () => {
             </div>
             <button
               onClick={() => {
-                navigate('/login');
+                navigate('/signIn');
                 localStorage.removeItem('userInfo');
               }}>
               로그아웃

@@ -1,15 +1,17 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import ModalModel from './ModalModel';
 import { modalModeType } from 'hooks/feature/useModal';
 import { formatProcessToKor } from 'utils/process';
 import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
+
 interface IProps {
   mode: modalModeType;
+  queryKey: string[];
   closeModal: () => void;
   currentProcessType: processType;
-  fetchedProcessData: any;
+  fetchedProcessData?: any;
   applicationInfo: any;
 }
 export interface IFormValues {
@@ -25,6 +27,7 @@ export type handleApplicationSubmissionType = (formValues: FieldValues) => Promi
 
 const ModalViewModel = ({
   mode,
+  queryKey,
   closeModal,
   currentProcessType,
   fetchedProcessData,
@@ -34,26 +37,24 @@ const ModalViewModel = ({
   const queryClient = useQueryClient();
 
   function invalidateKanbanListOnSuccess() {
-    queryClient.invalidateQueries('fetchKanbanList');
+    queryKey.forEach(key => {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    });
   }
 
-  const registerMutation = useMutation(model.registerApplication, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-    },
+  const registerMutation = useMutation({
+    mutationFn: model.registerApplication,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
-  const editMutation = useMutation(model.editApplication, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-    },
+  const editMutation = useMutation({
+    mutationFn: model.editApplication,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
-  const updateProcessMutation = useMutation(model.updateProcess, {
-    onSuccess() {
-      invalidateKanbanListOnSuccess();
-      closeModal();
-    },
+  const updateProcessMutation = useMutation({
+    mutationFn: model.updateProcess,
+    onSuccess: invalidateKanbanListOnSuccess,
   });
 
   const handleApplicationSubmission: handleApplicationSubmissionType = async formValues => {

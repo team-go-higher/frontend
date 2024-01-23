@@ -5,7 +5,7 @@ const PrivateRoutesComponent = () => {
   const userInfo = localStorage.getItem('userInfo');
 
   if (!userInfo) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to='/signIn' replace />;
   }
   return <Main />;
 };
