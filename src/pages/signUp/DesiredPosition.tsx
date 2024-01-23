@@ -45,7 +45,7 @@ const DesiredPosition = () => {
 
   useEffect(() => {
     if (status === 'success') {
-      setPositionList(data.data);
+      setPositionList(data);
     }
   }, [status, data]);
 
