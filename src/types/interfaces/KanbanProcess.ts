@@ -16,8 +16,6 @@ export interface IApplication {
     type: processType;
   };
   specificPosition: null | string;
-  processDescription: string;
-  schedule: string;
 }
 
 export interface IRegisterNewApplication {

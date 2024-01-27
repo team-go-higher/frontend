@@ -10,7 +10,7 @@ interface IProps {
   value: string;
   isPlaceHolder: boolean;
   isArrowIconRequired: boolean;
-  itemList: string[] | null;
+  itemList: string[] | null | undefined;
   inputToggleHandler?: () => void;
   dropDownToggleHandler: (dropDownId: string) => void;
   dropDownItemHandler: (process: string) => void;
@@ -44,13 +44,13 @@ const ModalDropDown = ({
       {isArrowIconRequired && <S.ArrowIcon src={SelectArrowIcon} />}
       {toggle && (
         <S.ModalDropdownItemBox>
-          {itemList?.map((process: string) => (
+          {itemList?.map((item: string) => (
             <S.DropdownItem
-              key={process}
+              key={item}
               onClick={() => {
-                dropDownItemHandler(process);
+                dropDownItemHandler(item);
               }}>
-              {dropDownId === 'processType' ? formatProcessToKor(process) : process}
+              {dropDownId === 'processType' ? formatProcessToKor(item) : item}
             </S.DropdownItem>
           ))}
 

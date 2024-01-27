@@ -14,6 +14,14 @@ const Header = () => {
   const [isSelect, setIsSelect] = useState('공고리스트');
   const navigate = useNavigate();
 
+  const handlePage = (item: string) => {
+    if (item === '지원서 추가') {
+      setIsSelect(item);
+      navigate('/application/add');
+    }
+    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+  };
+
   return (
     <HeaderContainer>
       <div className='headerContainer'>
@@ -25,7 +33,7 @@ const Header = () => {
                 <div
                   className={`menuItem ${isSelect === e ? 'active' : ''}`}
                   key={index}
-                  onClick={() => setIsSelect(e)}>
+                  onClick={() => handlePage(e)}>
                   {e}
                 </div>
               );
@@ -40,7 +48,7 @@ const Header = () => {
             </div>
             <button
               onClick={() => {
-                navigate('/login');
+                navigate('/signIn');
                 localStorage.removeItem('userInfo');
               }}>
               로그아웃
