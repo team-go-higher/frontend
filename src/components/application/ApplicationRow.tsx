@@ -30,14 +30,14 @@ const RowContainer = styled.div`
   label {
     width: 11rem;
     color: #969696;
-    font-size: 1.8rem;
+    font-size: 1.1rem;
     font-weight: 500;
   }
 
   .content {
     width: 32.9rem;
     color: #464646;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-weight: 500;
   }
 

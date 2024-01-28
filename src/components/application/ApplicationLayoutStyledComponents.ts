@@ -7,22 +7,31 @@ export const Wrapper = styled.div`
   padding: 5.4rem 11rem;
 
   .title {
-    color: #333;
+    color: rgb(var(--title));
     text-align: center;
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
   }
 `;
 
 export const ContentContainer = styled.form`
+  width: 50%;
+  min-width: 500px;
   display: flex;
   flex-direction: column;
   margin: 3.3rem 0 5rem;
   gap: 2.7rem;
 
   .btnContainer {
-    align-self: center;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    gap: 2.7rem;
   }
+`;
+
+export const RowContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 `;

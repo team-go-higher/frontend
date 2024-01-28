@@ -1,8 +1,11 @@
 import { FieldValues, useForm } from 'react-hook-form';
-import { ContentContainer, Wrapper } from './ApplicationLayoutStyledComponents';
+import { ContentContainer, Wrapper, RowContainer } from './ApplicationLayoutStyledComponents';
 import ApplicationRow from './ApplicationRow';
-import ApplicationRowEdit from './ApplicationRowEdit';
+import ApplicationLabel from './ApplicationLabel';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'components/default/button/Button';
+import { Input } from 'components/default/input/Input';
+import { RadioInput } from 'components/default/input/RadioInput';
 
 interface ApplicationLayoutProps {
   type: 'edit' | 'default' | 'add';
@@ -18,7 +21,6 @@ const InputContentArr = [
   { label: '전형 단계', name: 'processes', isRequired: false },
   { label: '주요 업무', name: 'jobDescription', isRequired: true },
   { label: '필수 역량', name: 'requiredCapability', isRequired: false },
-  { label: '경력 조건', name: 'requiredCapability', isRequired: false },
   { label: '공고 URL', name: 'url', isRequired: true },
   { label: '회사 위치', name: 'location', isRequired: false },
   { label: '우대 사항', name: 'preferredQualification', isRequired: false },
@@ -26,9 +28,24 @@ const InputContentArr = [
 ];
 
 const RadioContentArr = [
-  { label: '고용 형태', name: 'employmentType' },
-  { label: '경력 조건', name: 'careerRequirement' },
-  { label: '근무 형태', name: 'workType' },
+  {
+    label: '고용 형태',
+    name: 'employmentType',
+    options: ['정규직', '계약직', '파견직', '인턴'],
+    isRequired: true,
+  },
+  {
+    label: '경력 조건',
+    name: 'careerRequirement',
+    options: ['신입', '경력', '무관'],
+    isRequired: false,
+  },
+  {
+    label: '근무 형태',
+    name: 'workType',
+    options: ['상주', '재택근무', '재택가능'],
+    isRequired: false,
+  },
 ];
 
 const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
@@ -71,44 +88,47 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
     <Wrapper>
       <div className='title'>내 지원서</div>
       <ContentContainer onSubmit={handleSubmit(onSubmit)}>
-        {InputContentArr.map((e, index) =>
+        {InputContentArr.map(e =>
           type !== 'default' ? (
-            <ApplicationRowEdit
-              key={index}
-              label={e.label}
-              name={e.name}
-              control={control}
-              isRequired={e.isRequired}
-            />
+            <RowContainer key={e.name}>
+              <ApplicationLabel label={e.label} isRequired={e.isRequired} />
+              <Input
+                name={e.name}
+                label={e.label}
+                error={false}
+                isRequired={e.isRequired}
+                control={control}
+              />
+            </RowContainer>
           ) : (
-            <ApplicationRow key={index} label={e.label} name={e.name} value={data[e.name]} />
+            <ApplicationRow key={e.name} name={e.name} label={e.label} value={data[e.name]} />
           ),
         )}
+        {RadioContentArr.map(e => (
+          <RowContainer key={e.name}>
+            <ApplicationLabel label={e.label} isRequired={e.isRequired} />
+            {e.options.map(option => (
+              <RadioInput
+                key={option}
+                name={e.name}
+                label={option}
+                control={control}
+                radioValue={option}
+                readOnly={type === 'default'}
+              />
+            ))}
+          </RowContainer>
+        ))}
 
-        {/* TODO Radio Component 교체 필요 */}
-        {RadioContentArr.map((e, index) => {
-          return (
-            <ApplicationRowEdit
-              key={index}
-              label={e.label}
-              name={e.name}
-              control={control}
-              isRequired={false}
-            />
-          );
-        })}
-
-        {/* TODO button component 교체 필요 */}
+        {/* 버튼 */}
         {type === 'default' ? (
           <div className='btnContainer'>
-            <button type='button'>삭제하기</button>
-            <button type='button' onClick={() => navigate('/application/edit')}>
-              수정하기
-            </button>
+            <Button variant='secondary'>삭제하기</Button>
+            <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
           </div>
         ) : (
-          <div className={`btnContainer`}>
-            <button type='submit'>작성완료</button>
+          <div className='btnContainer'>
+            <Button type='submit'>작성완료</Button>
           </div>
         )}
       </ContentContainer>
