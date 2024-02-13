@@ -5,11 +5,13 @@ import { useDropdown } from 'hooks/feature/useDropDown';
 import CheckIcon from 'assets/default/check_icon.svg';
 import { ReactComponent as SelectArrowIcon } from 'assets/main/main_modal_select_arrow.svg';
 
+type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+
 interface DropdownProps {
-  process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  process: ProcessType;
   options: string[] | null;
   selectedOptions: string[];
-  onSelect: (option: string) => void;
+  onSelect: (process: ProcessType, option: string) => void;
 }
 
 export const TYPE_PROCESS = {
@@ -102,7 +104,7 @@ const CheckboxLabel = styled.label<{
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background-color: ${props => props.process && TYPE_PROCESS[props.process]};
-    z-index: 2;
+    z-index: -1;
   }
 `;
 
@@ -114,8 +116,8 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
     toggleDropdown();
   };
 
-  const handleCheckboxChange = (option: any) => {
-    onSelect(option);
+  const handleCheckboxChange = (process: ProcessType, option: string) => {
+    onSelect(process, option);
   };
 
   return (
@@ -132,7 +134,7 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
                 type='checkbox'
                 value={option}
                 checked={selectedOptions.includes(option)}
-                onChange={() => handleCheckboxChange(option)}
+                onChange={() => handleCheckboxChange(process, option)}
               />
               <span className='custom-checkbox'>
                 <img src={CheckIcon} alt='체크 아이콘' />
