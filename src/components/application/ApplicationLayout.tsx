@@ -1,15 +1,20 @@
-import { FieldValues, useForm } from 'react-hook-form';
-import { ContentContainer, Wrapper, RowContainer } from './ApplicationLayoutStyledComponents';
-import ApplicationRow from './ApplicationRow';
+import { useForm, useFieldArray, Control, FieldValues } from 'react-hook-form';
+import {
+  ContentContainer,
+  Wrapper,
+  RowContainer,
+  ApplicationContent,
+} from './ApplicationLayoutStyledComponents';
+import ApplicationInput from './ApplicationInput';
 import ApplicationLabel from './ApplicationLabel';
+import ApplicationProcess from './ApplicationProcess';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/default/button/Button';
-import { Input } from 'components/default/input/Input';
 import { RadioInput } from 'components/default/input/RadioInput';
 
 interface ApplicationLayoutProps {
-  type: 'edit' | 'default' | 'add';
-  data?: any; //TODO api 연결 이후 응답 데이터 type으로 수정 필요
+  applicationType: 'edit' | 'default' | 'add';
+  data?: any; //TODO api 연결 이후 응답 데이터 applicationType으로 수정 필요
 }
 
 // TODO 필수인지 여부 이후 api 연동 시 수정 필요
@@ -48,7 +53,7 @@ const RadioContentArr = [
   },
 ];
 
-const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
+const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
 
   const methods = useForm<FieldValues>({
@@ -58,7 +63,7 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
       team: data.team || '',
       position: data.position || '',
       specificPosition: data.specificPosition || '',
-      processes: data.processes || '',
+      processes: data.processes || [],
       jobDescription: data.jobDescription || '',
       requiredCapability: data.requiredCapability || '',
       url: data.url || '',
@@ -71,12 +76,17 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
     },
   });
 
-  const { handleSubmit, control } = methods;
+  const { control, handleSubmit } = methods;
+
+  const { fields, append, update, remove } = useFieldArray({
+    control,
+    name: 'processes',
+  });
 
   // 작성완료 버튼 클릭 시 동작, data를 통해서 입력값 확인 가능
   const onSubmit = (data: FieldValues) => {
     console.log(data);
-    if (type === 'edit') {
+    if (applicationType === 'edit') {
       //   TODO 수정 API 연결
       return;
     }
@@ -88,22 +98,33 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
     <Wrapper>
       <div className='title'>내 지원서</div>
       <ContentContainer onSubmit={handleSubmit(onSubmit)}>
-        {InputContentArr.map(e =>
-          type !== 'default' ? (
-            <RowContainer key={e.name}>
-              <ApplicationLabel label={e.label} isRequired={e.isRequired} />
-              <Input
-                name={e.name}
-                label={e.label}
-                error={false}
-                isRequired={e.isRequired}
-                control={control}
-              />
-            </RowContainer>
-          ) : (
-            <ApplicationRow key={e.name} name={e.name} label={e.label} value={data[e.name]} />
-          ),
-        )}
+        {InputContentArr.map(e => (
+          <RowContainer key={e.name}>
+            <ApplicationLabel label={e.label} isRequired={e.isRequired} />
+            <ApplicationContent>
+              {e.name === 'processes' ? (
+                <ApplicationProcess
+                  control={control}
+                  fields={fields}
+                  append={append}
+                  update={update}
+                  remove={remove}
+                  applicationType={applicationType}
+                />
+              ) : (
+                <ApplicationInput
+                  key={e.name}
+                  applicationType={applicationType}
+                  label={e.label}
+                  name={e.name}
+                  control={control}
+                  isRequired={e.isRequired}
+                  value={data[e.name]}
+                />
+              )}
+            </ApplicationContent>
+          </RowContainer>
+        ))}
         {RadioContentArr.map(e => (
           <RowContainer key={e.name}>
             <ApplicationLabel label={e.label} isRequired={e.isRequired} />
@@ -114,21 +135,23 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
                 label={option}
                 control={control}
                 radioValue={option}
-                readOnly={type === 'default'}
+                readOnly={applicationType === 'default'}
               />
             ))}
           </RowContainer>
         ))}
 
         {/* 버튼 */}
-        {type === 'default' ? (
+        {applicationType === 'default' ? (
           <div className='btnContainer'>
             <Button variant='secondary'>삭제하기</Button>
             <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
           </div>
         ) : (
           <div className='btnContainer'>
-            <Button type='submit'>작성완료</Button>
+            <Button type='submit' onClick={() => navigate('/application/detail')}>
+              작성완료
+            </Button>
           </div>
         )}
       </ContentContainer>

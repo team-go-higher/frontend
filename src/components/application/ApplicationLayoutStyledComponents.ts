@@ -32,6 +32,9 @@ export const ContentContainer = styled.form`
 
 export const RowContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
+`;
+
+export const ApplicationContent = styled.div`
+  width: calc(100% - 130px);
 `;

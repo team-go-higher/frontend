@@ -18,7 +18,7 @@ interface InputProps extends UseControllerProps {
 }
 
 const StyledTextarea = styled(TextareaAutosize)<{ error?: boolean }>`
-  width: 80%;
+  width: 100%;
   padding: 10px 18px;
   font-size: 15px;
   border: 0.5px solid ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
