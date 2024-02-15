@@ -46,7 +46,7 @@ const Login = () => {
             className='btnContainer'
             id='kakao'
             onClick={() => {
-              window.open(`${process.env.REACT_APP_BASE_URL}/oauth2/authorization/kakao`, '_self');
+              window.open(`https://api.test.gohigher.site/oauth2/authorization/kakao`, '_self');
             }}>
             <img src={KakaoImg} className='btnImg' alt='kakao' />
             <div className='btnTitle'>카카오로 로그인</div>

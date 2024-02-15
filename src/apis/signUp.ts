@@ -22,3 +22,13 @@ const postPositions = async (positionIds: number[]) => {
 export const usePostPositions = () => {
   return useMutation(postPositions);
 };
+
+export const getRefreshToken = async () => {
+  try {
+    const { data }: any = await apiService.Get('/tokens/mine');
+    localStorage.setItem('accessToken', data.accessToken);
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+};

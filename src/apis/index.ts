@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { getRefreshToken } from './signUp';
 interface IUserInfo {
   accessToken: string;
   expireDate: string;
@@ -43,7 +44,17 @@ class ApiService {
         }
         return response;
       },
-      error => {
+      async error => {
+        if (error.code === 401) {
+          const { config } = error;
+          const data = await getRefreshToken();
+
+          console.log(data);
+
+          if (data) {
+            return this.api(config);
+          }
+        }
         return Promise.reject(error);
       },
     );
