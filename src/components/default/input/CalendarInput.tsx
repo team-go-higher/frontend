@@ -7,7 +7,7 @@ import { StyledCalendarInput } from './CalendarInputStyledComponents';
 type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 interface CalendarInputProps {
-  onChange: (date: Date | null) => void;
+  onChange: (date: Date | null, process: ProcessType, detailProcess: string) => void;
   process?: ProcessType;
   detailProcess?: string;
 }
@@ -17,8 +17,8 @@ export const CalendarInput = ({ onChange, process, detailProcess }: CalendarInpu
 
   const getFormattedDate = (date: Date | null) => {
     if (date) {
-      const formattedDate = format(date, 'M') + '월' + format(date, 'd') + '일';
-      const formattedTime = format(date, 'HH') + '시' + format(date, 'mm') + '분';
+      const formattedDate = format(date, "'M'월 'd'일");
+      const formattedTime = format(date, "'HH'시 'mm'분");
       return `${detailProcess} ${formattedDate} ${formattedTime}`;
     }
     return `${detailProcess} 일정을 선택하세요`;
@@ -26,8 +26,8 @@ export const CalendarInput = ({ onChange, process, detailProcess }: CalendarInpu
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    if (process && detailProcess) {
-      onChange(date);
+    if (date && process && detailProcess) {
+      onChange(date, process, detailProcess);
     }
   };
 

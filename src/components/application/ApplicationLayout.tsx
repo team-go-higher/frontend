@@ -104,7 +104,6 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             <ApplicationContent>
               {e.name === 'processes' ? (
                 <ApplicationProcess
-                  control={control}
                   fields={fields}
                   append={append}
                   update={update}

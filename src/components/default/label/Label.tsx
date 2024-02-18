@@ -14,10 +14,9 @@ export const TYPE_PROCESS = {
 };
 
 const StyledLabel = styled.label<LabelProps>`
-  width: fit-content;
-  height: 22px;
   white-space: nowrap;
-  padding: 0 10px;
+  padding: 1px 10px;
+  margin-bottom: 10px;
   outline: none;
   border: 1px solid ${props => props.process && TYPE_PROCESS[props.process]};
   border-radius: 12.5px;

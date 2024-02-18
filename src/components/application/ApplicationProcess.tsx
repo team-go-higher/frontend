@@ -7,7 +7,6 @@ import styled from 'styled-components';
 
 interface ApplicationProcessProps {
   applicationType: 'edit' | 'default' | 'add';
-  control: Control<FieldValues>;
   fields: FieldArrayWithId<FieldValues>[];
   append: (
     value?: Partial<FieldValues> | Partial<FieldValues>[] | undefined,
@@ -21,7 +20,6 @@ type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 const ApplicationProcess = ({
   applicationType,
-  control,
   fields,
   append,
   update,
@@ -62,8 +60,11 @@ const ApplicationProcess = ({
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log(fields);
-  }, [fields]);
+    if (selectedOptions.length === 0) {
+      setSelectedOptions(['서류전형']);
+      append({ type: 'DOCUMENT', description: '서류전형', schedule: '' });
+    }
+  }, [selectedOptions]);
 
   const handleSelectCheckbox = (process: ProcessType, option: string) => {
     if (selectedOptions.includes(option)) {
@@ -76,12 +77,17 @@ const ApplicationProcess = ({
     }
   };
 
+  const updateFieldArray = (date: Date | null, process: ProcessType, option: string) => {
+    const index = selectedOptions.indexOf(option);
+    update(index, { type: process, description: option, schedule: date });
+  };
+
   return (
     <ProcessContainer>
       {applicationType === 'default' ? (
         <div>
           {ProcessArr.map((e, index) => (
-            <div className='dropdown' key={index}>
+            <div className='label' key={index}>
               <Label process={e.type} isPast={true} />
             </div>
           ))}
@@ -90,27 +96,31 @@ const ApplicationProcess = ({
         <div>
           {ProcessArr.map((event: any, index: number) => (
             <div style={{ display: 'flex', width: '100%' }} key={event.id}>
-              <div className='dropdown'>
-                <DropDown
-                  process={event.type}
-                  options={ProcessArr.find(e => e.type === event.type)?.description || []}
-                  selectedOptions={selectedOptions}
-                  onSelect={handleSelectCheckbox}
-                />
+              <div className='label'>
+                {event.type === 'DOCUMENT' ? (
+                  <Label process='DOCUMENT'></Label>
+                ) : (
+                  <DropDown
+                    process={event.type}
+                    options={ProcessArr.find(e => e.type === event.type)?.description || []}
+                    selectedOptions={selectedOptions}
+                    onSelect={handleSelectCheckbox}
+                  />
+                )}
               </div>
-              {fields.map((field: any, index: number) => (
-                <div className='calendarInput'>
-                  {field.type === event.type && (
-                    <div style={{ width: '100%' }}>
+              <div>
+                {fields.map((field: any, index: number) => (
+                  <div className='calendarInput'>
+                    {field.type === event.type && (
                       <CalendarInput
-                        onChange={(date: Date | null) => update(field.id, { schedule: date })}
+                        onChange={updateFieldArray}
                         process={field.type}
                         detailProcess={field.description}
                       />
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -123,9 +133,9 @@ export default ApplicationProcess;
 
 const ProcessContainer = styled.div`
   width: 100%;
-  .dropdown {
+  .label {
     width: 140px;
-    line-height: 30px;
+    line-height: 40px;
   }
   .calendarInput {
     width: calc(100% - 140px);
