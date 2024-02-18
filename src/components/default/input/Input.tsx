@@ -10,7 +10,7 @@ import {
 } from 'react-hook-form';
 
 interface InputProps extends UseControllerProps {
-  error?: boolean;
+  error: boolean;
   label: string;
   control: Control<FieldValues>;
   name: FieldPath<FieldValues>;
@@ -37,7 +37,7 @@ const StyledTextarea = styled(TextareaAutosize)<{ error?: boolean }>`
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(92, 92, 92, 0.1); /*스크롤바 뒷 배경 색상*/
+    background: rgba(92, 92, 92, 0.1);
   }
 `;
 

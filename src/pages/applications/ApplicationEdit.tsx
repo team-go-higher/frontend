@@ -1,6 +1,6 @@
 import ApplicationLayout from 'components/application/ApplicationLayout';
 interface Data {
-  [key: string]: string;
+  [key: string]: string | string[];
 }
 
 const DummyData: Data = {
@@ -8,7 +8,7 @@ const DummyData: Data = {
   team: '',
   position: '디자인',
   specificPosition: '',
-  processes: '',
+  processes: [],
   jobDescription: '오토벨 광고 컨텐츠 크리에이티브 컨셉 도출 및 기획 (DA/SNS/영상 콘텐츠 등)',
   requiredCapability: 'Figma 활용 숙련자',
   url: 'https://glovis.recruiter.co.kr/app/jobnotice/list',
@@ -22,7 +22,7 @@ const DummyData: Data = {
 
 const ApplicationEdit = () => {
   // TODO api 연동 후 data 교체 필요
-  return <ApplicationLayout type='edit' data={DummyData} />;
+  return <ApplicationLayout applicationType='edit' data={DummyData} />;
 };
 
 export default ApplicationEdit;

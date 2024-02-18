@@ -1,19 +1,22 @@
 import React from 'react';
 import { UseControllerProps, useController } from 'react-hook-form';
 import styled from 'styled-components';
-import check_icon from 'assets/default/check_icon.png';
+import check_icon from 'assets/default/check_icon.svg';
 
 interface RadioInputProps {
   label: string;
   name: string;
   control: UseControllerProps['control'];
   radioValue: string;
+  readOnly: boolean;
 }
 
 const StyledRadioInput = styled.div`
   label {
     position: relative;
-    padding-left: 30px;
+    width: 100%;
+    padding-left: 25px;
+    margin-right: 10px;
     cursor: pointer;
     display: inline-block;
     line-height: 24px;
@@ -55,7 +58,7 @@ const StyledRadioInput = styled.div`
   }
 `;
 
-export const RadioInput = ({ label, name, control, radioValue }: RadioInputProps) => {
+export const RadioInput = ({ label, name, control, radioValue, readOnly }: RadioInputProps) => {
   const { field } = useController({
     name,
     control,
@@ -65,7 +68,7 @@ export const RadioInput = ({ label, name, control, radioValue }: RadioInputProps
   return (
     <StyledRadioInput>
       <label>
-        <input type='radio' {...field} value={radioValue} />
+        <input type='radio' {...field} value={radioValue} disabled={readOnly} />
         <span className='custom-radio'>
           <img src={check_icon} alt='체크 아이콘' />
         </span>

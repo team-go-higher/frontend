@@ -1,12 +1,20 @@
-import { FieldValues, useForm } from 'react-hook-form';
-import { ContentContainer, Wrapper } from './ApplicationLayoutStyledComponents';
-import ApplicationRow from './ApplicationRow';
-import ApplicationRowEdit from './ApplicationRowEdit';
+import { useForm, useFieldArray, Control, FieldValues } from 'react-hook-form';
+import {
+  ContentContainer,
+  Wrapper,
+  RowContainer,
+  ApplicationContent,
+} from './ApplicationLayoutStyledComponents';
+import ApplicationInput from './ApplicationInput';
+import ApplicationLabel from './ApplicationLabel';
+import ApplicationProcess from './ApplicationProcess';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'components/default/button/Button';
+import { RadioInput } from 'components/default/input/RadioInput';
 
 interface ApplicationLayoutProps {
-  type: 'edit' | 'default' | 'add';
-  data?: any; //TODO api 연결 이후 응답 데이터 type으로 수정 필요
+  applicationType: 'edit' | 'default' | 'add';
+  data?: any; //TODO api 연결 이후 응답 데이터 applicationType으로 수정 필요
 }
 
 // TODO 필수인지 여부 이후 api 연동 시 수정 필요
@@ -18,7 +26,6 @@ const InputContentArr = [
   { label: '전형 단계', name: 'processes', isRequired: false },
   { label: '주요 업무', name: 'jobDescription', isRequired: true },
   { label: '필수 역량', name: 'requiredCapability', isRequired: false },
-  { label: '경력 조건', name: 'requiredCapability', isRequired: false },
   { label: '공고 URL', name: 'url', isRequired: true },
   { label: '회사 위치', name: 'location', isRequired: false },
   { label: '우대 사항', name: 'preferredQualification', isRequired: false },
@@ -26,12 +33,27 @@ const InputContentArr = [
 ];
 
 const RadioContentArr = [
-  { label: '고용 형태', name: 'employmentType' },
-  { label: '경력 조건', name: 'careerRequirement' },
-  { label: '근무 형태', name: 'workType' },
+  {
+    label: '고용 형태',
+    name: 'employmentType',
+    options: ['정규직', '계약직', '파견직', '인턴'],
+    isRequired: true,
+  },
+  {
+    label: '경력 조건',
+    name: 'careerRequirement',
+    options: ['신입', '경력', '무관'],
+    isRequired: false,
+  },
+  {
+    label: '근무 형태',
+    name: 'workType',
+    options: ['상주', '재택근무', '재택가능'],
+    isRequired: false,
+  },
 ];
 
-const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
+const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
 
   const methods = useForm<FieldValues>({
@@ -41,7 +63,7 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
       team: data.team || '',
       position: data.position || '',
       specificPosition: data.specificPosition || '',
-      processes: data.processes || '',
+      processes: data.processes || [],
       jobDescription: data.jobDescription || '',
       requiredCapability: data.requiredCapability || '',
       url: data.url || '',
@@ -54,12 +76,17 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
     },
   });
 
-  const { handleSubmit, control } = methods;
+  const { control, handleSubmit } = methods;
+
+  const { fields, append, update, remove } = useFieldArray({
+    control,
+    name: 'processes',
+  });
 
   // 작성완료 버튼 클릭 시 동작, data를 통해서 입력값 확인 가능
   const onSubmit = (data: FieldValues) => {
     console.log(data);
-    if (type === 'edit') {
+    if (applicationType === 'edit') {
       //   TODO 수정 API 연결
       return;
     }
@@ -71,44 +98,59 @@ const ApplicationLayout = ({ type, data = [] }: ApplicationLayoutProps) => {
     <Wrapper>
       <div className='title'>내 지원서</div>
       <ContentContainer onSubmit={handleSubmit(onSubmit)}>
-        {InputContentArr.map((e, index) =>
-          type !== 'default' ? (
-            <ApplicationRowEdit
-              key={index}
-              label={e.label}
-              name={e.name}
-              control={control}
-              isRequired={e.isRequired}
-            />
-          ) : (
-            <ApplicationRow key={index} label={e.label} name={e.name} value={data[e.name]} />
-          ),
-        )}
+        {InputContentArr.map(e => (
+          <RowContainer key={e.name}>
+            <ApplicationLabel label={e.label} isRequired={e.isRequired} />
+            <ApplicationContent>
+              {e.name === 'processes' ? (
+                <ApplicationProcess
+                  fields={fields}
+                  append={append}
+                  update={update}
+                  remove={remove}
+                  applicationType={applicationType}
+                />
+              ) : (
+                <ApplicationInput
+                  key={e.name}
+                  applicationType={applicationType}
+                  label={e.label}
+                  name={e.name}
+                  control={control}
+                  isRequired={e.isRequired}
+                  value={data[e.name]}
+                />
+              )}
+            </ApplicationContent>
+          </RowContainer>
+        ))}
+        {RadioContentArr.map(e => (
+          <RowContainer key={e.name}>
+            <ApplicationLabel label={e.label} isRequired={e.isRequired} />
+            {e.options.map(option => (
+              <RadioInput
+                key={option}
+                name={e.name}
+                label={option}
+                control={control}
+                radioValue={option}
+                readOnly={applicationType === 'default'}
+              />
+            ))}
+          </RowContainer>
+        ))}
 
-        {/* TODO Radio Component 교체 필요 */}
-        {RadioContentArr.map((e, index) => {
-          return (
-            <ApplicationRowEdit
-              key={index}
-              label={e.label}
-              name={e.name}
-              control={control}
-              isRequired={false}
-            />
-          );
-        })}
-
-        {/* TODO button component 교체 필요 */}
-        {type === 'default' ? (
+        {/* 버튼 */}
+        {applicationType === 'default' ? (
           <div className='btnContainer'>
-            <button type='button'>삭제하기</button>
-            <button type='button' onClick={() => navigate('/application/edit')}>
-              수정하기
-            </button>
+            <Button variant='secondary'>삭제하기</Button>
+            <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
           </div>
         ) : (
-          <div className={`btnContainer`}>
-            <button type='submit'>작성완료</button>
+          <div className='btnContainer'>
+            <Button type='submit' onClick={() => navigate('/application/detail')}>
+              작성완료
+            </Button>
           </div>
         )}
       </ContentContainer>
