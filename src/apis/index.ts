@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { getRefreshToken } from './signUp';
+
 interface IUserInfo {
   accessToken: string;
   expireDate: string;
@@ -21,15 +21,14 @@ class ApiService {
 
     this.api.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        try {
-          const userInfoString: string = localStorage.getItem('userInfo') as string;
-          const userInfoJson: IUserInfo = JSON.parse(userInfoString);
-          const accessToken = userInfoJson.accessToken;
+        const userInfoString: string = localStorage.getItem('userInfo') as string;
+        const userInfoJson: IUserInfo = JSON.parse(userInfoString);
+        const accessToken = userInfoJson.accessToken;
 
-          if (accessToken) config.headers.Authorization = 'Bearer ' + accessToken;
-        } catch {
-          return config;
-        }
+        if (!accessToken) return config;
+
+        config.headers.Authorization = 'Bearer ' + accessToken;
+
         return config;
       },
       error => {
@@ -39,22 +38,33 @@ class ApiService {
 
     this.api.interceptors.response.use(
       async (response: AxiosResponse) => {
-        if (!response.data.success) {
-          throw new Error(response.data.error);
-        }
         return response;
       },
       async error => {
-        if (error.code === 401) {
-          const { config } = error;
-          const data = await getRefreshToken();
+        const { config, response } = error;
 
-          console.log(data);
+        if (response && response.status === 401) {
+          const originalRequest = config;
 
-          if (data) {
-            return this.api(config);
+          try {
+            const { data }: any = await axios.patch(
+              '/tokens/mine',
+              {},
+              {
+                withCredentials: true,
+              },
+            );
+
+            localStorage.setItem('accessToken', data.accessToken);
+
+            originalRequest.headers.authorization = `Bearer ${data.accessToken}`;
+            return axios(originalRequest);
+          } catch (e) {
+            localStorage.clear();
+            window.location.replace('/login');
           }
         }
+
         return Promise.reject(error);
       },
     );
