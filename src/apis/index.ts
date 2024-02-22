@@ -60,9 +60,8 @@ class ApiService {
             originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
             return axios(originalRequest);
           } catch (e) {
-            console.log(e);
-            // localStorage.clear();
-            // window.location.replace('/login');
+            localStorage.clear();
+            window.location.replace('/login');
           }
         }
 
