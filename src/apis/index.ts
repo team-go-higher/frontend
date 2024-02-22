@@ -48,20 +48,21 @@ class ApiService {
 
           try {
             const { data }: any = await axios.patch(
-              '/tokens/mine',
+              `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
               {},
               {
                 withCredentials: true,
               },
             );
 
-            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('accessToken', data.data.accessToken);
 
-            originalRequest.headers.authorization = `Bearer ${data.accessToken}`;
+            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
             return axios(originalRequest);
           } catch (e) {
-            localStorage.clear();
-            window.location.replace('/login');
+            console.log(e);
+            // localStorage.clear();
+            // window.location.replace('/login');
           }
         }
 
