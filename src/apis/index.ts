@@ -62,14 +62,14 @@ class ApiService {
               role: userInfoJson.role,
             };
 
-            localStorage.setItem('accessToken', JSON.stringify(newUserInfo));
+            localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
 
             originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
 
             return axios(originalRequest);
           } catch (e) {
             localStorage.clear();
-            window.location.replace('/login');
+            window.location.replace('/signin');
           }
         }
 
