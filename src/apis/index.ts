@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-interface IUserInfo {
+export interface IUserInfoJson {
   accessToken: string;
   expireDate: string;
   role: string;
@@ -22,7 +22,7 @@ class ApiService {
     this.api.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
         const userInfoString: string = localStorage.getItem('userInfo') as string;
-        const userInfoJson: IUserInfo = JSON.parse(userInfoString);
+        const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
         const accessToken = userInfoJson.accessToken;
 
         if (!accessToken) return config;

@@ -1,17 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { usePositions, usePostPositions } from 'apis/auth';
+import { getPositions, postPositions } from 'apis/auth';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { IUserInfoJson } from 'apis';
+import { queryKeys } from 'apis/queryKeys';
 import { IPosition } from 'types/interfaces/Auth';
 
 const DesiredPosition = () => {
   const navigate = useNavigate();
 
   const [position, setPosition] = useState<number[]>([]);
-  const [positionList, setPositionList] = useState<IPosition[]>([]);
 
-  const { status, data } = usePositions();
-  const { mutate: postPostions } = usePostPositions();
+  const { data: positionList, isError } = useQuery({
+    queryKey: [queryKeys.AUTH, 'getPositions'],
+    queryFn: () => getPositions(),
+  });
+
+  const postPositionsMutation = useMutation({
+    mutationFn: () => postPositions(position),
+    onSuccess: () => {
+      const userInfoString: string = localStorage.getItem('userInfo') as string;
+      const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
+      const newUserInfo = {
+        accessToken: userInfoJson.accessToken,
+        role: 'USER',
+      };
+      localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+      navigate('/calendar');
+    },
+    onError: (error: any) => {
+      const errorCode = error.response.data.error.code;
+      if (errorCode === 'USER_002') {
+        alert('게스트가 아닙니다. 로그인해주세요.');
+        navigate('/signin');
+      } else {
+        alert('문제가 발생했습니다. 다시 선택해주세요.');
+      }
+    },
+  });
 
   const handleSelect = (id: number) => {
     if (position.includes(id)) {
@@ -26,28 +53,11 @@ const DesiredPosition = () => {
 
   const handlePostion = () => {
     if (position.length > 0) {
-      postPostions(position, {
-        onSuccess: () => {
-          navigate('/');
-        },
-        onError: (error: any) => {
-          const errorCode = error.response.data.error.code;
-          if (errorCode === 'USER_002') {
-            alert('게스트가 아닙니다. 로그인해주세요.');
-            navigate('/login');
-          } else {
-            alert('문제가 발생했습니다. 다시 선택해주세요.');
-          }
-        },
-      });
+      postPositionsMutation.mutate();
     }
   };
 
-  useEffect(() => {
-    if (status === 'success') {
-      setPositionList(data);
-    }
-  }, [status, data]);
+  if (isError) return null;
 
   return (
     <Main>
@@ -55,9 +65,9 @@ const DesiredPosition = () => {
         <div className='mainTitle'>희망 직무를 선택하세요</div>
 
         <PositionContainer>
-          {positionList.length > 1 && (
+          {positionList && positionList.length > 1 && (
             <>
-              {positionList.map(item => {
+              {positionList.map((item: IPosition) => {
                 return (
                   <PositionCardContainer
                     active={position.includes(item.id)}

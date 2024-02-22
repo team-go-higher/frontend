@@ -9,6 +9,8 @@ import { processType } from 'types/interfaces/KanbanProcess';
 import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';
+import { fetchUserPoistionInfo } from 'apis/auth';
+import { IUserInfoJson } from 'apis';
 interface ModalViewModelProps {
   handleApplicationSubmission: handleApplicationSubmissionType;
   mode: modalModeType;
@@ -63,10 +65,10 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const processType = watch('processType');
   const detailedProcessType = watch('detailedProcessType');
   const [userInputToggle, setUserInputToggle] = useState(false);
-  const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') as string);
-  const desiredPositionList = desiredPositions.map(
-    (item: { id: number; position: string }) => item.position,
-  );
+
+  const userInfo = localStorage.getItem('userInfo');
+
+  const [desiredPositionList, setDesiredPositionList] = useState([]);
 
   function isDetailedProcessTypeRequired() {
     if (getValues('processType') === 'TO_APPLY' || getValues('processType') === 'DOCUMENT') {
@@ -128,6 +130,26 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
       clearErrors('detailedProcessType');
     }
   }
+
+  const storeUserPositionInfo = async () => {
+    const userPositionInfo = await fetchUserPoistionInfo();
+
+    if (userPositionInfo) {
+      localStorage.setItem('userPositionInfo', JSON.stringify(userPositionInfo));
+
+      const { desiredPositions } = userPositionInfo;
+      setDesiredPositionList(
+        desiredPositions.map((item: { id: number; position: string }) => item.position),
+      );
+    }
+  };
+
+  useEffect(() => {
+    const userInfoJson: IUserInfoJson = JSON.parse(userInfo as string);
+    if (userInfo !== null && userInfoJson.role === 'USER') {
+      storeUserPositionInfo();
+    }
+  }, [userInfo]);
 
   // 인풋 활성화시 세부단계 초기화
   useEffect(() => {
