@@ -2,15 +2,15 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import moment from 'moment';
-import KakaoImg from 'assets/login/login_kakao.svg';
-import GoogleImg from 'assets/login/login_google.svg';
+import KakaoImg from 'assets/auth/auth_kakao.svg';
+import GoogleImg from 'assets/auth/auth_google.svg';
 
 const Login = () => {
   const location = window.location;
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname !== '/login') {
+    if (location.pathname !== '/signIn') {
       const url = new URL(location.href);
       const urlParams = url.searchParams;
 

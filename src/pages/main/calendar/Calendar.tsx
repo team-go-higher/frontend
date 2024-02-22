@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
 import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
@@ -8,9 +9,12 @@ import {
   DayContainer,
   UnscheduledContainer,
 } from 'components/calendar/CalendarStyledComponents';
-import { fetchMonthCalendar, fetchDetailCalendar, fetchUnscheduledCalendar } from 'apis/calendar';
-import { useQuery } from 'react-query';
-import { queryKey } from 'apis/queryKey';
+import {
+  fetchApplicationByMonth,
+  fetchApplicationByDate,
+  fetchApplicationUnscheduled,
+} from 'apis/calendar';
+import { queryKeys } from 'apis/queryKeys';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -18,20 +22,24 @@ const Calendar = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
-  const { data: calendarData = [] } = useQuery([queryKey.CALENDARDATA, currentMonth], () =>
-    fetchMonthCalendar(
-      parseInt(format(currentMonth, 'yyyy')),
-      parseInt(format(currentMonth, 'MM')),
-    ),
-  );
+  const { data: calendarData = [] } = useQuery({
+    queryKey: [queryKeys.CALENDAR, 'fetchApplicationByMonth', currentMonth],
+    queryFn: () =>
+      fetchApplicationByMonth(
+        parseInt(format(currentMonth, 'yyyy')),
+        parseInt(format(currentMonth, 'MM')),
+      ),
+  });
 
-  const { data: detailData = [] } = useQuery([queryKey.DETAILDATA, selectedDate], () =>
-    fetchDetailCalendar(format(selectedDate, 'yyyy-MM-dd')),
-  );
+  const { data: detailData = [] } = useQuery({
+    queryKey: [queryKeys.CALENDAR, 'fetchApplicationByDate', selectedDate],
+    queryFn: () => fetchApplicationByDate(format(selectedDate, 'yyyy-MM-dd')),
+  });
 
-  const { data: unscheduledData } = useQuery([currentPage, queryKey.UNSCHEDULEDDATA], () =>
-    fetchUnscheduledCalendar(currentPage, 2),
-  );
+  const { data: unscheduledData } = useQuery({
+    queryKey: [queryKeys.UNSCHEDULED, 'fetchApplicationUnscheduled', currentPage],
+    queryFn: () => fetchApplicationUnscheduled(currentPage, 4),
+  });
 
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
