@@ -2,7 +2,6 @@ import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 export interface IUserInfoJson {
   accessToken: string;
-  expireDate: string;
   role: string;
 }
 interface ICommonResponse<T> {
@@ -47,6 +46,9 @@ class ApiService {
           const originalRequest = config;
 
           try {
+            const userInfoString: string = localStorage.getItem('userInfo') as string;
+            const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
+
             const { data }: any = await axios.patch(
               `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
               {},
@@ -55,9 +57,15 @@ class ApiService {
               },
             );
 
-            localStorage.setItem('accessToken', data.data.accessToken);
+            const newUserInfo: IUserInfoJson = {
+              accessToken: data.data.accessToken,
+              role: userInfoJson.role,
+            };
+
+            localStorage.setItem('accessToken', JSON.stringify(newUserInfo));
 
             originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
+
             return axios(originalRequest);
           } catch (e) {
             localStorage.clear();
