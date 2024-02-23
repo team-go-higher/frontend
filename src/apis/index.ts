@@ -1,9 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-
-export interface IUserInfoJson {
-  accessToken: string;
-  role: string;
-}
+import { IUserInfoJson, getUserInfo, updateUserInfo } from 'utils/localStorage';
 interface ICommonResponse<T> {
   success: boolean;
   error: any;
@@ -20,9 +16,8 @@ class ApiService {
 
     this.api.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        const userInfoString: string = localStorage.getItem('userInfo') as string;
-        const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
-        const accessToken = userInfoJson.accessToken;
+        const userInfo: IUserInfoJson = getUserInfo();
+        const accessToken = userInfo.accessToken;
 
         if (!accessToken) return config;
 
@@ -46,9 +41,6 @@ class ApiService {
           const originalRequest = config;
 
           try {
-            const userInfoString: string = localStorage.getItem('userInfo') as string;
-            const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
-
             const { data }: any = await axios.patch(
               `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
               {},
@@ -57,12 +49,7 @@ class ApiService {
               },
             );
 
-            const newUserInfo: IUserInfoJson = {
-              accessToken: data.data.accessToken,
-              role: userInfoJson.role,
-            };
-
-            localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+            updateUserInfo({ accessToken: data.data.accessToken });
 
             originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
 

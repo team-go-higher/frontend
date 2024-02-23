@@ -3,9 +3,9 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { getPositions, postPositions } from 'apis/auth';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { IUserInfoJson } from 'apis';
 import { queryKeys } from 'apis/queryKeys';
 import { IPosition } from 'types/interfaces/Auth';
+import { updateUserInfo } from 'utils/localStorage';
 
 const DesiredPosition = () => {
   const navigate = useNavigate();
@@ -20,13 +20,7 @@ const DesiredPosition = () => {
   const postPositionsMutation = useMutation({
     mutationFn: () => postPositions(position),
     onSuccess: () => {
-      const userInfoString: string = localStorage.getItem('userInfo') as string;
-      const userInfoJson: IUserInfoJson = JSON.parse(userInfoString);
-      const newUserInfo = {
-        accessToken: userInfoJson.accessToken,
-        role: 'USER',
-      };
-      localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+      updateUserInfo({ role: 'USER' });
       navigate('/calendar');
     },
     onError: (error: any) => {

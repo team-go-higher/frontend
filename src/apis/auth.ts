@@ -18,10 +18,3 @@ export const fetchUserPoistionInfo = async () => {
   const { data }: any = await apiService.Get('/v1/users/me');
   return data;
 };
-
-export const getRefreshToken = async () => {
-  const { data }: any = await apiService.Get('/tokens/mine');
-  localStorage.setItem('accessToken', data.accessToken);
-
-  return data;
-};

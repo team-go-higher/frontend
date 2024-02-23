@@ -10,7 +10,7 @@ import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';
 import { fetchUserPoistionInfo } from 'apis/auth';
-import { IUserInfoJson } from 'apis';
+import { getUserInfo } from 'utils/localStorage';
 interface ModalViewModelProps {
   handleApplicationSubmission: handleApplicationSubmissionType;
   mode: modalModeType;
@@ -65,8 +65,6 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const processType = watch('processType');
   const detailedProcessType = watch('detailedProcessType');
   const [userInputToggle, setUserInputToggle] = useState(false);
-
-  const userInfo = localStorage.getItem('userInfo');
 
   const [desiredPositionList, setDesiredPositionList] = useState([]);
 
@@ -145,11 +143,11 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   };
 
   useEffect(() => {
-    const userInfoJson: IUserInfoJson = JSON.parse(userInfo as string);
-    if (userInfo !== null && userInfoJson.role === 'USER') {
+    const userInfo = getUserInfo();
+    if (userInfo !== null && userInfo.role === 'USER') {
       storeUserPositionInfo();
     }
-  }, [userInfo]);
+  }, []);
 
   // 인풋 활성화시 세부단계 초기화
   useEffect(() => {
