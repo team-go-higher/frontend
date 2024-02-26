@@ -12,6 +12,7 @@ const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추�
 
 const Header = () => {
   const [isSelect, setIsSelect] = useState('공고리스트');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handlePage = (item: string) => {
@@ -39,20 +40,30 @@ const Header = () => {
               );
             })}
           </HeaderMenuContainer>
-          <HeaderPersonalContainer>
+          <HeaderPersonalContainer onClick={() => setIsOpen(!isOpen)}>
             <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
             <div className='personalBox'>
               <div className='profile'>고하</div>
               <div className='profileName'>사용자</div>
               <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
             </div>
-            <button
-              onClick={() => {
-                navigate('/signIn');
-                localStorage.removeItem('userInfo');
-              }}>
-              로그아웃
-            </button>
+            {isOpen && (
+              <div className='dropdown'>
+                <ul>
+                  <li className='row'>
+                    <div className='profile-image'>고하</div>
+                    <div className='user-info'>
+                      <p className='name'>김고하</p>
+                      <p className='email'>ghkin@gohigher.com</p>
+                    </div>
+                  </li>
+                  <li>전체 지원서 관리</li>
+                  <li>마이페이지</li>
+                  <span></span>
+                  <li>로그아웃</li>
+                </ul>
+              </div>
+            )}
           </HeaderPersonalContainer>
         </div>
       </div>

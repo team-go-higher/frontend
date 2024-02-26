@@ -47,6 +47,7 @@ export const HeaderMenuContainer = styled.div`
   }
 `;
 export const HeaderPersonalContainer = styled.div`
+  position: relative;
   display: flex;
   margin-left: 66px;
   align-items: center;
@@ -91,6 +92,74 @@ export const HeaderPersonalContainer = styled.div`
       width: 7px;
       height: 4px;
       margin-left: auto;
+    }
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    z-index: 100;
+    padding: 13px 27px;
+    background-color: rgb(var(--white));
+    width: 260px;
+    height: 170px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px 0px rgba(50, 83, 255, 0.3);
+    .row {
+      display: flex;
+      align-items: center;
+    }
+    ul {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      li {
+        color: rgb(var(--grayText));
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0.14px;
+        cursor: pointer;
+      }
+      span {
+        width: 100%;
+        height: 1px;
+        background-color: #e0e0e0;
+      }
+      .profile-image {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 4px;
+        background: #9570e2;
+        color: #fff;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      .user-info {
+        margin-left: 11px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 40px;
+        .name {
+          color: #333;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.14px;
+        }
+        .email {
+          color: rgb(var(—grayText));
+          font-size: 14px;
+          font-weight: 400;
+          letter-spacing: 0.14px;
+        }
+      }
     }
   }
 `;
