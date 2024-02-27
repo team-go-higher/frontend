@@ -1,9 +1,5 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-interface IUserInfo {
-  accessToken: string;
-  expireDate: string;
-  role: string;
-}
+import { IUserInfoJson, getUserInfo, updateUserInfo } from 'utils/localStorage';
 interface ICommonResponse<T> {
   success: boolean;
   error: any;
@@ -20,15 +16,13 @@ class ApiService {
 
     this.api.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        try {
-          const userInfoString: string = localStorage.getItem('userInfo') as string;
-          const userInfoJson: IUserInfo = JSON.parse(userInfoString);
-          const accessToken = userInfoJson.accessToken;
+        const userInfo: IUserInfoJson = getUserInfo();
+        const accessToken = userInfo.accessToken;
 
-          if (accessToken) config.headers.Authorization = 'Bearer ' + accessToken;
-        } catch {
-          return config;
-        }
+        if (!accessToken) return config;
+
+        config.headers.Authorization = 'Bearer ' + accessToken;
+
         return config;
       },
       error => {
@@ -38,12 +32,34 @@ class ApiService {
 
     this.api.interceptors.response.use(
       async (response: AxiosResponse) => {
-        if (!response.data.success) {
-          throw new Error(response.data.error);
-        }
         return response;
       },
-      error => {
+      async error => {
+        const { config, response } = error;
+
+        if (response && response.status === 401) {
+          const originalRequest = config;
+
+          try {
+            const { data }: any = await axios.patch(
+              `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
+              {},
+              {
+                withCredentials: true,
+              },
+            );
+
+            updateUserInfo({ accessToken: data.data.accessToken });
+
+            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
+
+            return axios(originalRequest);
+          } catch (e) {
+            localStorage.clear();
+            window.location.replace('/signin');
+          }
+        }
+
         return Promise.reject(error);
       },
     );

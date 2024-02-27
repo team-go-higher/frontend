@@ -50,6 +50,7 @@ const Header = () => {
               onClick={() => {
                 navigate('/signIn');
                 localStorage.removeItem('userInfo');
+                localStorage.removeItem('userPositionInfo');
               }}>
               로그아웃
             </button>
