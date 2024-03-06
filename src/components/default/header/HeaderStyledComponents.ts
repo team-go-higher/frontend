@@ -17,6 +17,7 @@ export const HeaderContainer = styled.div`
       font-size: 18px;
       font-weight: 700;
       letter-spacing: 1.08px;
+      cursor: pointer;
     }
     .rightContainer {
       display: flex;

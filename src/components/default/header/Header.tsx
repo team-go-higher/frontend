@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HeaderContainer,
   HeaderMenuContainer,
@@ -6,12 +6,13 @@ import {
 } from './HeaderStyledComponents';
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추가'];
+const MENU_ITEM_ARR = ['내 공고 리스트', '공고리스트', '지원서 추가'];
 
 const Header = () => {
-  const [isSelect, setIsSelect] = useState('공고리스트');
+  const { pathname } = useLocation();
+  const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
 
   const handlePage = (item: string) => {
@@ -22,13 +23,31 @@ const Header = () => {
     //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   };
 
+  useEffect(() => {
+    if (pathname === '/') {
+      setIsSelect('');
+      return;
+    }
+    if (pathname === '/application/add') {
+      setIsSelect('지원서 추가');
+      return;
+    }
+    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+  }, [pathname]);
+
   return (
     <HeaderContainer>
       <div className='headerContainer'>
-        <div className='headerLogo'>Go-Higher</div>
+        <div
+          className='headerLogo'
+          onClick={() => {
+            navigate('/');
+          }}>
+          Go-Higher
+        </div>
         <div className='rightContainer'>
           <HeaderMenuContainer>
-            {MenuItemArr.map((e, index) => {
+            {MENU_ITEM_ARR.map((e, index) => {
               return (
                 <div
                   className={`menuItem ${isSelect === e ? 'active' : ''}`}
