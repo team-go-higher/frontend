@@ -7,6 +7,8 @@ import {
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { postLogout } from 'apis/auth';
 
 const MENU_ITEM_ARR = ['내 공고 리스트', '공고리스트', '지원서 추가'];
 
@@ -22,6 +24,16 @@ const Header = () => {
     }
     //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   };
+
+  const handleLogoutMutation = useMutation({
+    mutationFn: () => postLogout(),
+    onSuccess: () => {
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('userPositionInfo');
+      navigate('/signin');
+    },
+    onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
+  });
 
   useEffect(() => {
     if (pathname === '/') {
@@ -67,9 +79,7 @@ const Header = () => {
             </div>
             <button
               onClick={() => {
-                navigate('/signIn');
-                localStorage.removeItem('userInfo');
-                localStorage.removeItem('userPositionInfo');
+                handleLogoutMutation.mutate();
               }}>
               로그아웃
             </button>
