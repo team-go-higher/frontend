@@ -20,5 +20,5 @@ export const fetchUserPoistionInfo = async () => {
 };
 
 export const postLogout = async () => {
-  await apiService.Post('/logout');
+  await apiService.Post('tokens/logout');
 };
