@@ -17,6 +17,7 @@ export const HeaderContainer = styled.div`
       font-size: 18px;
       font-weight: 700;
       letter-spacing: 1.08px;
+      cursor: pointer;
     }
     .rightContainer {
       display: flex;
@@ -60,7 +61,6 @@ export const HeaderPersonalContainer = styled.div`
     padding: 4px 7px;
     display: flex;
     height: 29px;
-    width: 80px;
     align-items: center;
     border-radius: 42px;
     border: 0.5px solid rgb(var(--main));
@@ -69,8 +69,8 @@ export const HeaderPersonalContainer = styled.div`
     width: 95px;
     .profile {
       border-radius: 50%;
-      width: 23px;
-      height: 23px;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -78,14 +78,16 @@ export const HeaderPersonalContainer = styled.div`
       background: #9570e2;
       color: #fff;
       text-align: center;
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 500;
+      line-height: normal;
     }
     .profileName {
       color: #333;
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.14px;
+      line-height: normal;
     }
     .arrowDown {
       width: 7px;

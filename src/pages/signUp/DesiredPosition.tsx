@@ -21,7 +21,7 @@ const DesiredPosition = () => {
     mutationFn: () => postPositions(position),
     onSuccess: () => {
       updateUserInfo({ role: 'USER' });
-      navigate('/calendar');
+      navigate('/');
     },
     onError: (error: any) => {
       const errorCode = error.response.data.error.code;
