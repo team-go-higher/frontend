@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HeaderContainer,
   HeaderMenuContainer,
@@ -6,12 +6,15 @@ import {
 } from './HeaderStyledComponents';
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { postLogout } from 'apis/auth';
 
-const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추가'];
+const MENU_ITEM_ARR = ['내 공고 리스트', '공고리스트', '지원서 추가'];
 
 const Header = () => {
-  const [isSelect, setIsSelect] = useState('공고리스트');
+  const { pathname } = useLocation();
+  const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
 
   const handlePage = (item: string) => {
@@ -22,13 +25,41 @@ const Header = () => {
     //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   };
 
+  const handleLogoutMutation = useMutation({
+    mutationFn: () => postLogout(),
+    onSuccess: () => {
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('userPositionInfo');
+      navigate('/signin');
+    },
+    onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
+  });
+
+  useEffect(() => {
+    if (pathname === '/') {
+      setIsSelect('');
+      return;
+    }
+    if (pathname === '/application/add') {
+      setIsSelect('지원서 추가');
+      return;
+    }
+    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+  }, [pathname]);
+
   return (
     <HeaderContainer>
       <div className='headerContainer'>
-        <div className='headerLogo'>Go-Higher</div>
+        <div
+          className='headerLogo'
+          onClick={() => {
+            navigate('/');
+          }}>
+          Go-Higher
+        </div>
         <div className='rightContainer'>
           <HeaderMenuContainer>
-            {MenuItemArr.map((e, index) => {
+            {MENU_ITEM_ARR.map((e, index) => {
               return (
                 <div
                   className={`menuItem ${isSelect === e ? 'active' : ''}`}
@@ -48,9 +79,7 @@ const Header = () => {
             </div>
             <button
               onClick={() => {
-                navigate('/signIn');
-                localStorage.removeItem('userInfo');
-                localStorage.removeItem('userPositionInfo');
+                handleLogoutMutation.mutate();
               }}>
               로그아웃
             </button>

@@ -23,7 +23,7 @@ const Login = () => {
         if (role === 'GUEST') {
           navigate('/signUp/desiredPosition');
         } else {
-          navigate('/calendar');
+          navigate('/');
         }
       }
     }
