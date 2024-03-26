@@ -15,7 +15,7 @@ export const TYPE_PROCESS = {
 
 const StyledLabel = styled.label<LabelProps>`
   white-space: nowrap;
-  padding: 1px 10px;
+  padding: 3px 10px;
   margin-bottom: 10px;
   outline: none;
   border: 1px solid ${props => props.process && TYPE_PROCESS[props.process]};
