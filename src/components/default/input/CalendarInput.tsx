@@ -8,12 +8,22 @@ type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 interface CalendarInputProps {
   onChange: (date: Date | null, process: ProcessType, detailProcess: string) => void;
+  applicationType: 'edit' | 'default' | 'add';
   process?: ProcessType;
   detailProcess?: string;
+  schedule?: Date | null;
 }
 
-export const CalendarInput = ({ onChange, process, detailProcess }: CalendarInputProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+export const CalendarInput = ({
+  onChange,
+  applicationType,
+  process,
+  detailProcess,
+  schedule,
+}: CalendarInputProps) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    schedule ? new Date(schedule) : null,
+  );
 
   const getFormattedDate = (date: Date | null) => {
     if (date) {
@@ -26,6 +36,7 @@ export const CalendarInput = ({ onChange, process, detailProcess }: CalendarInpu
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
+    console.log(date);
     if (date && process && detailProcess) {
       onChange(date, process, detailProcess);
     }
@@ -41,6 +52,7 @@ export const CalendarInput = ({ onChange, process, detailProcess }: CalendarInpu
         showTimeSelect //시간도 선택할 수 있게
         timeFormat='HH:mm'
         timeIntervals={10}
+        readOnly={applicationType === 'default' ? true : false}
       />
     </StyledCalendarInput>
   );

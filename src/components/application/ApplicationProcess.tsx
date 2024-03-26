@@ -6,6 +6,7 @@ import { CalendarInput } from 'components/default/input/CalendarInput';
 import styled from 'styled-components';
 
 interface ApplicationProcessProps {
+  value: any;
   applicationType: 'edit' | 'default' | 'add';
   fields: FieldArrayWithId<FieldValues>[];
   append: (
@@ -19,6 +20,7 @@ interface ApplicationProcessProps {
 type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 const ApplicationProcess = ({
+  value,
   applicationType,
   fields,
   append,
@@ -60,16 +62,18 @@ const ApplicationProcess = ({
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedOptions.length === 0) {
+    if (selectedOptions.length === 0 && applicationType === 'add') {
       setSelectedOptions(['서류전형']);
       append({ type: 'DOCUMENT', description: '서류전형', schedule: '' });
+    } else if (applicationType === 'edit') {
+      value.forEach((v: any) => setSelectedOptions([...selectedOptions, v.description]));
     }
-  }, [selectedOptions]);
+  }, []);
 
   const handleSelectCheckbox = (process: ProcessType, option: string) => {
     if (selectedOptions.includes(option)) {
       setSelectedOptions(selectedOptions.filter(selected => selected !== option));
-      const index = selectedOptions.indexOf(option);
+      const index = value.findIndex((v: any) => v.type === option);
       remove(index);
     } else {
       setSelectedOptions([...selectedOptions, option]);
@@ -87,8 +91,25 @@ const ApplicationProcess = ({
       {applicationType === 'default' ? (
         <div>
           {ProcessArr.map((e, index) => (
-            <div className='label' key={index}>
-              <Label process={e.type} isPast={true} />
+            <div style={{ display: 'flex', width: '100%' }} key={index}>
+              <div className='label' key={index}>
+                <Label process={e.type} isPast={true} />
+              </div>
+              <div className='calendarInput default'>
+                {value.map((v: any, index: number) => (
+                  <div key={index}>
+                    {v.type === e.type && (
+                      <CalendarInput
+                        onChange={updateFieldArray}
+                        applicationType={applicationType}
+                        process={v.type}
+                        detailProcess={v.description}
+                        schedule={v.schedule}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -108,14 +129,16 @@ const ApplicationProcess = ({
                   />
                 )}
               </div>
-              <div>
+              <div className='calendarInput'>
                 {fields.map((field: any, index: number) => (
-                  <div className='calendarInput'>
+                  <div>
                     {field.type === event.type && (
                       <CalendarInput
                         onChange={updateFieldArray}
+                        applicationType={applicationType}
                         process={field.type}
                         detailProcess={field.description}
+                        schedule={field.schedule}
                       />
                     )}
                   </div>
@@ -134,10 +157,11 @@ export default ApplicationProcess;
 const ProcessContainer = styled.div`
   width: 100%;
   .label {
-    width: 140px;
+    width: 140px !important;
     line-height: 40px;
   }
   .calendarInput {
     width: calc(100% - 140px);
+    line-height: 40px;
   }
 `;

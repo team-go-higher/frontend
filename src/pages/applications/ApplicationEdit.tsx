@@ -1,6 +1,6 @@
 import ApplicationLayout from 'components/application/ApplicationLayout';
 interface Data {
-  [key: string]: string | string[];
+  [key: string]: any;
 }
 
 const DummyData: Data = {
@@ -8,7 +8,20 @@ const DummyData: Data = {
   team: '',
   position: '디자인',
   specificPosition: '',
-  processes: [],
+  processes: [
+    {
+      type: 'DOCUMENT',
+      description: '',
+      schedule: 'Wed Mar 06 2024 00:00:00 GMT+0900',
+      isCurrent: true,
+    },
+    {
+      type: 'TEST',
+      description: '실기테스트',
+      schedule: 'Wed Mar 06 2024 00:00:00 GMT+0900',
+      isCurrent: true,
+    },
+  ],
   jobDescription: '오토벨 광고 컨텐츠 크리에이티브 컨셉 도출 및 기획 (DA/SNS/영상 콘텐츠 등)',
   requiredCapability: 'Figma 활용 숙련자',
   url: 'https://glovis.recruiter.co.kr/app/jobnotice/list',
