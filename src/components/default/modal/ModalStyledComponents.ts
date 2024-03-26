@@ -106,7 +106,7 @@ export const InModalButton = styled.button<{ mode: string }>`
   font-weight: 600;
 
   ${({ mode }) =>
-    mode === 'simple'
+    mode === 'cancel'
       ? `background-color : rgb(var(--white)); color : rgb(var(--blueText))`
       : `background-color : rgb(var(--blueText)); color : rgb(var(--white));`};
 `;

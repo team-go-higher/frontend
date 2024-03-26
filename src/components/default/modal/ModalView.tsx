@@ -164,7 +164,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   // 전형단계 변경시 세부단계 초기화
   useEffect(() => {
     if (mode === 'simpleRegister') {
-      if (processType !== currentProcessType) {
+      if (processType !== currentProcessType || processType === 'TO_APPLY') {
         setUserInputToggle(false);
         setValue('detailedProcessType', '');
       }
@@ -180,6 +180,14 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     setUserInputToggle(false);
     setPositionDropDownToggle(false);
   }, [modalIsOpen, mode]);
+
+  useEffect(() => {
+    if (dropDownToggle) {
+      setDetailedDropDownToggle(false);
+    } else if (detailedDropDownToggle) {
+      setDropDownToggle(false);
+    }
+  }, [dropDownToggle, detailedDropDownToggle]);
 
   if (mode === 'updateCurrentProcess') {
     return (
@@ -358,10 +366,10 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             일반등록 버튼을 눌러주세요
           </S.ModalHelperText>
           <S.ModalButtonWrapper>
-            <S.InModalButton mode='common' onClick={closeModal}>
-              {mode === 'simpleEdit' ? '취소' : '일반등록'}
+            <S.InModalButton mode='cancel' onClick={closeModal}>
+              취소
             </S.InModalButton>
-            <S.InModalButton mode='simple' type='submit' onClick={validateProcessType}>
+            <S.InModalButton mode='confirm' type='submit' onClick={validateProcessType}>
               {mode === 'simpleEdit' ? '수정완료' : '간편등록'}
             </S.InModalButton>
           </S.ModalButtonWrapper>
