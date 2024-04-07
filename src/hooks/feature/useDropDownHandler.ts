@@ -1,7 +1,11 @@
+import { FormValuesType } from 'components/default/modal/ModalView';
 import { useState } from 'react';
-import { UseFormSetValue, FieldValues } from 'react-hook-form';
+import { UseFormSetValue } from 'react-hook-form';
 
-const useDropDownHandler = (setValue: UseFormSetValue<FieldValues>, fieldName: string) => {
+const useDropDownHandler = (
+  setValue: UseFormSetValue<FormValuesType>,
+  fieldName: keyof FormValuesType,
+) => {
   const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
 
   function dropDownToggleHandler() {
