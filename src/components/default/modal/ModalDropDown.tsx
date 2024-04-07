@@ -11,7 +11,7 @@ interface IProps {
   isPlaceHolder: boolean;
   isArrowIconRequired: boolean;
   itemList: string[] | null | undefined;
-  inputToggleHandler?: () => void;
+  inputToggleHandler?: (state: boolean) => void;
   dropDownToggleHandler: (dropDownId: string) => void;
   dropDownItemHandler: (process: string) => void;
 }
@@ -49,14 +49,16 @@ const ModalDropDown = ({
               key={item}
               onClick={() => {
                 dropDownItemHandler(item);
+                if (dropDownId === 'detailedProcessType' && inputToggleHandler) {
+                  if (inputToggleHandler) {
+                    if (item !== '직접 입력') inputToggleHandler(false);
+                    else inputToggleHandler(true);
+                  }
+                }
               }}>
               {dropDownId === 'processType' ? formatProcessToKor(item) : item}
             </S.DropdownItem>
           ))}
-
-          {dropDownId === 'detailedProcessType' && (
-            <S.DropdownItem onClick={inputToggleHandler}>직접 입력 </S.DropdownItem>
-          )}
         </S.ModalDropdownItemBox>
       )}
       {isError && <S.InvalidIcon>!</S.InvalidIcon>}
