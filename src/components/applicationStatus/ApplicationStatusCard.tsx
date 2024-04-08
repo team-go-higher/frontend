@@ -6,23 +6,37 @@ import {
   Wrapper,
 } from './ApplicationStatusStyledComponents';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
+import { format } from 'date-fns';
+import { Label } from 'assets/default/label/Label';
+import { ApplicationStatusCardData } from 'pages/applicationStatus';
 
-const ApplicationStatusCard = () => {
+interface ApplicationStatusCardProps {
+  data: ApplicationStatusCardData;
+}
+
+const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
   const [isView, setIsView] = useState(true);
+  const { companyName, position, specificPosition } = data;
+  const { type, schedule } = data.process;
+
   return (
     <Wrapper>
-      <div className='label'>서류전형</div>
+      <Label process={type} />
 
       <ContentContainer>
-        <div className='title'>CJ ENM</div>
+        <div className='title'>{companyName}</div>
         <div className='contentBox'>
-          <div className='content'>브랜드디자인</div>
+          {/* 해당하는 내용 포지션? 세부 포지션? 확인 필요 */}
+          <div className='content'>
+            {position}/{specificPosition}
+          </div>
+          {/* TODO 내용 확인 필요 */}
           <div className='memo'>공고 메모 : 입사시 주의 사항을 기록하세요</div>
         </div>
       </ContentContainer>
 
       <UtilContainer>
-        <div className='deadline'>8월 15일 23:59</div>
+        <div className='deadline'>{format(new Date(schedule), 'M월 dd일 HH:mm')}</div>
         <ToggleContainer onClick={() => setIsView(!isView)}>
           <div className={`toggleCircle ${isView ? '' : 'false'}`} />
         </ToggleContainer>

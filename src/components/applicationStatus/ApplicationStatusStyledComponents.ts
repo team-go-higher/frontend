@@ -6,8 +6,11 @@ export const Wrapper = styled.div`
   border-top: 1px solid #d6d6d6;
   padding: 35px 0 24px;
 
-  .label {
+  label {
     margin-right: 55px;
+    height: 23px;
+    display: flex;
+    align-items: center;
   }
 `;
 
