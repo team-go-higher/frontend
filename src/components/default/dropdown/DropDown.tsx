@@ -10,7 +10,7 @@ type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 interface DropdownProps {
   process: ProcessType;
   options: string[] | null;
-  selectedOptions: string[];
+  selectedOptions: { process: ProcessType; option: string }[];
   onSelect: (process: ProcessType, option: string) => void;
 }
 
@@ -148,7 +148,9 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
                 <input
                   type='checkbox'
                   value={option}
-                  checked={selectedOptions.includes(option)}
+                  checked={selectedOptions.some(
+                    item => item.process === process && item.option === option,
+                  )}
                   onChange={() => handleCheckboxChange(process, option)}
                 />
                 <span className='custom-checkbox'>

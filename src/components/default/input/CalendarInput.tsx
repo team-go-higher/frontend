@@ -26,13 +26,6 @@ export const CalendarInput = ({
   );
 
   const getFormattedDate = (date: Date | null) => {
-    if (process === 'COMPLETE') {
-      if (detailProcess === '최종합격') {
-        return '최종 합격을 축하합니다!';
-      } else {
-        return `${detailProcess}`;
-      }
-    }
     if (date) {
       const formattedDate = format(date, "'M'월 'd'일");
       const formattedTime = format(date, "'HH'시 'mm'분");
@@ -54,7 +47,7 @@ export const CalendarInput = ({
         selected={selectedDate}
         onChange={handleDateChange}
         placeholderText={
-          process === 'COMPLETE' ? '최종 결과를 선택하세요' : `${detailProcess} 일정을 선택하세요`
+          process === 'COMPLETE' ? `${detailProcess}` : `${detailProcess} 일정을 선택하세요`
         }
         dateFormat={getFormattedDate(selectedDate)}
         showTimeSelect //시간도 선택할 수 있게

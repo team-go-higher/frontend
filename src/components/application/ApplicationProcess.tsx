@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Control, FieldValues, FieldArrayWithId } from 'react-hook-form';
+import { FieldValues, FieldArrayWithId } from 'react-hook-form';
 import { DropDown } from 'components/default/dropdown/DropDown';
 import { Label } from 'components/default/label/Label';
 import { CalendarInput } from 'components/default/input/CalendarInput';
 import styled from 'styled-components';
 
 interface ApplicationProcessProps {
-  value: any;
   applicationType: 'edit' | 'default' | 'add';
   fields: FieldArrayWithId<FieldValues>[];
   append: (
@@ -20,7 +19,6 @@ interface ApplicationProcessProps {
 type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 const ApplicationProcess = ({
-  value,
   applicationType,
   fields,
   append,
@@ -53,36 +51,61 @@ const ApplicationProcess = ({
         '테스트 합격',
         '과제 합격',
         '검사 합격',
-        '1차 면접 합격',
+        '1차 면접합격',
         '2차 면접합격',
-        '3차 면접 합격',
+        '3차 면접합격',
       ],
     },
   ];
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const [selectedOptions, setSelectedOptions] = useState<
+    { process: ProcessType; option: string }[]
+  >([]);
 
   useEffect(() => {
     if (selectedOptions.length === 0 && applicationType === 'add') {
-      setSelectedOptions(['서류전형']);
+      setSelectedOptions([{ process: 'DOCUMENT', option: '서류전형' }]);
       append({ type: 'DOCUMENT', description: '서류전형', schedule: '' });
     } else if (applicationType === 'edit') {
-      value.forEach((v: any) => setSelectedOptions([...selectedOptions, v.description]));
+      fields.forEach((v: any) =>
+        setSelectedOptions(prevOptions => [
+          ...prevOptions,
+          { process: v.type, option: v.description },
+        ]),
+      );
     }
   }, []);
 
   const handleSelectCheckbox = (process: ProcessType, option: string) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter(selected => selected !== option));
-      const index = value.findIndex((v: any) => v.type === option);
-      remove(index);
+    const optionExists = selectedOptions.some(
+      item => item.process === process && item.option === option,
+    );
+
+    if (process === 'COMPLETE') {
+      const completeItemIndex = selectedOptions.findIndex(item => item.process === process);
+      if (completeItemIndex !== -1) {
+        const fieldIndex = fields.findIndex((v: any) => v.type === process);
+        update(fieldIndex, { type: process, description: option, schedule: '' });
+      } else {
+        setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
+        append({ type: process, description: option, schedule: '' });
+      }
     } else {
-      setSelectedOptions([...selectedOptions, option]);
-      append({ type: process, description: option, schedule: '' });
+      if (optionExists) {
+        setSelectedOptions(prevOptions =>
+          prevOptions.filter(item => !(item.process === process && item.option === option)),
+        );
+        const index = fields.findIndex((v: any) => v.type === option);
+        remove(index);
+      } else {
+        setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
+        append({ type: process, description: option, schedule: '' });
+      }
     }
   };
 
   const updateFieldArray = (date: Date | null, process: ProcessType, option: string) => {
-    const index = selectedOptions.indexOf(option);
+    const index = fields.findIndex((v: any) => v.type === option);
     update(index, { type: process, description: option, schedule: date });
   };
 
@@ -96,7 +119,7 @@ const ApplicationProcess = ({
                 <Label process={e.type} isPast={true} />
               </div>
               <div className='calendarInput default'>
-                {value.map((v: any, index: number) => (
+                {fields.map((v: any, index: number) => (
                   <div key={index}>
                     {v.type === e.type && (
                       <CalendarInput
