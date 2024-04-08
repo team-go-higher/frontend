@@ -1,12 +1,13 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { formatProcessToKor } from 'utils/process';
 
 interface LabelProps {
-  process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  process?: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
   isPast?: boolean;
 }
 
 export const TYPE_PROCESS = {
+  TO_APPLY: 'rgb(var(--defaultPink))',
   DOCUMENT: 'rgb(var(--defaultPink))',
   TEST: 'rgb(var(--defaultPurple))',
   INTERVIEW: 'rgb(var(--defaultSkyblue))',
