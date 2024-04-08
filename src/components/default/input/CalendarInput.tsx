@@ -47,7 +47,11 @@ export const CalendarInput = ({
         selected={selectedDate}
         onChange={handleDateChange}
         placeholderText={
-          process === 'COMPLETE' ? `${detailProcess}` : `${detailProcess} 일정을 선택하세요`
+          process === 'COMPLETE'
+            ? detailProcess === '최종합격'
+              ? '합격을 축하드립니다!'
+              : `${detailProcess}`
+            : `${detailProcess} 일정을 선택하세요`
         }
         dateFormat={getFormattedDate(selectedDate)}
         showTimeSelect //시간도 선택할 수 있게

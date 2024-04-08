@@ -77,13 +77,12 @@ const ApplicationProcess = ({
   }, []);
 
   const handleSelectCheckbox = (process: ProcessType, option: string) => {
-    const optionExists = selectedOptions.some(
+    const itemIndex = selectedOptions.findIndex(
       item => item.process === process && item.option === option,
     );
 
     if (process === 'COMPLETE') {
-      const completeItemIndex = selectedOptions.findIndex(item => item.process === process);
-      if (completeItemIndex !== -1) {
+      if (itemIndex !== -1) {
         const fieldIndex = fields.findIndex((v: any) => v.type === process);
         update(fieldIndex, { type: process, description: option, schedule: '' });
       } else {
@@ -91,7 +90,7 @@ const ApplicationProcess = ({
         append({ type: process, description: option, schedule: '' });
       }
     } else {
-      if (optionExists) {
+      if (itemIndex !== -1) {
         setSelectedOptions(prevOptions =>
           prevOptions.filter(item => !(item.process === process && item.option === option)),
         );
