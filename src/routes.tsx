@@ -7,11 +7,13 @@ const DesiredPosition = React.lazy(() => import('./pages/signUp/DesiredPosition'
 const Application = React.lazy(() => import('./pages/applications/index'));
 const Home = React.lazy(() => import('./pages/main/index'));
 const ApplicationStatus = React.lazy(() => import('./pages/applicationStatus/index'));
+const MyPage = React.lazy(() => import('./pages/mypage/index'));
 
 export const privateRoutes = [
   { path: '/', element: <Home /> },
   { path: '/application/*', element: <Application /> },
   { path: '/applicationStatus', element: <ApplicationStatus /> },
+  { path: '/mypage', element: <MyPage /> },
 ];
 
 export const publicRoutes = [
