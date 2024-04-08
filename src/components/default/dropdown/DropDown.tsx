@@ -42,6 +42,11 @@ const DropdownButton = styled.button<{
   font-size: 14px;
   cursor: pointer;
   z-index: ${props => (props.isOpen ? '3' : '1')};
+
+  .process-text {
+    display: inline-block;
+    margin-right: 5px;
+  }
 `;
 
 const DropdownContent = styled.div<{
@@ -50,9 +55,9 @@ const DropdownContent = styled.div<{
 }>`
   display: ${props => (props.isOpen ? 'block' : 'none')};
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 0;
-  padding: 8px;
+  padding: ${props => (props.process === 'COMPLETE' ? '10px' : '8px')};
   padding-top: 20px;
   border: 0.5px solid ${props => props.process && TYPE_PROCESS[props.process]};
   border-top: 0;
@@ -66,11 +71,16 @@ const CheckboxLabel = styled.label<{
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 }>`
   position: relative;
-  padding-left: 20px;
+  padding-left: ${props => (props.process === 'COMPLETE' ? '0' : '20px')};
   cursor: pointer;
-  display: inline-block;
+  display: ${props => (props.process === 'COMPLETE' ? '' : 'inline-block')};
   line-height: 24px;
   font-size: 12px;
+  color: ${props => props.process && TYPE_PROCESS[props.process]};
+
+  .checkbox-container {
+    display: ${props => (props.process === 'COMPLETE' ? 'none' : 'block')};
+  }
 
   input {
     position: absolute;
@@ -106,6 +116,10 @@ const CheckboxLabel = styled.label<{
     background-color: ${props => props.process && TYPE_PROCESS[props.process]};
     z-index: -1;
   }
+
+  .option-text {
+    text-align: center;
+  }
 `;
 
 export const DropDown = ({ process, options, selectedOptions, onSelect }: DropdownProps) => {
@@ -123,23 +137,25 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
   return (
     <DropdownContainer ref={dropdownRef}>
       <DropdownButton isOpen={isOpen} process={process} onClick={handleButtonClick}>
-        {process && formatProcessToKor(process)}
+        <div className='process-text'>{process && formatProcessToKor(process)}</div>
         <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : process && TYPE_PROCESS[process]} />
       </DropdownButton>
       {options && (
         <DropdownContent isOpen={isOpen} process={process}>
           {options.map(option => (
             <CheckboxLabel key={option} process={process}>
-              <input
-                type='checkbox'
-                value={option}
-                checked={selectedOptions.includes(option)}
-                onChange={() => handleCheckboxChange(process, option)}
-              />
-              <span className='custom-checkbox'>
-                <img src={CheckIcon} alt='체크 아이콘' />
-              </span>
-              {option}
+              <div className='checkbox-container'>
+                <input
+                  type='checkbox'
+                  value={option}
+                  checked={selectedOptions.includes(option)}
+                  onChange={() => handleCheckboxChange(process, option)}
+                />
+                <span className='custom-checkbox'>
+                  <img src={CheckIcon} alt='체크 아이콘' />
+                </span>
+              </div>
+              <div className='option-text'>{option}</div>
             </CheckboxLabel>
           ))}
         </DropdownContent>

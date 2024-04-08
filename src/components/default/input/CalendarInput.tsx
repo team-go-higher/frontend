@@ -26,6 +26,13 @@ export const CalendarInput = ({
   );
 
   const getFormattedDate = (date: Date | null) => {
+    if (process === 'COMPLETE') {
+      if (detailProcess === '최종합격') {
+        return '최종 합격을 축하합니다!';
+      } else {
+        return `${detailProcess}`;
+      }
+    }
     if (date) {
       const formattedDate = format(date, "'M'월 'd'일");
       const formattedTime = format(date, "'HH'시 'mm'분");
@@ -36,7 +43,6 @@ export const CalendarInput = ({
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    console.log(date);
     if (date && process && detailProcess) {
       onChange(date, process, detailProcess);
     }
@@ -47,12 +53,14 @@ export const CalendarInput = ({
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
-        placeholderText={`${detailProcess} 일정을 선택하세요`}
+        placeholderText={
+          process === 'COMPLETE' ? '최종 결과를 선택하세요' : `${detailProcess} 일정을 선택하세요`
+        }
         dateFormat={getFormattedDate(selectedDate)}
         showTimeSelect //시간도 선택할 수 있게
         timeFormat='HH:mm'
         timeIntervals={10}
-        readOnly={applicationType === 'default' ? true : false}
+        readOnly={applicationType === 'default' || process === 'COMPLETE' ? true : false}
       />
     </StyledCalendarInput>
   );
