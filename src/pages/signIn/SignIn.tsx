@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import moment from 'moment';
 import KakaoImg from 'assets/auth/auth_kakao.svg';
 import GoogleImg from 'assets/auth/auth_google.svg';
+import { updateUserInfo } from 'utils/localStorage';
 
 const Login = () => {
   const location = window.location;
@@ -16,20 +16,14 @@ const Login = () => {
 
       const accessToken = urlParams.get('accessToken');
       const role = urlParams.get('role');
-      const expireDate = moment().add(1, 'month').format('YYYY-MM-DD hh:mm:ss');
 
       if (accessToken !== null && role !== null) {
-        let userInfo = {
-          accessToken: accessToken,
-          role: role,
-          expireDate: expireDate,
-        };
+        updateUserInfo({ role: role, accessToken: accessToken });
 
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
         if (role === 'GUEST') {
           navigate('/signUp/desiredPosition');
         } else {
-          navigate('/calendar');
+          navigate('/');
         }
       }
     }

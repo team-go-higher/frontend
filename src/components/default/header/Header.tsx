@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   HeaderContainer,
   HeaderMenuContainer,
@@ -6,29 +6,58 @@ import {
 } from './HeaderStyledComponents';
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const MenuItemArr = ['내 공고 리스트', '공고리스트', '지원서 추가'];
+const MENU_ITEM_ARR = ['지원 현황 모아보기', '공고리스트', '지원서 추가'];
 
 const Header = () => {
-  const [isSelect, setIsSelect] = useState('공고리스트');
+  const { pathname } = useLocation();
+  const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
 
+  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   const handlePage = (item: string) => {
     if (item === '지원서 추가') {
       setIsSelect(item);
       navigate('/application/add');
+      return;
     }
-    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+    if (item === '지원 현황 모아보기') {
+      setIsSelect(item);
+      navigate('/applicationStatus');
+      return;
+    }
   };
+
+  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+  useEffect(() => {
+    if (pathname === '/') {
+      setIsSelect('');
+      return;
+    }
+    if (pathname === '/application/add') {
+      setIsSelect('지원서 추가');
+      return;
+    }
+    if (pathname === '/applicationStatus') {
+      setIsSelect('지원 현황 모아보기');
+      return;
+    }
+  }, [pathname]);
 
   return (
     <HeaderContainer>
       <div className='headerContainer'>
-        <div className='headerLogo'>Go-Higher</div>
+        <div
+          className='headerLogo'
+          onClick={() => {
+            navigate('/');
+          }}>
+          Go-Higher
+        </div>
         <div className='rightContainer'>
           <HeaderMenuContainer>
-            {MenuItemArr.map((e, index) => {
+            {MENU_ITEM_ARR.map((e, index) => {
               return (
                 <div
                   className={`menuItem ${isSelect === e ? 'active' : ''}`}
@@ -41,18 +70,11 @@ const Header = () => {
           </HeaderMenuContainer>
           <HeaderPersonalContainer>
             <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
-            <div className='personalBox'>
+            <div className='personalBox' onClick={() => navigate('/mypage')}>
               <div className='profile'>고하</div>
               <div className='profileName'>사용자</div>
               <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
             </div>
-            <button
-              onClick={() => {
-                navigate('/signIn');
-                localStorage.removeItem('userInfo');
-              }}>
-              로그아웃
-            </button>
           </HeaderPersonalContainer>
         </div>
       </div>

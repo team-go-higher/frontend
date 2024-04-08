@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 import * as S from './ModalStyledComponents';
 import { processTypeInfo, processTypeList } from 'constants/process';
@@ -9,6 +9,8 @@ import { processType } from 'types/interfaces/KanbanProcess';
 import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';
+import { fetchUserPoistionInfo } from 'apis/auth';
+import { getUserInfo } from 'utils/localStorage';
 interface ModalViewModelProps {
   handleApplicationSubmission: handleApplicationSubmissionType;
   mode: modalModeType;
@@ -22,8 +24,41 @@ interface IProps {
   closeModal: () => void;
 }
 
+export type FormValuesType = {
+  companyName: string;
+  processType: string;
+  detailedProcessType: string;
+  position: string;
+  schedule: string;
+  url: string;
+};
+
+// TODO : defaulValue 설정 로직 수정
 const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const {
+    handleApplicationSubmission,
+    mode,
+    currentProcessType,
+    fetchedProcessData,
+    applicationInfo,
+  } = viewModel;
+  const [desiredPositionList, setDesiredPositionList] = useState([]);
+  const FormValues: FormValuesType = {
+    companyName: '',
+    processType: currentProcessType ? currentProcessType : applicationInfo.process.type,
+    detailedProcessType:
+      mode === 'updateCurrentProcess'
+        ? applicationInfo.processDescription.length > 0
+          ? applicationInfo.processDescription[0].description
+          : ''
+        : applicationInfo.process.description,
+    position: applicationInfo.position !== '' ? applicationInfo.position : desiredPositionList[0],
+    schedule: '',
+    url: '',
+  };
+
+  const {
+    control,
     register,
     handleSubmit,
     getValues,
@@ -33,17 +68,10 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     clearErrors,
     watch,
     formState: { errors, defaultValues },
-  } = useForm({
+  } = useForm<typeof FormValues>({
     mode: 'onSubmit',
+    defaultValues: getResetValues(),
   });
-
-  const {
-    handleApplicationSubmission,
-    mode,
-    currentProcessType,
-    fetchedProcessData,
-    applicationInfo,
-  } = viewModel;
 
   const { dropDownToggle, setDropDownToggle, dropDownToggleHandler, dropDownItemHandler } =
     useDropDownHandler(setValue, 'processType');
@@ -63,10 +91,6 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const processType = watch('processType');
   const detailedProcessType = watch('detailedProcessType');
   const [userInputToggle, setUserInputToggle] = useState(false);
-  const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') as string);
-  const desiredPositionList = desiredPositions.map(
-    (item: { id: number; position: string }) => item.position,
-  );
 
   function isDetailedProcessTypeRequired() {
     if (getValues('processType') === 'TO_APPLY' || getValues('processType') === 'DOCUMENT') {
@@ -76,7 +100,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     }
   }
 
-  function isError(field: string) {
+  function isError(field: keyof typeof FormValues) {
     return errors[field] ? true : false;
   }
 
@@ -101,8 +125,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
           : ''
         : applicationInfo.process.description;
 
-    const position =
-      applicationInfo.position !== '' ? applicationInfo.position : desiredPositionList[0];
+    const position = applicationInfo.position || desiredPositionList[0];
 
     return {
       companyName: applicationInfo.companyName,
@@ -129,6 +152,25 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     }
   }
 
+  const storeUserPositionInfo = async () => {
+    const userPositionInfo = await fetchUserPoistionInfo();
+    if (userPositionInfo) {
+      localStorage.setItem('userPositionInfo', JSON.stringify(userPositionInfo));
+
+      const { desiredPositions } = userPositionInfo;
+      setDesiredPositionList(
+        desiredPositions.map((item: { id: number; position: string }) => item.position),
+      );
+    }
+  };
+
+  useEffect(() => {
+    const userInfo = getUserInfo();
+    if (userInfo !== null && userInfo.role === 'USER') {
+      storeUserPositionInfo();
+    }
+  }, []);
+
   // 인풋 활성화시 세부단계 초기화
   useEffect(() => {
     if (userInputToggle) {
@@ -144,7 +186,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   // 전형단계 변경시 세부단계 초기화
   useEffect(() => {
     if (mode === 'simpleRegister') {
-      if (processType !== currentProcessType) {
+      if (processType !== currentProcessType || processType === 'TO_APPLY') {
         setUserInputToggle(false);
         setValue('detailedProcessType', '');
       }
@@ -160,6 +202,14 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     setUserInputToggle(false);
     setPositionDropDownToggle(false);
   }, [modalIsOpen, mode]);
+
+  useEffect(() => {
+    if (dropDownToggle) {
+      setDetailedDropDownToggle(false);
+    } else if (detailedDropDownToggle) {
+      setDropDownToggle(false);
+    }
+  }, [dropDownToggle, detailedDropDownToggle]);
 
   if (mode === 'updateCurrentProcess') {
     return (
@@ -215,7 +265,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
                 isPlaceHolder={defaultValues?.processType !== getValues('processType')}
                 isArrowIconRequired={isDetailedProcessTypeRequired()}
                 itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
-                inputToggleHandler={() => setUserInputToggle(true)}
+                inputToggleHandler={(state: boolean) => setUserInputToggle(state)}
                 dropDownToggleHandler={detailedDropDownToggleHandler}
                 dropDownItemHandler={detailedDropDownItemHandler}
               />
@@ -247,15 +297,21 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
           <S.ModalInputWrapper>
             {/* 회사명 */}
             <S.ModalInputBox>
-              <S.ModalInput
-                defaultValue={getValues('companyName')}
-                type='text'
-                $error={errors.companyName ? true : false}
-                placeholder='회사명을 입력하세요'
-                {...register('companyName', {
-                  required: true,
-                })}
+              <Controller
+                name='companyName'
+                control={control}
+                render={({ field }) => (
+                  <S.ModalInput
+                    {...field}
+                    onChange={e => field.onChange(e.target.value)}
+                    required={true}
+                    type='text'
+                    $error={errors.companyName ? true : false}
+                    placeholder='회사명을 입력하세요'
+                  />
+                )}
               />
+
               {errors.companyName && <S.InvalidIcon>!</S.InvalidIcon>}
             </S.ModalInputBox>
 
@@ -265,7 +321,9 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
               disabled={mode === 'simpleEdit' ? true : false}
               toggle={dropDownToggle}
               isError={isError('processType')}
-              isPlaceHolder={getValues('processType') !== currentProcessType}
+              isPlaceHolder={
+                mode === 'simpleEdit' ? false : getValues('processType') !== currentProcessType
+              }
               isArrowIconRequired={mode !== 'simpleEdit'}
               value={getValues('processType')}
               itemList={processTypeList}
@@ -274,7 +332,27 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             />
 
             {/* 세부단계 */}
-            {userInputToggle ? (
+
+            <ModalDropDown
+              dropDownId='detailedProcessType'
+              disabled={mode === 'simpleEdit' ? true : !isDetailedProcessTypeRequired()}
+              toggle={detailedDropDownToggle}
+              isError={isError('detailedProcessType')}
+              value={
+                getValues('detailedProcessType') === '' || userInputToggle
+                  ? '세부 단계를 입력하세요'
+                  : getValues('detailedProcessType')
+              }
+              isPlaceHolder={
+                defaultValues?.detailedProcessType !== getValues('detailedProcessType')
+              }
+              isArrowIconRequired={mode !== 'simpleEdit' && isDetailedProcessTypeRequired()}
+              itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
+              inputToggleHandler={(state: boolean) => setUserInputToggle(state)}
+              dropDownToggleHandler={detailedDropDownToggleHandler}
+              dropDownItemHandler={detailedDropDownItemHandler}
+            />
+            {userInputToggle && (
               <S.ModalInputBox>
                 <S.ModalInput
                   type='text'
@@ -284,26 +362,6 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
                 />
                 {errors.detailedProcessType && <S.InvalidIcon>!</S.InvalidIcon>}
               </S.ModalInputBox>
-            ) : (
-              <ModalDropDown
-                dropDownId='detailedProcessType'
-                disabled={mode === 'simpleEdit' ? true : !isDetailedProcessTypeRequired()}
-                toggle={detailedDropDownToggle}
-                isError={isError('detailedProcessType')}
-                value={
-                  getValues('detailedProcessType') === ''
-                    ? '세부 단계를 입력하세요'
-                    : getValues('detailedProcessType')
-                }
-                isPlaceHolder={
-                  defaultValues?.detailedProcessType !== getValues('detailedProcessType')
-                }
-                isArrowIconRequired={mode !== 'simpleEdit' && isDetailedProcessTypeRequired()}
-                itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
-                inputToggleHandler={() => setUserInputToggle(true)}
-                dropDownToggleHandler={detailedDropDownToggleHandler}
-                dropDownItemHandler={detailedDropDownItemHandler}
-              />
             )}
 
             {/* 직무 */}
@@ -338,10 +396,10 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             일반등록 버튼을 눌러주세요
           </S.ModalHelperText>
           <S.ModalButtonWrapper>
-            <S.InModalButton mode='common' onClick={closeModal}>
-              {mode === 'simpleEdit' ? '취소' : '일반등록'}
+            <S.InModalButton mode='cancel' onClick={closeModal}>
+              취소
             </S.InModalButton>
-            <S.InModalButton mode='simple' type='submit' onClick={validateProcessType}>
+            <S.InModalButton mode='confirm' type='submit' onClick={validateProcessType}>
               {mode === 'simpleEdit' ? '수정완료' : '간편등록'}
             </S.InModalButton>
           </S.ModalButtonWrapper>
