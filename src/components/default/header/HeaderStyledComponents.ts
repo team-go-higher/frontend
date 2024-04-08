@@ -36,7 +36,8 @@ export const HeaderMenuContainer = styled.div`
     font-size: 13px;
     font-weight: 500;
     letter-spacing: -0.52px;
-    width: 84px;
+    min-width: 84px;
+    width: fit-content;
     box-sizing: border-box;
     height: 50px;
   }
