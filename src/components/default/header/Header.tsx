@@ -10,19 +10,25 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { postLogout } from 'apis/auth';
 
-const MENU_ITEM_ARR = ['내 공고 리스트', '공고리스트', '지원서 추가'];
+const MENU_ITEM_ARR = ['지원 현황 모아보기', '공고리스트', '지원서 추가'];
 
 const Header = () => {
   const { pathname } = useLocation();
   const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
 
+  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   const handlePage = (item: string) => {
     if (item === '지원서 추가') {
       setIsSelect(item);
       navigate('/application/add');
+      return;
     }
-    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+    if (item === '지원 현황 모아보기') {
+      setIsSelect(item);
+      navigate('/applicationStatus');
+      return;
+    }
   };
 
   const handleLogoutMutation = useMutation({
@@ -35,6 +41,7 @@ const Header = () => {
     onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
   });
 
+  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   useEffect(() => {
     if (pathname === '/') {
       setIsSelect('');
@@ -44,7 +51,10 @@ const Header = () => {
       setIsSelect('지원서 추가');
       return;
     }
-    //TODO 다른 페이지 개발 시 이동 처리 추가 필요
+    if (pathname === '/applicationStatus') {
+      setIsSelect('지원 현황 모아보기');
+      return;
+    }
   }, [pathname]);
 
   return (
