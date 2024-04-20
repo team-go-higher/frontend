@@ -34,7 +34,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
       <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div className='selectDate'>
         <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
-        <div className='selectedDate'>{format(selectedDate, 'd, eee').toLowerCase()}</div>
+        <div className='selectedDate'>{format(selectedDate, 'd, eee')}</div>
         <img src={dayRight} alt='dayRight' onClick={nextDay} />
       </div>
       <div className='cardContainer'>
@@ -74,8 +74,20 @@ export const RenderUnscheduled = ({
   prevPage,
   nextPage,
 }: RenderUnscheduledProps) => {
+  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
+    useModal();
+
+  const modalViewModel = ModalViewModel({
+    mode,
+    queryKey: [queryKeys.CALENDAR],
+    closeModal,
+    currentProcessType,
+    applicationInfo,
+  });
+
   return (
     <S.RenderUnscheduledContainer>
+      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <S.TitleSection>
         {currentPage > 1 ? (
           <div className='arrow' onClick={prevPage}>
@@ -95,7 +107,10 @@ export const RenderUnscheduled = ({
       </S.TitleSection>
       <S.CalendarCardDiv>
         {unscheduledData.content.map((event: any) => (
-          <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+          <CalendarCard
+            key={event.applicationId}
+            event={event}
+            openModal={openModal}></CalendarCard>
         ))}
       </S.CalendarCardDiv>
     </S.RenderUnscheduledContainer>
