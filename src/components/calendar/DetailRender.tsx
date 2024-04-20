@@ -3,12 +3,7 @@ import { format } from 'date-fns';
 import { CalendarCard } from './CalendarCard';
 import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
 import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
-import {
-  DetailContainer,
-  PlusButton,
-  Circle,
-  RenderUnscheduledContainer,
-} from './CalendarStyledComponents';
+import * as S from './CalendarStyledComponents';
 import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
 import { useModal } from 'hooks/feature/useModal';
 import { ModalView, ModalViewModel } from 'components/default';
@@ -35,7 +30,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
   });
 
   return (
-    <DetailContainer>
+    <S.DetailContainer>
       <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div className='selectDate'>
         <img src={dayLeft} alt='dayLeft' onClick={prevDay} />
@@ -47,8 +42,8 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
           detailData.map((event, i) => (
             <CalendarCard key={i} event={event} openModal={openModal}></CalendarCard>
           ))}
-        <PlusButton>
-          <Circle
+        <S.PlusButton>
+          <S.Circle
             onClick={() =>
               openModal({
                 mode: 'simpleRegister',
@@ -58,10 +53,10 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
               })
             }>
             +
-          </Circle>
-        </PlusButton>
+          </S.Circle>
+        </S.PlusButton>
       </div>
-    </DetailContainer>
+    </S.DetailContainer>
   );
 };
 
@@ -80,8 +75,8 @@ export const RenderUnscheduled = ({
   nextPage,
 }: RenderUnscheduledProps) => {
   return (
-    <RenderUnscheduledContainer>
-      <div className='arrow-wrap'>
+    <S.RenderUnscheduledContainer>
+      <S.TitleSection>
         {currentPage > 1 ? (
           <div className='arrow' onClick={prevPage}>
             ◁
@@ -97,12 +92,12 @@ export const RenderUnscheduled = ({
         ) : (
           <div></div>
         )}
-      </div>
-      <div className='card'>
+      </S.TitleSection>
+      <S.CalendarCardDiv>
         {unscheduledData.content.map((event: any) => (
           <CalendarCard key={event.applicationId} event={event}></CalendarCard>
         ))}
-      </div>
-    </RenderUnscheduledContainer>
+      </S.CalendarCardDiv>
+    </S.RenderUnscheduledContainer>
   );
 };

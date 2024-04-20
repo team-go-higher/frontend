@@ -238,13 +238,15 @@ export const UnscheduledContainer = styled.div`
 `;
 
 export const RenderUnscheduledContainer = styled.div`
-  .arrow-wrap {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 77px 0px 30px 0px;
-  }
+  margin: 100px 0;
+`;
+
+export const TitleSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
   .arrow {
     cursor: pointer;
   }
@@ -253,10 +255,11 @@ export const RenderUnscheduledContainer = styled.div`
     font-size: 25px;
     font-weight: 700;
   }
-  .card {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+`;
+
+export const CalendarCardDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
