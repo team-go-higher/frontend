@@ -229,6 +229,13 @@ export const EventContainer = styled.div<EventProps>`
   }
 `;
 
+export const MoreIconDiv = styled.div`
+  position: absolute;
+  bottom: 7px;
+  right: 16px;
+  cursor: pointer;
+`;
+
 // UnscheduledContainer
 export const UnscheduledContainer = styled.div`
   display: flex;
