@@ -5,7 +5,6 @@ import * as S from 'components/kanban/KanbanCard/KanbanCardStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import { modalModeType } from 'hooks/feature/useModal';
-import { IApplication } from 'types/interfaces/KanbanProcess';
 
 interface CalendarCardProps {
   event: {
@@ -57,7 +56,7 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
           </S.MoreItem>
           <S.MoreItem>
             <MoreItemIcon />
-            <S.MoreItemText>공고 숨기기</S.MoreItemText>
+            <S.MoreItemText>지원서 비활성화</S.MoreItemText>
           </S.MoreItem>
         </S.MoreMenuColumn>
       )}
