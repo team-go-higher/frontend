@@ -54,6 +54,13 @@ export const HeaderContainer = styled.div`
     padding: 5px 15px;
     font-size: 12px;
   }
+
+  .searchInput::placeholder {
+    color: #8f8f8f;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.48px;
+  }
 `;
 
 export const ContentContainer = styled.div`

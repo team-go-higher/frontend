@@ -66,6 +66,7 @@ const ApplicationStatus = () => {
             className='searchInput'
             value={searchValue}
             onChange={e => setSearhValue(e.target.value)}
+            placeholder='회사명을 입력하세요'
           />
         </HeaderContainer>
 
