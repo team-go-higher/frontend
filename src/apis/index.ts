@@ -5,6 +5,45 @@ interface ICommonResponse<T> {
   error: any;
   data: T;
 }
+
+let lock = false;
+let subscribers: ((token: string) => void)[] = [];
+
+function subscribeTokenRefresh(cb: (token: string) => void) {
+  subscribers.push(cb);
+}
+
+function onRrefreshed(token: string) {
+  subscribers.forEach(cb => cb(token));
+}
+
+const getRefreshToken = async (): Promise<string | void> => {
+  try {
+    const { data }: any = await axios.patch(
+      `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+    if (!data.data.accessToken) {
+      throw new Error();
+    }
+
+    lock = false;
+    onRrefreshed(data.data.accessToken);
+    subscribers = [];
+    updateUserInfo({ accessToken: data.data.accessToken });
+
+    return data.data.accessToken;
+  } catch (e) {
+    lock = false;
+    subscribers = [];
+    localStorage.clear();
+    window.location.replace('/signin');
+  }
+};
+
 class ApiService {
   private api;
 
@@ -40,23 +79,20 @@ class ApiService {
         if (response && response.status === 401) {
           const originalRequest = config;
 
-          try {
-            const { data }: any = await axios.patch(
-              `${process.env.REACT_APP_BASE_URL}/tokens/mine`,
-              {},
-              {
-                withCredentials: true,
-              },
-            );
+          if (lock) {
+            return new Promise(resolve => {
+              subscribeTokenRefresh((token: string) => {
+                originalRequest.headers.Authorization = `Bearer ${token}`;
+                resolve(axios(originalRequest));
+              });
+            });
+          }
+          lock = true;
+          const accessToken = await getRefreshToken();
 
-            updateUserInfo({ accessToken: data.data.accessToken });
-
-            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
-
-            return axios(originalRequest);
-          } catch (e) {
-            localStorage.clear();
-            window.location.replace('/signin');
+          if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+            return axios(config);
           }
         }
 
