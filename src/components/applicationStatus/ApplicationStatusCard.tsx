@@ -20,23 +20,21 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
   const { type, schedule } = data.process;
 
   return (
-    <Wrapper>
+    <Wrapper isView={isView}>
       <Label process={type} />
 
       <ContentContainer>
-        <div className='title'>{companyName}</div>
+        <div className='companyName'>{companyName}</div>
         <div className='contentBox'>
           {/* 해당하는 내용 포지션? 세부 포지션? 확인 필요 */}
           <div className='content'>
             {position}/{specificPosition}
           </div>
-          {/* TODO 내용 확인 필요 */}
-          <div className='memo'>공고 메모 : 입사시 주의 사항을 기록하세요</div>
         </div>
       </ContentContainer>
 
       <UtilContainer>
-        <div className='deadline'>{format(new Date(schedule), 'M월 dd일 HH:mm')}</div>
+        <div className='deadline'>{format(new Date(schedule), 'yy년 M월 dd일 HH:mm')}</div>
         <ToggleContainer onClick={() => setIsView(!isView)}>
           <div className={`toggleCircle ${isView ? '' : 'false'}`} />
         </ToggleContainer>
