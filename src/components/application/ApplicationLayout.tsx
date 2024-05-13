@@ -11,47 +11,12 @@ import ApplicationProcess from './ApplicationProcess';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/default/button/Button';
 import { RadioInput } from 'components/default/input/RadioInput';
+import { InputContentArr, RadioContentArr } from 'constants/application';
 
 interface ApplicationLayoutProps {
   applicationType: 'edit' | 'default' | 'add';
   data?: any; //TODO api 연결 이후 응답 데이터 applicationType으로 수정 필요
 }
-
-// TODO 필수인지 여부 이후 api 연동 시 수정 필요
-const InputContentArr = [
-  { label: '회사명', name: 'companyName', isRequired: true },
-  { label: '부서', name: 'team', isRequired: false },
-  { label: '직군', name: 'position', isRequired: true },
-  { label: '세부직무', name: 'specificPosition', isRequired: false },
-  { label: '전형 단계', name: 'processes', isRequired: false },
-  { label: '주요 업무', name: 'jobDescription', isRequired: true },
-  { label: '필수 역량', name: 'requiredCapability', isRequired: false },
-  { label: '공고 URL', name: 'url', isRequired: true },
-  { label: '회사 위치', name: 'location', isRequired: false },
-  { label: '우대 사항', name: 'preferredQualification', isRequired: false },
-  { label: '채용 담당', name: 'contact', isRequired: false },
-];
-
-const RadioContentArr = [
-  {
-    label: '고용 형태',
-    name: 'employmentType',
-    options: ['정규직', '계약직', '파견직', '인턴'],
-    isRequired: true,
-  },
-  {
-    label: '경력 조건',
-    name: 'careerRequirement',
-    options: ['신입', '경력', '무관'],
-    isRequired: false,
-  },
-  {
-    label: '근무 형태',
-    name: 'workType',
-    options: ['상주', '재택근무', '재택가능'],
-    isRequired: false,
-  },
-];
 
 const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
@@ -98,6 +63,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
     <Wrapper>
       <div className='title'>내 지원서</div>
       <ContentContainer onSubmit={handleSubmit(onSubmit)}>
+        {/* input 입력 부분 */}
         {InputContentArr.map(e => (
           <RowContainer key={e.name}>
             <ApplicationLabel label={e.label} isRequired={e.isRequired} />
@@ -124,6 +90,8 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             </ApplicationContent>
           </RowContainer>
         ))}
+
+        {/* 라디오 인풋 입력 부분 */}
         {RadioContentArr.map(e => (
           <RowContainer key={e.name}>
             <ApplicationLabel label={e.label} isRequired={e.isRequired} />
@@ -141,18 +109,20 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
         ))}
 
         {/* 버튼 */}
-        {applicationType === 'default' ? (
-          <div className='btnContainer'>
-            <Button variant='secondary'>삭제하기</Button>
-            <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
-          </div>
-        ) : (
-          <div className='btnContainer'>
-            <Button type='submit' onClick={() => navigate('/application/detail')}>
-              작성완료
-            </Button>
-          </div>
-        )}
+        <div className='btnContainer'>
+          {applicationType === 'default' ? (
+            <>
+              <Button variant='secondary'>삭제하기</Button>
+              <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
+            </>
+          ) : (
+            <>
+              <Button type='submit' onClick={() => navigate('/application/detail')}>
+                작성완료
+              </Button>
+            </>
+          )}
+        </div>
       </ContentContainer>
     </Wrapper>
   );
