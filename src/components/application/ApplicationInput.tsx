@@ -6,7 +6,7 @@ interface ApplicationInputProps {
   label: string;
   control: Control<FieldValues>;
   name: FieldPath<FieldValues>;
-  isRequired: boolean;
+  isRequired?: boolean;
   value?: string;
 }
 
@@ -34,7 +34,7 @@ const ApplicationInput = ({
   label,
   name,
   control,
-  isRequired,
+  isRequired = false,
   value,
 }: ApplicationInputProps) => {
   return applicationType === 'default' ? (

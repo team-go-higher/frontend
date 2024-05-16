@@ -1,4 +1,3 @@
-import React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
 import {
@@ -20,6 +19,7 @@ interface InputProps extends UseControllerProps {
 const StyledTextarea = styled(TextareaAutosize)<{ error?: boolean }>`
   width: 100%;
   padding: 10px 18px;
+  box-sizing: border-box;
   font-size: 15px;
   border: 0.5px solid ${props => (props.error ? `rgb(var(--redText))` : `rgb(var(--inputBorder))`)};
   border-radius: 10px;
