@@ -53,6 +53,7 @@ export const MoreIconDiv = styled.div`
   position: absolute;
   bottom: 18px;
   right: 35px;
+  cursor: pointer;
 `;
 
 export const MoreMenuColumn = styled.div<{ $currentProcessType: string }>`
@@ -65,7 +66,9 @@ export const MoreMenuColumn = styled.div<{ $currentProcessType: string }>`
   justify-content: space-between;
   padding: 9px 25px 9px 16px;
   width: 150px;
-  height: 64px;
+  /* height: 64px; */
+  height: fit-content;
+  min-height: 64px;
   background-color: rgb(var(--white));
   border-radius: 8px;
   box-shadow: ${({ $currentProcessType }) =>
@@ -76,6 +79,7 @@ export const MoreItem = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 `;
 
 export const MoreItemText = styled.p`
