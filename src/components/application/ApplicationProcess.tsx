@@ -49,11 +49,11 @@ const ApplicationProcess = ({
     );
 
     if (process === 'COMPLETE') {
-      if (itemIndex !== -1) {
-        const fieldIndex = fields.findIndex((v: any) => v.type === process);
+      setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
+      const fieldIndex = fields.findIndex((v: any) => v.type === process);
+      if (fieldIndex !== -1) {
         update(fieldIndex, { type: process, description: option, schedule: '' });
       } else {
-        setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
         append({ type: process, description: option, schedule: '' });
       }
     } else {

@@ -36,7 +36,8 @@ export const ProcessArr: { type: ProcessType; description: string[] | null }[] =
     type: 'COMPLETE',
     description: [
       '최종합격',
-      '서류합격',
+      '서류 탈락',
+      '서류 합격',
       '테스트 합격',
       '과제 합격',
       '검사 합격',
