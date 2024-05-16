@@ -37,7 +37,7 @@ export const RowContainer = styled.div`
   & > :first-child {
     width: 130px;
     flex-shrink: 0;
-    margin-top: 10.5px;
+    margin-top: 12px;
   }
   & > :nth-child(2) {
     flex-grow: 1;

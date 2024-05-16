@@ -115,6 +115,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             applicationType={applicationType}
             label='주요 업무'
             name='jobDescription'
+            inputType='textarea'
             control={control}
             isRequired={true}
             value={data.jobDescription}
@@ -125,6 +126,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
           <ApplicationInput
             applicationType={applicationType}
             label='필수 역량'
+            inputType='textarea'
             name='requiredCapability'
             control={control}
             value={data.requiredCapability}
@@ -156,6 +158,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
           <ApplicationInput
             applicationType={applicationType}
             label='우대 사항'
+            inputType='textarea'
             name='preferredQualification'
             control={control}
             value={data.preferredQualification}

@@ -1,9 +1,11 @@
 import { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { Input } from 'components/default/input/Input';
+import { Textarea } from 'components/default/input/Textarea';
 
 interface ApplicationInputProps {
   applicationType: 'edit' | 'default' | 'add';
   label: string;
+  inputType?: 'input' | 'textarea';
   control: Control<FieldValues>;
   name: FieldPath<FieldValues>;
   isRequired?: boolean;
@@ -32,6 +34,7 @@ const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
 const ApplicationInput = ({
   applicationType,
   label,
+  inputType = 'input',
   name,
   control,
   isRequired = false,
@@ -40,7 +43,19 @@ const ApplicationInput = ({
   return applicationType === 'default' ? (
     <DefaultContentView name={name} value={value}></DefaultContentView>
   ) : (
-    <Input name={name} label={label} error={false} isRequired={isRequired} control={control} />
+    <>
+      {inputType === 'input' ? (
+        <Input name={name} label={label} error={false} isRequired={isRequired} control={control} />
+      ) : (
+        <Textarea
+          name={name}
+          label={label}
+          error={false}
+          isRequired={isRequired}
+          control={control}
+        />
+      )}
+    </>
   );
 };
 
