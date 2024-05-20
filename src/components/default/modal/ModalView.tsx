@@ -274,7 +274,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
           <S.ModalButtonWrapper>
             <S.InModalButton mode='common' onClick={closeModal}>
-              돌아가기
+              돌아가기
             </S.InModalButton>
             <S.InModalButton mode='simple' type='submit'>
               수정완료

@@ -28,7 +28,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
 
   const modalViewModel = ModalViewModel({
     mode,
-    queryKey: [queryKeys.CALENDAR],
+    queryKey: [queryKeys.CALENDAR, queryKeys.UNSCHEDULED],
     closeModal,
     currentProcessType,
     applicationInfo,
@@ -79,8 +79,20 @@ export const RenderUnscheduled = ({
   prevPage,
   nextPage,
 }: RenderUnscheduledProps) => {
+  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
+    useModal();
+
+  const modalViewModel = ModalViewModel({
+    mode,
+    queryKey: [queryKeys.CALENDAR, queryKeys.UNSCHEDULED],
+    closeModal,
+    currentProcessType,
+    applicationInfo,
+  });
+
   return (
     <RenderUnscheduledContainer>
+      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <div className='arrow-wrap'>
         {currentPage > 1 ? (
           <div className='arrow' onClick={prevPage}>
@@ -100,7 +112,10 @@ export const RenderUnscheduled = ({
       </div>
       <div className='card'>
         {unscheduledData.content.map((event: any) => (
-          <CalendarCard key={event.applicationId} event={event}></CalendarCard>
+          <CalendarCard
+            key={event.applicationId}
+            event={event}
+            openModal={openModal}></CalendarCard>
         ))}
       </div>
     </RenderUnscheduledContainer>
