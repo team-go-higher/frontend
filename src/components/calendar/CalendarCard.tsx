@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { EventContainer } from './CalendarStyledComponents';
 import * as S from 'components/kanban/KanbanCard/KanbanCardStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
-import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import { modalModeType } from 'hooks/feature/useModal';
-import { IApplication } from 'types/interfaces/KanbanProcess';
+import MoreMenuModal from 'components/default/modal/MoreMenuModal';
 
 interface CalendarCardProps {
   event: {
@@ -50,16 +49,11 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
         <MoreIcon fill={`rgb(var(--${event.process.type}))`} onClick={handleMoreMenu} />
       </S.MoreIconDiv>
       {moreMenuShow && (
-        <S.MoreMenuColumn $currentProcessType={event.process.type}>
-          <S.MoreItem onClick={handleEditButton}>
-            <MoreItemIcon />
-            <S.MoreItemText>간편 수정하기</S.MoreItemText>
-          </S.MoreItem>
-          <S.MoreItem>
-            <MoreItemIcon />
-            <S.MoreItemText>공고 숨기기</S.MoreItemText>
-          </S.MoreItem>
-        </S.MoreMenuColumn>
+        <MoreMenuModal
+          handleEditButton={handleEditButton}
+          currentProcessType={event.process.type}
+          closeModal={() => setMoreMenuShow(false)}
+        />
       )}
     </EventContainer>
   );

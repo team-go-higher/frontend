@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
-import { ReactComponent as MoreItemIcon } from 'assets/main/main_kanban_card_more_item.svg';
 import * as S from './KanbanCardStyledComponents';
 import { IApplication, processType } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
 import { modalModeType } from 'hooks/feature/useModal';
 import { formatDataType } from 'utils/date';
+import MoreMenuModal from 'components/default/modal/MoreMenuModal';
 
 interface IProps {
   item: IApplication;
@@ -85,16 +85,11 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
         <MoreIcon fill={`rgb(var(--${currentProcessType}))`} onClick={handleMoreMenu} />
       </S.MoreIconDiv>
       {moreMenuShow && (
-        <S.MoreMenuColumn $currentProcessType={currentProcessType}>
-          <S.MoreItem onClick={handleEditButton}>
-            <MoreItemIcon />
-            <S.MoreItemText>간편 수정하기</S.MoreItemText>
-          </S.MoreItem>
-          <S.MoreItem>
-            <MoreItemIcon />
-            <S.MoreItemText>공고 숨기기</S.MoreItemText>
-          </S.MoreItem>
-        </S.MoreMenuColumn>
+        <MoreMenuModal
+          closeModal={() => setMoreMenuShow(false)}
+          handleEditButton={handleEditButton}
+          currentProcessType={currentProcessType}
+        />
       )}
     </S.KanbanCardContainer>
   );
