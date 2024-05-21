@@ -110,7 +110,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
           />
         </S.RowContainer>
         <S.RowContainer>
-          <ApplicationLabel label='주요 업무' isRequired={true} />
+          <ApplicationLabel label='주요 업무' />
           <ApplicationInput
             applicationType={applicationType}
             label='주요 업무'
@@ -133,7 +133,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
           />
         </S.RowContainer>
         <S.RowContainer>
-          <ApplicationLabel label='공고 URL' isRequired={true} />
+          <ApplicationLabel label='공고 URL' />
           <ApplicationInput
             applicationType={applicationType}
             label='공고 URL'
@@ -175,7 +175,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
           />
         </S.RowContainer>
         <S.RowContainer>
-          <ApplicationLabel label='고용 형태' isRequired={true} />
+          <ApplicationLabel label='고용 형태' />
           <S.RadioInputWrapper>
             {['정규직', '계약직', '파견직', '인턴'].map(option => (
               <RadioInput
