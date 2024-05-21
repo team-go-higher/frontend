@@ -4,6 +4,8 @@ import { DropDown } from 'components/default/dropdown/DropDown';
 import { Label } from 'components/default/label/Label';
 import { CalendarInput } from 'components/default/input/CalendarInput';
 import styled from 'styled-components';
+import { ProcessType } from 'types/interfaces/Application';
+import { ProcessArr } from 'constants/application';
 
 interface ApplicationProcessProps {
   applicationType: 'edit' | 'default' | 'add';
@@ -16,8 +18,6 @@ interface ApplicationProcessProps {
   remove: (index?: number | number[] | undefined) => void;
 }
 
-type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-
 const ApplicationProcess = ({
   applicationType,
   fields,
@@ -25,39 +25,6 @@ const ApplicationProcess = ({
   update,
   remove,
 }: ApplicationProcessProps) => {
-  const ProcessArr: { type: ProcessType; description: string[] | null }[] = [
-    {
-      type: 'DOCUMENT',
-      description: null,
-    },
-    {
-      type: 'TEST',
-      description: [
-        '실기테스트',
-        '사전과제',
-        '코딩테스트',
-        '인적성검사',
-        '인성검사',
-        '역량검사',
-        '기타(직접입력)',
-      ],
-    },
-    { type: 'INTERVIEW', description: ['1차면접', '2차면접', '3차면접', '인성면접', '직무면접'] },
-    {
-      type: 'COMPLETE',
-      description: [
-        '최종합격',
-        '서류합격',
-        '테스트 합격',
-        '과제 합격',
-        '검사 합격',
-        '1차 면접합격',
-        '2차 면접합격',
-        '3차 면접합격',
-      ],
-    },
-  ];
-
   const [selectedOptions, setSelectedOptions] = useState<
     { process: ProcessType; option: string }[]
   >([]);
@@ -82,11 +49,11 @@ const ApplicationProcess = ({
     );
 
     if (process === 'COMPLETE') {
-      if (itemIndex !== -1) {
-        const fieldIndex = fields.findIndex((v: any) => v.type === process);
+      setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
+      const fieldIndex = fields.findIndex((v: any) => v.type === process);
+      if (fieldIndex !== -1) {
         update(fieldIndex, { type: process, description: option, schedule: '' });
       } else {
-        setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
         append({ type: process, description: option, schedule: '' });
       }
     } else {
@@ -112,7 +79,7 @@ const ApplicationProcess = ({
     <ProcessContainer>
       {applicationType === 'default' ? (
         <div>
-          {ProcessArr.map((e, index) => (
+          {ProcessArr.map((e, index: number) => (
             <div style={{ display: 'flex', width: '100%' }} key={index}>
               <div className='label' key={index}>
                 <Label process={e.type} isPast={true} />

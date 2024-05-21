@@ -33,8 +33,19 @@ export const ContentContainer = styled.form`
 export const RowContainer = styled.div`
   display: flex;
   align-items: flex-start;
+
+  & > :first-child {
+    width: 130px;
+    flex-shrink: 0;
+    margin-top: 12px;
+  }
+  & > :nth-child(2) {
+    flex-grow: 1;
+  }
 `;
 
-export const ApplicationContent = styled.div`
-  width: calc(100% - 130px);
+export const RadioInputWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
 `;

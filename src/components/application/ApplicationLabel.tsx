@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 interface ApplicationLabelProps {
   label: string;
-  isRequired: boolean;
+  isRequired?: boolean;
 }
 
-const ApplicationLabel = ({ label, isRequired }: ApplicationLabelProps) => {
+const ApplicationLabel = ({ label, isRequired = false }: ApplicationLabelProps) => {
   return (
     <LabelContainer>
       <label>
