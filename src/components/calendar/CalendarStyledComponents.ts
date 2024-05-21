@@ -16,6 +16,11 @@ export const RenderHeaderContainer = styled.div`
   img {
     cursor: pointer;
   }
+  .react-datepicker__input-container input {
+    caret-color: transparent;
+    text-align: center;
+    cursor: pointer;
+  }
 `;
 
 //RenderDays

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
 import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
@@ -15,12 +15,6 @@ const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentPage, setCurrentPage] = useState(1);
-  const queryClient = useQueryClient();
-
-  queryClient.invalidateQueries({
-    queryKey: [queryKeys.CALENDAR],
-    exact: true,
-  });
 
   //api 연결
   const { data: calendarData = [] } = useQuery({
@@ -49,7 +43,10 @@ const Calendar = () => {
   const nextMonth = () => {
     setCurrentMonth(addMonths(currentMonth, 1));
   };
-  const onDateClick = (day: any) => {
+  const onMonthClick = (month: Date) => {
+    setCurrentMonth(month);
+  };
+  const onDateClick = (day: Date) => {
     setSelectedDate(day);
   };
   const prevDay = () => {
@@ -76,7 +73,12 @@ const Calendar = () => {
 
   return (
     <S.CalendarPage>
-      <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
+      <RenderHeader
+        currentMonth={currentMonth}
+        prevMonth={prevMonth}
+        nextMonth={nextMonth}
+        onMonthClick={onMonthClick}
+      />
       <div className='calendar-detail'>
         <S.CalendarContainer>
           <RenderDays />
