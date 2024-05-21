@@ -11,7 +11,7 @@ export const formatProcessToKor = (process: string) => {
     case 'INTERVIEW':
       return '면접전형';
     case 'COMPLETE':
-      return '완료';
+      return '최종발표';
     default:
       return '';
   }
@@ -27,7 +27,7 @@ export const fomatProcessTypeToEng = (process: string): processType => {
       return 'TEST';
     case '면접전형':
       return 'INTERVIEW';
-    case '완료':
+    case '최종발표':
       return 'COMPLETE';
     default:
       return 'TO_APPLY';
