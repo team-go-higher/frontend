@@ -238,6 +238,7 @@ export const UnscheduledContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 262px;
 `;
 
 export const RenderUnscheduledContainer = styled.div`

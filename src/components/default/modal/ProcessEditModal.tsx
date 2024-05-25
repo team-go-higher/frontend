@@ -1,6 +1,5 @@
 import Modal from 'react-modal';
 import * as S from './ModalStyledComponents';
-import { useForm } from 'react-hook-form';
 import { formatProcessToKor } from 'utils/process';
 import { IProcess, IProcessArray } from 'components/kanban/KanbanCard/KanbanCard';
 import { useState } from 'react';
@@ -68,15 +67,6 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
     });
   };
 
-  const {
-    // control,
-    // register,
-    handleSubmit,
-    // formState: { errors, defaultValues },
-  } = useForm({
-    mode: 'onSubmit',
-  });
-
   return (
     <Modal
       id='editModal'
@@ -85,7 +75,7 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
       isOpen={modalIsOpen}
       ariaHideApp={false}
       onRequestClose={closeModal}>
-      <S.ModalForm onSubmit={handleSubmit(handleEditProcess)}>
+      <S.ModalForm>
         <S.ModalTitle>전형이동</S.ModalTitle>
 
         <S.ModalInputWrapper>
@@ -117,7 +107,7 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
           <S.InModalButton mode='cancel' onClick={closeModal}>
             이동취소
           </S.InModalButton>
-          <S.InModalButton mode='simple' type='submit'>
+          <S.InModalButton mode='simple' onClick={handleEditProcess}>
             이동하기
           </S.InModalButton>
         </S.ModalButtonWrapper>
