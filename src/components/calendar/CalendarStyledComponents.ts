@@ -5,6 +5,9 @@ import { isSameMonth, isSameDay } from 'date-fns';
 export const CalendarPage = styled.div`
   width: 996px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 100px;
   .calendar-detail {
     display: flex;
     flex-direction: row;

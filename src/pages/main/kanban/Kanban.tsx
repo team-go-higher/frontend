@@ -61,7 +61,7 @@ const Kanban = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
-      <div>
+      <S.KanbanContainer>
         <S.KanbanHeaderContainer>
           <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
           <S.Paragraph>채용보드</S.Paragraph>
@@ -70,7 +70,7 @@ const Kanban = () => {
         <S.KanbanBoardContainer ref={containerRef}>
           <KanbanBoard openModal={openModal} setFetchedProcessData={setFetchedProcessData} />
         </S.KanbanBoardContainer>
-      </div>
+      </S.KanbanContainer>
     </DndProvider>
   );
 };

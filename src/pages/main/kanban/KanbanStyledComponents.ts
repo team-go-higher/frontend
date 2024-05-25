@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+export const KanbanContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 100px;
+`;
+
 export const KanbanHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
