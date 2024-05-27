@@ -7,7 +7,7 @@ import {
 } from './ApplicationStatusStyledComponents';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import { format } from 'date-fns';
-import { Label } from 'assets/default/label/Label';
+import { Label } from 'components/default/label/Label';
 import { ApplicationStatusCardData } from 'pages/applicationStatus';
 
 interface ApplicationStatusCardProps {

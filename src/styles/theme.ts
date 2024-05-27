@@ -23,6 +23,7 @@ export const theme = {
     defaultPurple: '149, 112, 226',
     defaultSkyblue: '96, 207, 254',
     defaultRed: '255, 85, 85',
+    title: '51, 51, 51',
   },
 };
 
