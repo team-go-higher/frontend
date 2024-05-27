@@ -107,7 +107,7 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
           <S.InModalButton mode='cancel' onClick={closeModal}>
             이동취소
           </S.InModalButton>
-          <S.InModalButton mode='simple' onClick={handleEditProcess}>
+          <S.InModalButton mode='simple' onClick={handleEditProcess} type='button'>
             이동하기
           </S.InModalButton>
         </S.ModalButtonWrapper>
