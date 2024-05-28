@@ -16,6 +16,7 @@ import ProcessEditModal from 'components/default/modal/ProcessEditModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatProcessToKor } from 'utils/process';
 import { queryKeys } from 'apis/queryKeys';
+import { ModalModel } from 'components/default';
 
 interface IProps {
   item: IApplication;
@@ -39,19 +40,10 @@ export interface IProcess {
 }
 
 const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData }: IProps) => {
-  const [moreMenuShow, setMoreMenuShow] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  function handleMoreMenu() {
-    setMoreMenuShow(!moreMenuShow);
-  }
-
-  function handleEditButton() {
-    openModal({ mode: 'simpleEdit', applicationInfo: item });
-    setMoreMenuShow(false);
-  }
-
+  const [moreMenuShow, setMoreMenuShow] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [processInfo, setProcessInfo] = useState<IProcess>({
     processType: '',
     applicationId: 0,
@@ -59,15 +51,10 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
   });
 
   const [applicationId, setApplicationId] = useState(0);
+  const model = new ModalModel();
 
   const createProcessMutation = useMutation({
-    mutationFn: ({
-      applicationId,
-      newProcessData,
-    }: {
-      applicationId: number;
-      newProcessData: INewProcessRes;
-    }) => createNewProcess(applicationId, newProcessData),
+    mutationFn: model.createNewProcess,
     onSuccess: res => {
       updateApplicationProcessMutation.mutate({
         applicationId: applicationId,
@@ -77,12 +64,20 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
   });
 
   const updateApplicationProcessMutation = useMutation({
-    mutationFn: ({ applicationId, processId }: { applicationId: number; processId: number }) =>
-      updateApplicationProcess(applicationId, processId),
+    mutationFn: model.updateProcess,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.KANBAN] });
     },
   });
+
+  function handleMoreMenu() {
+    setMoreMenuShow(!moreMenuShow);
+  }
+
+  function handleEditButton() {
+    openModal({ mode: 'simpleEdit', applicationInfo: item });
+    setMoreMenuShow(false);
+  }
 
   const [{ isDragging }, ref] = useDrag({
     type: 'card',

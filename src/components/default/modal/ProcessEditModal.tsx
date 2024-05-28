@@ -6,8 +6,7 @@ import { useState } from 'react';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
-import { createNewProcess, updateApplicationProcess } from 'apis/kanban';
-import { INewProcessRes } from 'types/interfaces/KanbanProcess';
+import ModalModel from './ModalModel';
 
 interface ProcessEditModalProps {
   modalIsOpen: boolean;
@@ -22,14 +21,10 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
   // 직접입력
   const [userInput, setUserInput] = useState('');
 
+  const model = new ModalModel();
+
   const createProcessMutation = useMutation({
-    mutationFn: ({
-      applicationId,
-      newProcessData,
-    }: {
-      applicationId: number;
-      newProcessData: INewProcessRes;
-    }) => createNewProcess(applicationId, newProcessData),
+    mutationFn: model.createNewProcess,
     onSuccess: res => {
       updateApplicationProcessMutation.mutate({
         applicationId: process.applicationId,
@@ -39,8 +34,7 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
   });
 
   const updateApplicationProcessMutation = useMutation({
-    mutationFn: ({ applicationId, processId }: { applicationId: number; processId: number }) =>
-      updateApplicationProcess(applicationId, processId),
+    mutationFn: model.updateProcess,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.KANBAN] });
       closeModal();
