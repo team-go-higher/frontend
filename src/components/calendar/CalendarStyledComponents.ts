@@ -180,6 +180,9 @@ export const Circle = styled.div`
 `;
 
 export const EventContainer = styled.div<EventProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   position: relative;
   box-sizing: border-box;
   width: 222px;
@@ -190,20 +193,17 @@ export const EventContainer = styled.div<EventProps>`
   border-radius: 10px;
   border: 1px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
   border-top: 14px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
-  div {
-    margin: 4px 0;
-  }
-  div:nth-child(1) {
+  h1 {
     color: #333;
     font-size: 22px;
     font-weight: 700;
   }
-  div:nth-child(2) {
+  p {
     color: ${({ $processType }) => `rgb(var(--${$processType}))`};
     font-size: 17px;
     font-weight: 600;
   }
-  div:nth-child(3) {
+  div {
     color: #f55;
     font-size: 15px;
     font-weight: 600;

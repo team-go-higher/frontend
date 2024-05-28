@@ -38,8 +38,8 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
 
   return (
     <EventContainer $processType={event.process.type}>
-      <div>{event.companyName}</div>
-      <div>{event.process.description}</div>
+      <h1>{event.companyName}</h1>
+      <p>{event.process.description}</p>
       <div>
         {event.process.schedule
           ? format(new Date(event.process.schedule), 'M월 dd일 HH:mm')
