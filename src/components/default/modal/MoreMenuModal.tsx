@@ -71,4 +71,5 @@ export const MoreItemText = styled.p`
   color: rgb(var(--grayText));
   font-size: 16px;
   line-height: 23px;
+  font-weight: 500;
 `;
