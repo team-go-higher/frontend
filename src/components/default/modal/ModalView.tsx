@@ -321,9 +321,10 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
               disabled={mode === 'simpleEdit' ? true : false}
               toggle={dropDownToggle}
               isError={isError('processType')}
-              isPlaceHolder={
-                mode === 'simpleEdit' ? false : getValues('processType') !== currentProcessType
-              }
+              isPlaceHolder={mode !== 'simpleEdit'}
+              // isPlaceHolder={
+              //   mode === 'simpleEdit' ? false : getValues('processType') !== currentProcessType
+              // }
               isArrowIconRequired={mode !== 'simpleEdit'}
               value={getValues('processType')}
               itemList={processTypeList}
@@ -370,7 +371,8 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
               disabled={false}
               toggle={positionDropDownToggle}
               isError={isError('position')}
-              isPlaceHolder={defaultValues?.position !== getValues('position')}
+              isPlaceHolder={true}
+              // isPlaceHolder={defaultValues?.position !== getValues('position')}
               isArrowIconRequired={true}
               value={getValues('position')}
               itemList={desiredPositionList}
