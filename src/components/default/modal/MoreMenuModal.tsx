@@ -49,10 +49,10 @@ export const MoreMenuColumn = styled.div<{ $currentProcessType: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 9px 25px 9px 16px;
+  padding: 10px 16px;
   width: 150px;
-  /* height: 64px; */
   height: fit-content;
+  gap: 2px;
   min-height: 64px;
   background-color: rgb(var(--white));
   border-radius: 8px;

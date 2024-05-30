@@ -38,16 +38,24 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
 
   return (
     <EventContainer $processType={event.process.type}>
-      <div>{event.companyName}</div>
-      <div>{event.process.description}</div>
-      <div>
-        {event.process.schedule
-          ? format(new Date(event.process.schedule), 'M월 dd일 HH:mm')
-          : '전형일을 입력하세요'}
+      <div className='companyName'>{event.companyName}</div>
+      <div className='description'>{event.process.description}</div>
+      <div className='bottomContainer'>
+        <div className='schedule'>
+          {event.process.schedule
+            ? format(new Date(event.process.schedule), 'M월 dd일 HH:mm')
+            : '전형일을 입력하세요'}
+        </div>
+
+        <MoreIcon
+          className='moreIcon'
+          width={15}
+          height={15}
+          fill={`rgb(var(--${event.process.type}))`}
+          onClick={handleMoreMenu}
+        />
       </div>
-      <S.MoreIconDiv>
-        <MoreIcon fill={`rgb(var(--${event.process.type}))`} onClick={handleMoreMenu} />
-      </S.MoreIconDiv>
+
       {moreMenuShow && (
         <MoreMenuModal
           handleEditButton={handleEditButton}
