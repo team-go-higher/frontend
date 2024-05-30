@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { EventContainer } from './CalendarStyledComponents';
-import * as S from 'components/kanban/KanbanCard/KanbanCardStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { modalModeType } from 'hooks/feature/useModal';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
@@ -61,6 +60,7 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
           handleEditButton={handleEditButton}
           currentProcessType={event.process.type}
           closeModal={() => setMoreMenuShow(false)}
+          applicationId={event.applicationId}
         />
       )}
     </EventContainer>

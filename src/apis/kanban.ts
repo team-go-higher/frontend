@@ -5,7 +5,6 @@ import {
   IRegisterNewApplication,
   IRegisterNewApplicationRes,
   IApplicationStagesRes,
-  INewProcessRes,
   ICreateNesProcess,
 } from 'types/interfaces/KanbanProcess';
 

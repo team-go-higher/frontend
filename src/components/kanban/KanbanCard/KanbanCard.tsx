@@ -3,12 +3,8 @@ import { useDrag } from 'react-dnd';
 
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import * as S from './KanbanCardStyledComponents';
-import { IApplication, INewProcessRes, processType } from 'types/interfaces/KanbanProcess';
-import {
-  createNewProcess,
-  fetchApplicationStagesByProcessType,
-  updateApplicationProcess,
-} from 'apis/kanban';
+import { IApplication, processType } from 'types/interfaces/KanbanProcess';
+import { fetchApplicationStagesByProcessType } from 'apis/kanban';
 import { modalModeType } from 'hooks/feature/useModal';
 import { formatDataType } from 'utils/date';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
@@ -50,14 +46,13 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
     process: [],
   });
 
-  const [applicationId, setApplicationId] = useState(0);
   const model = new ModalModel();
 
   const createProcessMutation = useMutation({
     mutationFn: model.createNewProcess,
     onSuccess: res => {
       updateApplicationProcessMutation.mutate({
-        applicationId: applicationId,
+        applicationId: item.applicationId,
         processId: res.data.id,
       });
     },
@@ -99,8 +94,6 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
           draggedItem.applicationId,
           dropResult.processType,
         );
-
-        setApplicationId(draggedItem.applicationId);
 
         if (response.success) {
           const applicationInfo = {
@@ -176,6 +169,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
             closeModal={() => setMoreMenuShow(false)}
             handleEditButton={handleEditButton}
             currentProcessType={currentProcessType}
+            applicationId={item.applicationId}
           />
         )}
       </S.KanbanCardContainer>
