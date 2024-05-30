@@ -2,7 +2,11 @@ import { ToggleContainer, UtilContainer, Wrapper } from './ApplicationStatusStyl
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import { format } from 'date-fns';
 import { Label } from 'components/default/label/Label';
-import { ApplicationStatusCardData, patchApplicationsFinished } from 'apis/applications';
+import {
+  ApplicationStatusCardData,
+  deleteApplication,
+  patchApplicationsFinished,
+} from 'apis/applications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
 
@@ -15,10 +19,20 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
   const { companyName, position, specificPosition, isCompleted } = data;
   const { type, schedule } = data.process;
 
+  const inValidateApplications = () => {
+    queryClient.invalidateQueries({ queryKey: [queryKeys.APPLICATIONS] });
+  };
+
   const applicationFinishedMutation = useMutation({
     mutationFn: () => patchApplicationsFinished(data.applicationId, !isCompleted),
+    onSuccess: inValidateApplications,
+  });
+
+  const deleteApplicationMutation = useMutation({
+    mutationFn: () => deleteApplication(data.applicationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.APPLICATIONS] });
+      inValidateApplications();
+      alert('삭제 완료~~');
     },
   });
 
@@ -45,7 +59,12 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
         <ToggleContainer onClick={() => applicationFinishedMutation.mutate()}>
           <div className={`toggleCircle ${!isCompleted ? '' : 'false'}`} />
         </ToggleContainer>
-        <img src={CloseIcon} className='closeIcon' alt='closeIcon' />
+        <img
+          src={CloseIcon}
+          className='closeIcon'
+          alt='closeIcon'
+          onClick={() => deleteApplicationMutation.mutate()}
+        />
       </UtilContainer>
     </Wrapper>
   );

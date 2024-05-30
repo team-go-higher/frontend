@@ -35,3 +35,8 @@ export const patchApplicationsFinished = async (applicationId: number, isComplet
 
   return data.data;
 };
+
+export const deleteApplication = async (applicationId: number) => {
+  const data = await apiService.Delete(`/v1/applications/${applicationId}`);
+  return data.data;
+};
