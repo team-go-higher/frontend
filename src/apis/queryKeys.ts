@@ -3,4 +3,5 @@ export const queryKeys = {
   KANBAN: 'kanban',
   CALENDAR: 'calendar',
   UNSCHEDULED: 'unscheduled',
+  APPLICATIONS: 'applications',
 };

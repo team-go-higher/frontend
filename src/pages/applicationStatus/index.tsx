@@ -6,50 +6,45 @@ import {
 } from './ApplicationStatusStyledComponents';
 import SortIcon from '../../assets/applicationStatus/applicationStatus_sort.svg';
 import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatusCard';
-import { useState } from 'react';
-
-export interface ApplicationStatusCardData {
-  applicationId: number;
-  companyName: string;
-  position: string;
-  specificPosition: string;
-  process: {
-    id: number;
-    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-    description: string;
-    schedule: string;
-  };
-}
-
-const DUMMY_DATA: ApplicationStatusCardData[] = [
-  {
-    applicationId: 1,
-    companyName: '카카오커머스1',
-    position: '디자인1',
-    specificPosition: 'UI 디자인1',
-    process: {
-      id: 1,
-      type: 'TO_APPLY',
-      description: '지원예정',
-      schedule: '2023-08-15T23:59',
-    },
-  },
-  {
-    applicationId: 2,
-    companyName: '카카오커머스2',
-    position: '디자인2',
-    specificPosition: 'UI 디자인2',
-    process: {
-      id: 2,
-      type: 'TO_APPLY',
-      description: '지원예정',
-      schedule: '2023-08-15T23:59',
-    },
-  },
-];
+import { useEffect, useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { queryKeys } from 'apis/queryKeys';
+import { ApplicationStatusCardData, getApplications } from 'apis/applications';
+import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 
 const ApplicationStatus = () => {
   const [searchValue, setSearhValue] = useState('');
+  const [companyName, setCompanyName] = useState('');
+
+  const [page, setPage] = useState(1);
+
+  const { isVisible, targetRef } = useInfiniteScroll();
+
+  const { data, fetchNextPage, isFetching } = useInfiniteQuery({
+    queryKey: [queryKeys.APPLICATIONS, companyName],
+    queryFn: async ({ pageParam }) => {
+      const res = await getApplications(pageParam, companyName);
+
+      setPage(page);
+
+      return res;
+    },
+    initialPageParam: 1,
+    getNextPageParam: lastPage => {
+      if (lastPage.data.hasNext) {
+        return page + 1;
+      }
+      return null;
+    },
+  });
+
+  const applicationData = data?.pages.flatMap(page => page.data.content);
+
+  useEffect(() => {
+    if (isVisible) {
+      fetchNextPage();
+    }
+  }, [isVisible]);
 
   return (
     <Wrapper>
@@ -62,19 +57,35 @@ const ApplicationStatus = () => {
             <img src={SortIcon} alt='sortIcon' />
           </div>
 
-          <input
-            className='searchInput'
-            value={searchValue}
-            onChange={e => setSearhValue(e.target.value)}
-            placeholder='회사명을 입력하세요'
-          />
+          <div
+            style={{
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'center',
+            }}>
+            <input
+              className='searchInput'
+              value={searchValue}
+              onChange={e => setSearhValue(e.target.value)}
+              placeholder='회사명을 입력하세요'
+            />
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setCompanyName(searchValue);
+              }}>
+              검색
+            </div>
+          </div>
         </HeaderContainer>
 
         <ContentContainer>
-          {DUMMY_DATA.map(item => {
-            return <ApplicationStatusCard key={item.applicationId} data={item} />;
-          })}
+          {!isFetching &&
+            applicationData?.map((item: ApplicationStatusCardData) => {
+              return <ApplicationStatusCard key={item.applicationId} data={item} />;
+            })}
         </ContentContainer>
+        <div ref={targetRef} style={{ height: '20px', width: '100%' }}></div>
       </ApplicationStatusContainer>
     </Wrapper>
   );
