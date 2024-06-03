@@ -8,21 +8,19 @@ import { queryKeys } from 'apis/queryKeys';
 interface MoreMenuModalProps {
   closeModal: () => void;
   handleEditButton: () => void;
-  currentProcessType: string;
-  applicationId: number;
+  application: {
+    currentProcessType: string;
+    applicationId: number;
+  };
 }
 
-const MoreMenuModal = ({
-  closeModal,
-  handleEditButton,
-  currentProcessType,
-  applicationId,
-}: MoreMenuModalProps) => {
+const MoreMenuModal = ({ closeModal, handleEditButton, application }: MoreMenuModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const { applicationId, currentProcessType } = application;
 
   const applicationsFinishedMutation = useMutation({
-    mutationFn: (isCompleted: boolean) => patchApplicationsFinished(applicationId, isCompleted),
+    mutationFn: () => patchApplicationsFinished(applicationId, true),
     onSuccess: () => {
       [queryKeys.KANBAN, queryKeys.CALENDAR, queryKeys.UNSCHEDULED].forEach(key => {
         queryClient.invalidateQueries({ queryKey: [key] });
@@ -46,7 +44,7 @@ const MoreMenuModal = ({
         <MoreItemIcon />
         <MoreItemText>간편 수정하기</MoreItemText>
       </MoreItem>
-      <MoreItem onClick={() => applicationsFinishedMutation.mutate(true)}>
+      <MoreItem onClick={() => applicationsFinishedMutation.mutate()}>
         <MoreItemIcon />
         <MoreItemText>공고 숨기기</MoreItemText>
       </MoreItem>

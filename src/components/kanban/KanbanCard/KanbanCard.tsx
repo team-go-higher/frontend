@@ -168,8 +168,10 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
           <MoreMenuModal
             closeModal={() => setMoreMenuShow(false)}
             handleEditButton={handleEditButton}
-            currentProcessType={currentProcessType}
-            applicationId={item.applicationId}
+            application={{
+              applicationId: item.applicationId,
+              currentProcessType: currentProcessType,
+            }}
           />
         )}
       </S.KanbanCardContainer>

@@ -58,9 +58,11 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
       {moreMenuShow && (
         <MoreMenuModal
           handleEditButton={handleEditButton}
-          currentProcessType={event.process.type}
           closeModal={() => setMoreMenuShow(false)}
-          applicationId={event.applicationId}
+          application={{
+            applicationId: event.applicationId,
+            currentProcessType: event.process.type,
+          }}
         />
       )}
     </EventContainer>
