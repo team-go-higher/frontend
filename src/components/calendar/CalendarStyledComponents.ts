@@ -231,14 +231,15 @@ export const EventContainer = styled.div<EventProps>`
   .bottomContainer {
     display: flex;
     justify-content: space-between;
-  }
-  .schedule {
-    color: #f55;
-    font-size: 15px;
-    font-weight: 600;
-  }
-  .moreIcon {
-    cursor: pointer;
+
+    .schedule {
+      color: #f55;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .moreIcon {
+      cursor: pointer;
+    }
   }
 `;
 
