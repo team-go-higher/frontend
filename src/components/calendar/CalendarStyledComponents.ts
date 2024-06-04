@@ -1,26 +1,6 @@
 import styled from 'styled-components';
 import { isSameMonth, isSameDay } from 'date-fns';
 
-//Calendar
-export const CalendarPage = styled.div`
-  width: 996px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 100px;
-  .calendar-detail {
-    display: flex;
-    flex-direction: row;
-  }
-`;
-
-//CalendarContainer
-export const CalendarContainer = styled.div`
-  width: 735px;
-  margin-right: 11px;
-  border: 0.5px solid #ccc;
-`;
-
 //RenderHeader
 export const RenderHeaderContainer = styled.div`
   display: flex;
@@ -34,6 +14,11 @@ export const RenderHeaderContainer = styled.div`
     font-weight: 700;
   }
   img {
+    cursor: pointer;
+  }
+  .react-datepicker__input-container input {
+    caret-color: transparent;
+    text-align: center;
     cursor: pointer;
   }
 `;
@@ -127,14 +112,6 @@ export const Row = styled.div`
   display: flex;
 `;
 
-//DayContainer
-export const DayContainer = styled.div`
-  width: 250px;
-  height: 589px;
-  border-radius: 15px;
-  border: 1px solid rgb(var(--main));
-`;
-
 // RenderDayDetail
 export const DetailContainer = styled.div`
   .selectDate {
@@ -207,7 +184,8 @@ export const EventContainer = styled.div<EventProps>`
   box-sizing: border-box;
   width: 222px;
   height: 110px;
-  margin: 10px;
+  margin: auto;
+  margin-bottom: 10px;
   padding: 14px 21px;
   border-radius: 10px;
   border: 1px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
@@ -244,22 +222,16 @@ export const EventContainer = styled.div<EventProps>`
 `;
 
 // UnscheduledContainer
-export const UnscheduledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 262px;
+export const RenderUnscheduledContainer = styled.div`
+  margin: 100px 0;
 `;
 
-export const RenderUnscheduledContainer = styled.div`
-  .arrow-wrap {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 77px 0px 30px 0px;
-  }
+export const TitleSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
   .arrow {
     cursor: pointer;
   }
@@ -268,10 +240,12 @@ export const RenderUnscheduledContainer = styled.div`
     font-size: 25px;
     font-weight: 700;
   }
-  .card {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+`;
+
+export const CalendarCardDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 `;

@@ -4,7 +4,6 @@ import { EventContainer } from './CalendarStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import { modalModeType } from 'hooks/feature/useModal';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
-
 interface CalendarCardProps {
   event: {
     applicationId: number;
