@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import headerLeft from 'assets/main/main_left_arrow.svg';
 import headerRight from 'assets/main/main_right_arrow.svg';
@@ -11,19 +11,34 @@ import {
   RenderCellsContainer,
 } from './CalendarStyledComponents';
 import { ICalendarData } from 'types/interfaces/CalendarProcess';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // RenderHeader(월)
 interface RenderHeaderProps {
   currentMonth: Date;
   prevMonth: () => void;
   nextMonth: () => void;
+  onMonthClick: (month: Date) => void;
 }
 
-export const RenderHeader = ({ currentMonth, prevMonth, nextMonth }: RenderHeaderProps) => {
+export const RenderHeader = ({
+  currentMonth,
+  prevMonth,
+  nextMonth,
+  onMonthClick,
+}: RenderHeaderProps) => {
   return (
     <RenderHeaderContainer>
       <img src={headerLeft} alt='headerLeft' onClick={prevMonth} />
-      <div className='month'>{format(currentMonth, 'MMMM')}</div>
+      <div className='month'>
+        <DatePicker
+          selected={currentMonth}
+          onChange={onMonthClick}
+          dateFormat='MMMM'
+          showMonthYearPicker
+        />
+      </div>
       <img src={headerRight} alt='headerRight' onClick={nextMonth} />
     </RenderHeaderContainer>
   );

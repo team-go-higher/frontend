@@ -92,7 +92,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
           </S.MoreItem>
           <S.MoreItem>
             <MoreItemIcon />
-            <S.MoreItemText>공고 숨기기</S.MoreItemText>
+            <S.MoreItemText>지원서 비활성화</S.MoreItemText>
           </S.MoreItem>
         </S.MoreMenuColumn>
       )}
