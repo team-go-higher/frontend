@@ -25,6 +25,7 @@ const MoreMenuModal = ({ closeModal, handleEditButton, application }: MoreMenuMo
       [queryKeys.KANBAN, queryKeys.CALENDAR, queryKeys.UNSCHEDULED].forEach(key => {
         queryClient.invalidateQueries({ queryKey: [key] });
       });
+      closeModal();
     },
   });
 
@@ -46,7 +47,7 @@ const MoreMenuModal = ({ closeModal, handleEditButton, application }: MoreMenuMo
       </MoreItem>
       <MoreItem onClick={() => applicationsFinishedMutation.mutate()}>
         <MoreItemIcon />
-        <MoreItemText>공고 숨기기</MoreItemText>
+        <MoreItemText>지원서 비활성화</MoreItemText>
       </MoreItem>
     </MoreMenuColumn>
   );
@@ -63,7 +64,8 @@ export const MoreMenuColumn = styled.div<{ $currentProcessType: string }>`
   flex-direction: column;
   justify-content: space-between;
   padding: 10px 16px;
-  width: 150px;
+  min-width: 150px;
+  width: fit-content;
   height: fit-content;
   gap: 2px;
   min-height: 64px;
