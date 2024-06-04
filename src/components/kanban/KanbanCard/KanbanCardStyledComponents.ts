@@ -55,32 +55,3 @@ export const MoreIconDiv = styled.div`
   right: 35px;
   cursor: pointer;
 `;
-
-export const MoreMenuColumn = styled.div<{ $currentProcessType: string }>`
-  z-index: 5;
-  position: absolute;
-  bottom: -43px;
-  right: 35px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 9px 16px;
-  width: 150px;
-  height: 64px;
-  background-color: rgb(var(--white));
-  border-radius: 8px;
-  box-shadow: ${({ $currentProcessType }) =>
-    `0px 0px 4px 0px rgba(var(--${$currentProcessType}), 0.5);`};
-`;
-
-export const MoreItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-`;
-
-export const MoreItemText = styled.p`
-  color: rgb(var(--grayText));
-  font-size: 0.8rem;
-`;

@@ -190,31 +190,35 @@ export const EventContainer = styled.div<EventProps>`
   border-radius: 10px;
   border: 1px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
   border-top: 14px solid ${({ $processType }) => `rgb(var(--${$processType}))`};
-  div {
-    margin: 4px 0;
-  }
-  div:nth-child(1) {
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .companyName {
     color: #333;
     font-size: 22px;
     font-weight: 700;
+    margin-top: 4px;
   }
-  div:nth-child(2) {
+  .description {
     color: ${({ $processType }) => `rgb(var(--${$processType}))`};
     font-size: 17px;
     font-weight: 600;
   }
-  div:nth-child(3) {
-    color: #f55;
-    font-size: 15px;
-    font-weight: 600;
-  }
-`;
+  .bottomContainer {
+    display: flex;
+    justify-content: space-between;
 
-export const MoreIconDiv = styled.div`
-  position: absolute;
-  bottom: 7px;
-  right: 16px;
-  cursor: pointer;
+    .schedule {
+      color: #f55;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .moreIcon {
+      cursor: pointer;
+    }
+  }
 `;
 
 // UnscheduledContainer
@@ -228,6 +232,7 @@ export const TitleSection = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  gap: 50px;
   .arrow {
     cursor: pointer;
   }

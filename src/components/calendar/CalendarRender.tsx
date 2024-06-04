@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 import headerLeft from 'assets/main/main_left_arrow.svg';
 import headerRight from 'assets/main/main_right_arrow.svg';
