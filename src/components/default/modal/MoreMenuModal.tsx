@@ -22,7 +22,7 @@ const MoreMenuModal = ({ closeModal, handleEditButton, application }: MoreMenuMo
   const applicationsFinishedMutation = useMutation({
     mutationFn: () => patchApplicationsFinished(applicationId, true),
     onSuccess: () => {
-      [queryKeys.KANBAN, queryKeys.CALENDAR, queryKeys.UNSCHEDULED].forEach(key => {
+      [queryKeys.KANBAN, queryKeys.CALENDAR].forEach(key => {
         queryClient.invalidateQueries({ queryKey: [key] });
       });
       closeModal();

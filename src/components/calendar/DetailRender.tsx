@@ -23,7 +23,7 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
 
   const modalViewModel = ModalViewModel({
     mode,
-    queryKey: [queryKeys.CALENDAR, queryKeys.UNSCHEDULED],
+    queryKey: [queryKeys.CALENDAR],
     closeModal,
     currentProcessType,
     applicationInfo,
@@ -79,7 +79,7 @@ export const RenderUnscheduled = ({
 
   const modalViewModel = ModalViewModel({
     mode,
-    queryKey: [queryKeys.CALENDAR, queryKeys.UNSCHEDULED],
+    queryKey: [queryKeys.CALENDAR],
     closeModal,
     currentProcessType,
     applicationInfo,
