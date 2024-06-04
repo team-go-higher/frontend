@@ -41,7 +41,7 @@ export interface INewProcessRes {
   type: string;
 }
 
-export interface ICreateNesProcess {
+export interface ICreateNewProcess {
   applicationId: number;
   newProcessData: INewProcessRes;
 }

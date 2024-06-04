@@ -5,7 +5,7 @@ import {
   IRegisterNewApplication,
   IRegisterNewApplicationRes,
   IApplicationStagesRes,
-  ICreateNesProcess,
+  ICreateNewProcess,
 } from 'types/interfaces/KanbanProcess';
 
 export const fetchKanbanList = async () => {
@@ -53,7 +53,7 @@ export const updateApplicationProcess = async (applicationId: number, processId:
 };
 
 // 전형 이동을 위한 새로운 전형 생성
-export const createNewProcess = async (newProcess: ICreateNesProcess) => {
+export const createNewProcess = async (newProcess: ICreateNewProcess) => {
   const { applicationId, newProcessData } = newProcess;
 
   const data = await ApiService.Post<IApplicationStagesRes>(
