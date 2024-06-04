@@ -232,7 +232,6 @@ export const TitleSection = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  //카드가 없는 경우 화살표와 제목이 붙는 현상 수정을 위해 추가함
   gap: 50px;
   .arrow {
     cursor: pointer;
