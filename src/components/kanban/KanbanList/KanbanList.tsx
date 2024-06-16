@@ -4,12 +4,12 @@ import { useDrop } from 'react-dnd';
 import * as S from './KanbanListStyledComponents';
 import { formatProcessToKor } from 'utils/process';
 
-interface IProps {
+interface KanbanListProps {
   processType: string;
   children: ReactElement[] | ReactElement;
 }
 
-const KanbanList = ({ processType, children }: IProps) => {
+const KanbanList = ({ processType, children }: KanbanListProps) => {
   const [, ref] = useDrop({
     accept: 'card',
     drop: () => {
@@ -23,7 +23,7 @@ const KanbanList = ({ processType, children }: IProps) => {
   });
 
   return (
-    <S.KanbanListContainer ref={ref}>
+    <S.KanbanListContainer ref={ref} $processType={processType}>
       <S.ProcessTitle $processType={processType}>{formatProcessToKor(processType)}</S.ProcessTitle>
       <S.KanbanCardContainer>{children}</S.KanbanCardContainer>
     </S.KanbanListContainer>
