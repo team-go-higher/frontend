@@ -8,7 +8,7 @@ export const KanbanContainer = styled.div`
 
 export const KanbanHeaderContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin: 20px auto;
   width: 213px;

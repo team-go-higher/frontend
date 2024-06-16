@@ -7,8 +7,6 @@ import { useAppDispatch } from 'redux/store';
 import { useModal } from 'hooks/feature/useModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
-import LeftIcon from 'assets/main/main_left_arrow.svg';
-import RightIcon from 'assets/main/main_right_arrow.svg';
 import * as S from './KanbanStyledComponents';
 import { ModalViewModel, ModalView } from 'components/default';
 import KanbanBoard from './KanbanBoard';
@@ -35,22 +33,6 @@ const Kanban = () => {
     applicationInfo,
   });
 
-  const handleArrowButton = (type: 'prev' | 'next') => {
-    if (!containerRef.current) return;
-
-    if (type === 'prev') {
-      containerRef.current.scrollTo({
-        left: containerRef.current.scrollLeft - containerRef.current.offsetWidth,
-        behavior: 'smooth',
-      });
-    } else {
-      containerRef.current.scrollTo({
-        left: containerRef.current.scrollLeft + containerRef.current.offsetWidth,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   useEffect(() => {
     if (!isLoading && isSuccess) {
       const kanbanList = data.data;
@@ -63,9 +45,7 @@ const Kanban = () => {
       <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
       <S.KanbanContainer>
         <S.KanbanHeaderContainer>
-          <S.ArrowButton src={LeftIcon} onClick={() => handleArrowButton('prev')} />
           <S.Paragraph>채용보드</S.Paragraph>
-          <S.ArrowButton src={RightIcon} onClick={() => handleArrowButton('next')} />
         </S.KanbanHeaderContainer>
         <S.KanbanBoardContainer ref={containerRef}>
           <KanbanBoard openModal={openModal} setFetchedProcessData={setFetchedProcessData} />

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export const KanbanListContainer = styled.div`
-  min-width: 327px;
-  height: 835px;
+export const KanbanListContainer = styled.div<{ $processType: string }>`
+  min-width: 320px;
+  height: ${({ $processType }) => ($processType === 'TO_APPLY' ? `835px` : `405px`)};
   background-color: rgb(var(--kanbanBackground));
   border-radius: 15px;
   display: flex;
@@ -28,4 +28,12 @@ export const KanbanCardContainer = styled.div`
   gap: 15px;
   padding: 18px 14px;
   overflow-y: auto;
+`;
+
+export const KanbanGrid = styled.div`
+  display: grid;
+  width: 660px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
 `;

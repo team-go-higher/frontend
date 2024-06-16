@@ -4,10 +4,11 @@ import { modalModeType } from 'hooks/feature/useModal';
 import { processTypeList } from 'constants/process';
 import { IApplication, IKabanData, processType } from 'types/interfaces/KanbanProcess';
 import * as S from './KanbanStyledComponents';
+import * as List from 'components/kanban/KanbanList/KanbanListStyledComponents';
 import { KanbanList, KanbanCard } from 'components/kanban';
 import { initialApplicationInfo } from 'constants/application';
 
-interface IProps {
+interface KanbanBoardProps {
   openModal: (parameter: {
     mode: modalModeType;
     processType?: string;
@@ -16,7 +17,7 @@ interface IProps {
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const KanbanBoard = ({ openModal, setFetchedProcessData }: IProps) => {
+const KanbanBoard = ({ openModal, setFetchedProcessData }: KanbanBoardProps) => {
   const kanbanList: IKabanData[] = useAppSelector(state => state.kanban);
 
   function kanbanListHandler(processType: processType): ReactElement[] | ReactElement {
@@ -60,11 +61,17 @@ const KanbanBoard = ({ openModal, setFetchedProcessData }: IProps) => {
 
   return (
     <>
-      {processTypeList.map(processType => (
-        <KanbanList key={processType} processType={processType}>
-          {kanbanListHandler(processType)}
-        </KanbanList>
-      ))}
+      <KanbanList processType={'TO_APPLY'}>{kanbanListHandler('TO_APPLY')}</KanbanList>
+      <List.KanbanGrid>
+        {processTypeList.map(
+          processType =>
+            processType !== 'TO_APPLY' && (
+              <KanbanList key={processType} processType={processType}>
+                {kanbanListHandler(processType)}
+              </KanbanList>
+            ),
+        )}
+      </List.KanbanGrid>
     </>
   );
 };
