@@ -90,7 +90,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
   const processType = watch('processType');
   const detailedProcessType = watch('detailedProcessType');
-  const [userInputToggle, setUserInputToggle] = useState(false);
+  // const [userInputToggle, setUserInputToggle] = useState(false);
 
   function isDetailedProcessTypeRequired() {
     if (getValues('processType') === 'TO_APPLY' || getValues('processType') === 'DOCUMENT') {
@@ -172,11 +172,11 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   }, []);
 
   // 인풋 활성화시 세부단계 초기화
-  useEffect(() => {
-    if (userInputToggle) {
-      setValue('detailedProcessType', '');
-    }
-  }, [userInputToggle]);
+  // useEffect(() => {
+  //   if (userInputToggle) {
+  //     setValue('detailedProcessType', '');
+  //   }
+  // }, [userInputToggle]);
 
   // 세부단계 유효성 검사
   useEffect(() => {
@@ -187,7 +187,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   useEffect(() => {
     if (mode === 'simpleRegister') {
       if (processType !== currentProcessType || processType === 'TO_APPLY') {
-        setUserInputToggle(false);
+        // setUserInputToggle(false);
         setValue('detailedProcessType', '');
       }
     }
@@ -199,7 +199,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
 
     setDropDownToggle(false);
     setDetailedDropDownToggle(false);
-    setUserInputToggle(false);
+    // setUserInputToggle(false);
     setPositionDropDownToggle(false);
   }, [modalIsOpen, mode]);
 
@@ -241,7 +241,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             />
 
             {/* 세부단계 */}
-            {userInputToggle ? (
+            {/* {userInputToggle ? (
               <S.ModalInputBox>
                 <S.ModalInput
                   type='text'
@@ -269,7 +269,24 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
                 dropDownToggleHandler={detailedDropDownToggleHandler}
                 dropDownItemHandler={detailedDropDownItemHandler}
               />
-            )}
+            )} */}
+            <ModalDropDown
+              dropDownId='detailedProcessType'
+              disabled={!isDetailedProcessTypeRequired()}
+              toggle={detailedDropDownToggle}
+              isError={isError('detailedProcessType')}
+              value={
+                getValues('detailedProcessType') === ''
+                  ? '세부 단계를 입력하세요'
+                  : getValues('detailedProcessType')
+              }
+              isPlaceHolder={defaultValues?.processType !== getValues('processType')}
+              isArrowIconRequired={isDetailedProcessTypeRequired()}
+              itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
+              // inputToggleHandler={(state: boolean) => setUserInputToggle(state)}
+              dropDownToggleHandler={detailedDropDownToggleHandler}
+              dropDownItemHandler={detailedDropDownItemHandler}
+            />
           </S.ModalInputWrapper>
 
           <S.ModalButtonWrapper>
@@ -333,27 +350,31 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
             />
 
             {/* 세부단계 */}
-
             <ModalDropDown
               dropDownId='detailedProcessType'
               disabled={mode === 'simpleEdit' ? true : !isDetailedProcessTypeRequired()}
               toggle={detailedDropDownToggle}
               isError={isError('detailedProcessType')}
               value={
-                getValues('detailedProcessType') === '' || userInputToggle
+                getValues('detailedProcessType') === ''
                   ? '세부 단계를 입력하세요'
                   : getValues('detailedProcessType')
               }
+              // value={
+              //   getValues('detailedProcessType') === '' || userInputToggle
+              //     ? '세부 단계를 입력하세요'
+              //     : getValues('detailedProcessType')
+              // }
               isPlaceHolder={
                 defaultValues?.detailedProcessType !== getValues('detailedProcessType')
               }
               isArrowIconRequired={mode !== 'simpleEdit' && isDetailedProcessTypeRequired()}
               itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
-              inputToggleHandler={(state: boolean) => setUserInputToggle(state)}
+              // inputToggleHandler={(state: boolean) => setUserInputToggle(state)}
               dropDownToggleHandler={detailedDropDownToggleHandler}
               dropDownItemHandler={detailedDropDownItemHandler}
             />
-            {userInputToggle && (
+            {/* {userInputToggle && (
               <S.ModalInputBox>
                 <S.ModalInput
                   type='text'
@@ -363,7 +384,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
                 />
                 {errors.detailedProcessType && <S.InvalidIcon>!</S.InvalidIcon>}
               </S.ModalInputBox>
-            )}
+            )} */}
 
             {/* 직무 */}
             <ModalDropDown
