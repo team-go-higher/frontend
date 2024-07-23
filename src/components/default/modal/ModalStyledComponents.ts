@@ -31,6 +31,7 @@ export const editModalStyles: Styles = {
     height: 'fit-content',
     padding: '32px 50px 38px',
     borderRadius: '15px',
+    overflow: 'inherit',
   },
 };
 
