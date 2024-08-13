@@ -1,12 +1,14 @@
 import Modal from 'react-modal';
 import * as S from './ModalStyledComponents';
 import { formatProcessToKor } from 'utils/process';
-import { IProcess, IProcessArray } from 'components/kanban/KanbanCard/KanbanCard';
+import { IProcess } from 'components/kanban/KanbanCard/KanbanCard';
 import { useState } from 'react';
 import SelectArrowIcon from 'assets/main/main_modal_select_arrow.svg';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
 import ModalModel from './ModalModel';
+import { processTypeInfo } from 'constants/process';
+import { ProcessType } from 'types/interfaces/Application';
 
 interface ProcessEditModalProps {
   modalIsOpen: boolean;
@@ -16,10 +18,7 @@ interface ProcessEditModalProps {
 
 const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModalProps) => {
   const queryClient = useQueryClient();
-  const [detailProcess, setDetailProcess] = useState<IProcessArray>({ id: 0, description: '' });
-  const [isUserInput, setIsUserInput] = useState(false);
-  // 직접입력
-  const [userInput, setUserInput] = useState('');
+  const [detailProcess, setDetailProcess] = useState('');
 
   const model = new ModalModel();
 
@@ -42,13 +41,13 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
   });
 
   const handleEditProcess = () => {
-    if (detailProcess.description === '') return;
+    const exist = process.process.filter(e => e.description === detailProcess);
 
-    if (detailProcess.description === '직접입력') {
+    if (process.process.length === 0 || exist.length === 0) {
       createProcessMutation.mutate({
         applicationId: process.applicationId,
         newProcessData: {
-          description: userInput,
+          description: detailProcess,
           type: process.processType,
         },
       });
@@ -57,7 +56,7 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
 
     updateApplicationProcessMutation.mutate({
       applicationId: process.applicationId,
-      processId: detailProcess.id,
+      processId: exist[0].id,
     });
   };
 
@@ -78,23 +77,10 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
           </S.ModalInputBox>
 
           <ModalDropDown
-            itemList={process.process}
+            itemList={processTypeInfo[process.processType as ProcessType]?.detailed}
             setDetailProcess={setDetailProcess}
             detailProcess={detailProcess}
-            setIsUserInput={setIsUserInput}
           />
-
-          {isUserInput && (
-            <S.ModalInputBox>
-              <S.ModalInput
-                type='text'
-                $error={false}
-                placeholder='세부 단계 입력'
-                value={userInput}
-                onChange={e => setUserInput(e.target.value)}
-              />
-            </S.ModalInputBox>
-          )}
         </S.ModalInputWrapper>
 
         <S.ModalButtonWrapper>
@@ -113,13 +99,12 @@ const ProcessEditModal = ({ process, modalIsOpen, closeModal }: ProcessEditModal
 export default ProcessEditModal;
 
 interface IProps {
-  itemList: IProcessArray[];
+  itemList: string[] | null | undefined;
   setDetailProcess: any;
-  detailProcess: IProcessArray;
-  setIsUserInput: any;
+  detailProcess: string;
 }
 
-const ModalDropDown = ({ itemList, setDetailProcess, detailProcess, setIsUserInput }: IProps) => {
+const ModalDropDown = ({ itemList, setDetailProcess, detailProcess }: IProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -129,34 +114,23 @@ const ModalDropDown = ({ itemList, setDetailProcess, detailProcess, setIsUserInp
       onClick={() => {
         setIsOpen(!isOpen);
       }}>
-      <S.PlaceHolder $color={detailProcess.description !== ''} $error={false}>
-        {detailProcess.description === '' ? '세부전형을 선택해주세요' : detailProcess.description}
+      <S.PlaceHolder $color={detailProcess !== ''} $error={false}>
+        {detailProcess === '' ? '세부전형을 선택해주세요' : detailProcess}
       </S.PlaceHolder>
       <S.ArrowIcon src={SelectArrowIcon} />
       {isOpen && (
         <S.ModalDropdownItemBox>
-          {itemList?.map((item: IProcessArray) => {
+          {itemList?.map((item, idx) => {
             return (
               <S.DropdownItem
-                key={item.id}
+                key={idx}
                 onClick={() => {
                   setDetailProcess(item);
-                  setIsUserInput(false);
                 }}>
-                {item.description}
+                {item}
               </S.DropdownItem>
             );
           })}
-          <S.DropdownItem
-            onClick={() => {
-              setDetailProcess({
-                id: -1,
-                description: '직접입력',
-              });
-              setIsUserInput(true);
-            }}>
-            직접입력
-          </S.DropdownItem>
         </S.ModalDropdownItemBox>
       )}
     </S.ModalDropdownBox>
