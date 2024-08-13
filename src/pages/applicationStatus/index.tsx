@@ -9,7 +9,7 @@ import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatu
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
-import { ApplicationStatusCardData, getApplications } from 'apis/applications';
+import { ApplicationSort, ApplicationStatusCardData, getApplications } from 'apis/applications';
 import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 
 const ApplicationStatus = () => {
@@ -18,12 +18,14 @@ const ApplicationStatus = () => {
 
   const [page, setPage] = useState(1);
 
+  const [sort, setSort] = useState<ApplicationSort>(null);
+
   const { isVisible, targetRef } = useInfiniteScroll();
 
   const { data, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: [queryKeys.APPLICATIONS, companyName],
+    queryKey: [queryKeys.APPLICATIONS, companyName, sort],
     queryFn: async ({ pageParam }) => {
-      const res = await getApplications(pageParam, companyName);
+      const res = await getApplications(pageParam, companyName, sort);
 
       setPage(page);
 
@@ -50,6 +52,12 @@ const ApplicationStatus = () => {
     <Wrapper>
       <ApplicationStatusContainer>
         <div className='title'>지원 현황 모아보기</div>
+
+        <div style={{ display: 'flex', gap: '3rem' }}>
+          <div onClick={() => setSort('processType')}>전형순</div>
+          <div onClick={() => setSort('reverseProcessType')}>전형역순</div>
+          <div onClick={() => setSort('closing')}>마감임박순</div>
+        </div>
 
         <HeaderContainer>
           <div className='sortContainer'>

@@ -18,9 +18,17 @@ interface GetApplicationsRes {
   content: ApplicationStatusCardData[];
 }
 
-export const getApplications = async (pageNumber: number, companyName: string) => {
+export type ApplicationSort = 'processType' | 'reverseProcessType' | 'closing' | null;
+
+export const getApplications = async (
+  pageNumber: number,
+  companyName: string,
+  sort: ApplicationSort,
+) => {
   let params = '';
   if (companyName !== '') params += `&companyName=${companyName}`;
+  if (sort) params += `&sort=${sort}`;
+
   const data = await apiService.Get<GetApplicationsRes>(
     `/v1/applications?page=${pageNumber}&size=10` + params,
   );
