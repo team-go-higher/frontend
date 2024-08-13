@@ -3,12 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
 import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
-import {
-  CalendarPage,
-  CalendarContainer,
-  DayContainer,
-  UnscheduledContainer,
-} from 'components/calendar/CalendarStyledComponents';
+import * as S from './CalendarStyledComponents';
 import {
   fetchApplicationByMonth,
   fetchApplicationByDate,
@@ -37,17 +32,21 @@ const Calendar = () => {
   });
 
   const { data: unscheduledData } = useQuery({
-    queryKey: [queryKeys.UNSCHEDULED, 'fetchApplicationUnscheduled', currentPage],
+    queryKey: [queryKeys.CALENDAR, 'fetchApplicationUnscheduled', currentPage],
     queryFn: () => fetchApplicationUnscheduled(currentPage, 4),
   });
 
+  // 달력 관련 함수
   const prevMonth = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
   const nextMonth = () => {
     setCurrentMonth(addMonths(currentMonth, 1));
   };
-  const onDateClick = (day: any) => {
+  const onMonthClick = (month: Date) => {
+    setCurrentMonth(month);
+  };
+  const onDateClick = (day: Date) => {
     setSelectedDate(day);
   };
   const prevDay = () => {
@@ -73,10 +72,15 @@ const Calendar = () => {
   }, [selectedDate]);
 
   return (
-    <CalendarPage>
-      <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
+    <S.CalendarPage>
+      <RenderHeader
+        currentMonth={currentMonth}
+        prevMonth={prevMonth}
+        nextMonth={nextMonth}
+        onMonthClick={onMonthClick}
+      />
       <div className='calendar-detail'>
-        <CalendarContainer>
+        <S.CalendarContainer>
           <RenderDays />
           <RenderCells
             currentMonth={currentMonth}
@@ -84,18 +88,18 @@ const Calendar = () => {
             onDateClick={onDateClick}
             calendarData={calendarData}
           />
-        </CalendarContainer>
+        </S.CalendarContainer>
 
-        <DayContainer>
+        <S.DayContainer>
           <RenderDetail
             selectedDate={selectedDate}
             prevDay={prevDay}
             nextDay={nextDay}
             detailData={detailData}
           />
-        </DayContainer>
+        </S.DayContainer>
       </div>
-      <UnscheduledContainer>
+      <S.UnscheduledContainer>
         {unscheduledData && unscheduledData.content.length !== 0 && (
           <RenderUnscheduled
             unscheduledData={unscheduledData}
@@ -103,8 +107,8 @@ const Calendar = () => {
             prevPage={prevPage}
             nextPage={nextPage}></RenderUnscheduled>
         )}
-      </UnscheduledContainer>
-    </CalendarPage>
+      </S.UnscheduledContainer>
+    </S.CalendarPage>
   );
 };
 

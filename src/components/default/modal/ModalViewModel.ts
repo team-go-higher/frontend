@@ -91,7 +91,10 @@ const ModalViewModel = ({
         description: detailedProcessType === '' ? processType : detailedProcessType,
       };
 
-      const data = await model.createNewProcess(applicationInfo.applicationId, newProcessData);
+      const data = await model.createNewProcess({
+        applicationId: applicationInfo.applicationId,
+        newProcessData,
+      });
       if (data.success) {
         updateProcessMutation.mutate({
           applicationId: applicationInfo.applicationId,

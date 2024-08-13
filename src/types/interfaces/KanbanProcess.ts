@@ -40,6 +40,11 @@ export interface INewProcessRes {
   description: string;
   type: string;
 }
+
+export interface ICreateNewProcess {
+  applicationId: number;
+  newProcessData: INewProcessRes;
+}
 export interface IApplicationStagesRes {
   id: number;
   description: string;
