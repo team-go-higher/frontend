@@ -123,16 +123,26 @@ const FilterModal = ({ isOpen, closeModal, setSort, setProcess, setComplete }: F
     });
   };
 
+  const handleClose = () => {
+    setFilterItem({
+      sort: (searchParams.get('sort') as ApplicationSort) || null,
+      process: (searchParams.get('process')?.split(',') as ApplicationProcess) || [],
+      complete: (searchParams.get('completed') as 'true' | 'false') || null,
+    });
+
+    closeModal();
+  };
+
   return (
     <Modal
       ariaHideApp={false}
       isOpen={isOpen}
-      onRequestClose={closeModal}
+      onRequestClose={handleClose}
       style={filterModalStyles}>
       <FilterModalContainer>
         <div className='titleContainer'>
           <div className='title'>정렬 및 필터</div>
-          <div className='closeButton' onClick={closeModal}>
+          <div className='closeButton' onClick={handleClose}>
             닫기
           </div>
         </div>
