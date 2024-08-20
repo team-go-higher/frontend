@@ -32,7 +32,6 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
     mutationFn: () => deleteApplication(data.applicationId),
     onSuccess: () => {
       inValidateApplications();
-      alert('삭제 완료~~');
     },
   });
 

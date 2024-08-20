@@ -18,6 +18,7 @@ import {
 import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 import FilterModal from 'components/applicationStatus/FilterModal';
 import { useSearchParams } from 'react-router-dom';
+import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 
 const ApplicationStatus = () => {
   const [searchValue, setSearhValue] = useState('');
@@ -61,6 +62,12 @@ const ApplicationStatus = () => {
 
   const applicationData = data?.pages.flatMap(page => page.data.content);
 
+  const activeEnter = (e: { key: string }) => {
+    if (e.key === 'Enter') {
+      setCompanyName(searchValue);
+    }
+  };
+
   useEffect(() => {
     if (isVisible) {
       fetchNextPage();
@@ -78,25 +85,23 @@ const ApplicationStatus = () => {
             <img src={SortIcon} alt='sortIcon' />
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '10px',
-              alignItems: 'center',
-            }}>
+          <div className='searchInputContainer'>
             <input
               className='searchInput'
               value={searchValue}
               onChange={e => setSearhValue(e.target.value)}
               placeholder='회사명을 입력하세요'
+              onKeyDown={activeEnter}
             />
-            <div
-              style={{ cursor: 'pointer' }}
+            <img
+              src={CloseIcon}
+              alt='closeIcon'
+              className='closeIcon'
               onClick={() => {
-                setCompanyName(searchValue);
-              }}>
-              검색
-            </div>
+                setSearhValue('');
+                setCompanyName('');
+              }}
+            />
           </div>
         </HeaderContainer>
 

@@ -45,6 +45,20 @@ export const HeaderContainer = styled.div`
     }
   }
 
+  .searchInputContainer {
+    position: relative;
+
+    .closeIcon {
+      width: 0.5rem;
+      height: 0.5rem;
+      position: absolute;
+      cursor: pointer;
+      top: 50%;
+      right: 0.8rem;
+      transform: translate(0%, -50%);
+    }
+  }
+
   .searchInput {
     border-radius: 16px;
     border: 0.5px solid #616161;
