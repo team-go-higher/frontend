@@ -9,23 +9,42 @@ import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatu
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
-import { ApplicationSort, ApplicationStatusCardData, getApplications } from 'apis/applications';
+import {
+  ApplicationProcess,
+  ApplicationSort,
+  ApplicationStatusCardData,
+  getApplications,
+} from 'apis/applications';
 import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
+import FilterModal from 'components/applicationStatus/FilterModal';
+import { useSearchParams } from 'react-router-dom';
 
 const ApplicationStatus = () => {
   const [searchValue, setSearhValue] = useState('');
   const [companyName, setCompanyName] = useState('');
 
+  const [searchParams] = useSearchParams();
+
   const [page, setPage] = useState(1);
 
-  const [sort, setSort] = useState<ApplicationSort>(null);
+  const [sort, setSort] = useState<ApplicationSort>(
+    (searchParams.get('sort') as ApplicationSort) || null,
+  );
+  const [process, setProcess] = useState<ApplicationProcess>(
+    (searchParams.get('process')?.split(',') as ApplicationProcess) || [],
+  );
+  const [complete, setComplete] = useState<boolean | null>(
+    (searchParams.get('completed') === 'true' ? true : false) || null,
+  );
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { isVisible, targetRef } = useInfiniteScroll();
 
   const { data, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: [queryKeys.APPLICATIONS, companyName, sort],
+    queryKey: [queryKeys.APPLICATIONS, companyName, sort, process, complete],
     queryFn: async ({ pageParam }) => {
-      const res = await getApplications(pageParam, companyName, sort);
+      const res = await getApplications(pageParam, companyName, sort, process, complete);
 
       setPage(page);
 
@@ -53,14 +72,8 @@ const ApplicationStatus = () => {
       <ApplicationStatusContainer>
         <div className='title'>지원 현황 모아보기</div>
 
-        <div style={{ display: 'flex', gap: '3rem' }}>
-          <div onClick={() => setSort('processType')}>전형순</div>
-          <div onClick={() => setSort('reverseProcessType')}>전형역순</div>
-          <div onClick={() => setSort('closing')}>마감임박순</div>
-        </div>
-
         <HeaderContainer>
-          <div className='sortContainer'>
+          <div className='sortContainer' onClick={() => setIsOpenModal(!isOpenModal)}>
             <div className='sortTitle'>정렬기준</div>
             <img src={SortIcon} alt='sortIcon' />
           </div>
@@ -95,6 +108,14 @@ const ApplicationStatus = () => {
         </ContentContainer>
         <div ref={targetRef} style={{ height: '20px', width: '100%' }}></div>
       </ApplicationStatusContainer>
+
+      <FilterModal
+        isOpen={isOpenModal}
+        closeModal={() => setIsOpenModal(false)}
+        setSort={setSort}
+        setProcess={setProcess}
+        setComplete={setComplete}
+      />
     </Wrapper>
   );
 };
