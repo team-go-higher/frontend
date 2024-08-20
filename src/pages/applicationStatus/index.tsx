@@ -25,7 +25,7 @@ const ApplicationStatus = () => {
 
   const [searchParams] = useSearchParams();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
 
   const [sort, setSort] = useState<ApplicationSort>(
     (searchParams.get('sort') as ApplicationSort) || null,
@@ -46,7 +46,7 @@ const ApplicationStatus = () => {
     queryFn: async ({ pageParam }) => {
       const res = await getApplications(pageParam, companyName, sort, process, complete);
 
-      setPage(page);
+      setPage(pageParam);
 
       return res;
     },
