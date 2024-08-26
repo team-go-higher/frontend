@@ -25,7 +25,7 @@ const KanbanList = ({ processType, children }: KanbanListProps) => {
   return (
     <S.KanbanListContainer ref={ref} $processType={processType}>
       <S.ProcessTitle $processType={processType}>{formatProcessToKor(processType)}</S.ProcessTitle>
-      <S.KanbanCardContainer>{children}</S.KanbanCardContainer>
+      <S.KanbanCardContainer $processType={processType}>{children}</S.KanbanCardContainer>
     </S.KanbanListContainer>
   );
 };

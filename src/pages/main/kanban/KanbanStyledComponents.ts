@@ -29,9 +29,8 @@ export const KanbanBoardContainer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   flex: 1;
-  gap: 20px;
+  gap: 15px;
   margin: 0 auto;
-  width: 1000px;
   overflow-x: auto;
 `;
 
@@ -40,7 +39,7 @@ export const PlusButton = styled.button`
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  height: 8.75rem;
+  height: 110px;
   border: 1px solid rgb(var(--border));
   border-radius: 19px;
   cursor: pointer;

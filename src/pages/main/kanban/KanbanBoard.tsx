@@ -61,17 +61,13 @@ const KanbanBoard = ({ openModal, setFetchedProcessData }: KanbanBoardProps) => 
 
   return (
     <>
-      <KanbanList processType={'TO_APPLY'}>{kanbanListHandler('TO_APPLY')}</KanbanList>
-      <List.KanbanGrid>
-        {processTypeList.map(
-          processType =>
-            processType !== 'TO_APPLY' && (
-              <KanbanList key={processType} processType={processType}>
-                {kanbanListHandler(processType)}
-              </KanbanList>
-            ),
-        )}
-      </List.KanbanGrid>
+      {processTypeList
+        .filter(process => process !== 'COMPLETE')
+        .map(processType => (
+          <KanbanList key={processType} processType={processType}>
+            {kanbanListHandler(processType)}
+          </KanbanList>
+        ))}
     </>
   );
 };
