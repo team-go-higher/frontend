@@ -1,17 +1,9 @@
 import styled from 'styled-components';
-import {
-  UseControllerProps,
-  useController,
-  Control,
-  FieldPath,
-  FieldValues,
-} from 'react-hook-form';
+import { UseControllerProps, useController, FieldValues } from 'react-hook-form';
 
 interface InputProps extends UseControllerProps<FieldValues> {
   error: boolean;
   label: string;
-  control: Control<FieldValues>;
-  name: FieldPath<FieldValues>;
   isRequired: boolean;
 }
 
@@ -42,5 +34,13 @@ export const Input = ({
     rules: isRequired ? { required: '값을 입력해주세요' } : {},
   });
 
-  return <StyledInput {...field} error={error} placeholder={placeholder} {...rest} />;
+  return (
+    <StyledInput
+      {...field}
+      error={error}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+      {...rest}
+    />
+  );
 };
