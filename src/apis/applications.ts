@@ -1,6 +1,5 @@
 import apiService from 'apis';
 import { IApplicationSpecific } from 'types/interfaces/Application';
-import { IApplication } from 'types/interfaces/KanbanProcess';
 import { objectToParams } from 'utils/params';
 
 export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
