@@ -61,8 +61,10 @@ const ApplicationProcess = ({
         setSelectedOptions(prevOptions =>
           prevOptions.filter(item => !(item.process === process && item.option === option)),
         );
-        const index = fields.findIndex((v: any) => v.type === option);
-        remove(index);
+        const index = fields.findIndex((v: any) => v.type === process && v.description === option);
+        if (index !== -1) {
+          remove(index);
+        }
       } else {
         setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
         append({ type: process, description: option, schedule: '' });
@@ -70,9 +72,11 @@ const ApplicationProcess = ({
     }
   };
 
-  const updateFieldArray = (date: Date | null, process: ProcessType, option: string) => {
-    const index = fields.findIndex((v: any) => v.type === option);
-    update(index, { type: process, description: option, schedule: date });
+  const updateFieldArray = (process: ProcessType, option: string, date: Date | null) => {
+    const index = fields.findIndex((v: any) => v.type === process && v.description === option);
+    if (index !== -1) {
+      update(index, { type: process, description: option, schedule: date });
+    }
   };
 
   return (

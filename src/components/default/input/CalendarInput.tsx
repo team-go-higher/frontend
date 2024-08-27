@@ -7,7 +7,7 @@ import { StyledCalendarInput } from './CalendarInputStyledComponents';
 type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
 interface CalendarInputProps {
-  onChange: (date: Date | null, process: ProcessType, detailProcess: string) => void;
+  onChange: (process: ProcessType, detailProcess: string, date: Date | null) => void;
   applicationType: 'edit' | 'default' | 'add';
   process?: ProcessType;
   detailProcess?: string;
@@ -36,8 +36,8 @@ export const CalendarInput = ({
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    if (date && process && detailProcess) {
-      onChange(date, process, detailProcess);
+    if (process && detailProcess && date) {
+      onChange(process, detailProcess, date);
     }
   };
 
