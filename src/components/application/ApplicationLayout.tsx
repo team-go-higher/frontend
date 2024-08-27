@@ -7,17 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/default/button/Button';
 import { RadioInput } from 'components/default/input/RadioInput';
 import useMutateApplication from 'hooks/application/useMutateApplication';
+import { IApplicationSpecific } from 'types/interfaces/Application';
 
 interface ApplicationLayoutProps {
   applicationType: 'edit' | 'default' | 'add';
   applicationId?: number;
-  data?: any; //TODO api 연결 이후 응답 데이터 applicationType으로 수정 필요
+  data?: IApplicationSpecific;
 }
 
 const ApplicationLayout = ({
   applicationType,
   applicationId,
-  data = [],
+  data = {},
 }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
   const { registerApplicationMutation, deleteApplicationMutation, editApplicationMutation } =
@@ -26,20 +27,20 @@ const ApplicationLayout = ({
   const methods = useForm<FieldValues>({
     mode: 'onChange',
     defaultValues: {
-      companyName: data?.companyName || '',
-      team: data?.team || '',
-      location: data?.location || '',
-      contact: data?.contact || '',
-      position: data?.position || '',
-      specificPosition: data?.specificPosition || '',
-      jobDescription: data?.jobDescription || '',
-      workType: data?.workType || '',
-      employmentType: data?.employmentType || '',
-      careerRequirement: data?.careerRequirement || '',
-      requiredCapability: data?.requiredCapability || '',
-      preferredQualification: data?.preferredQualification || '',
-      processes: data?.processes || [],
-      url: data?.url || '',
+      companyName: data.companyName || '',
+      team: data.team || '',
+      location: data.location || '',
+      contact: data.contact || '',
+      position: data.position || '',
+      specificPosition: data.specificPosition || '',
+      jobDescription: data.jobDescription || '',
+      workType: data.workType || '',
+      employmentType: data.employmentType || '',
+      careerRequirement: data.careerRequirement || '',
+      requiredCapability: data.requiredCapability || '',
+      preferredQualification: data.preferredQualification || '',
+      processes: data.processes || [],
+      url: data.url || '',
     },
   });
 
