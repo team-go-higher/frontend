@@ -58,9 +58,8 @@ const ApplicationStatus = () => {
       }
       return null;
     },
+    select: data => data?.pages.flatMap(page => page.data.content),
   });
-
-  const applicationData = data?.pages.flatMap(page => page.data.content);
 
   const activeEnter = (e: { key: string }) => {
     if (e.key === 'Enter') {
@@ -107,7 +106,7 @@ const ApplicationStatus = () => {
 
         <ContentContainer>
           {!isFetching &&
-            applicationData?.map((item: ApplicationStatusCardData) => {
+            data?.map((item: ApplicationStatusCardData) => {
               return <ApplicationStatusCard key={item.applicationId} data={item} />;
             })}
         </ContentContainer>
