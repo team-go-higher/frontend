@@ -3,7 +3,7 @@ import { Styles } from 'react-modal';
 
 export const normalModalStyles: Styles = {
   overlay: {
-    backgroundColor: 'rgba(var(--grayText), 0.8)',
+    backgroundColor: 'rgba(var(--greyText), 0.8)',
     zIndex: 1000,
   },
   content: {
@@ -19,7 +19,7 @@ export const normalModalStyles: Styles = {
 
 export const editModalStyles: Styles = {
   overlay: {
-    backgroundColor: 'rgba(var(--grayText), 0.8)',
+    backgroundColor: 'rgba(var(--greyText), 0.8)',
     zIndex: 1000,
   },
   content: {

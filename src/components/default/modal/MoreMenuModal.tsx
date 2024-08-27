@@ -83,7 +83,7 @@ export const MoreItem = styled.div`
 `;
 
 export const MoreItemText = styled.p`
-  color: rgb(var(--grayText));
+  color: rgb(var(--greyText));
   font-size: 16px;
   line-height: 23px;
   font-weight: 500;

@@ -162,7 +162,12 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
         <S.Job>{item.position}</S.Job>
         <S.Schedule>{formatDataType(item.process.schedule)}</S.Schedule>
         <S.MoreIconDiv>
-          <MoreIcon fill={`rgb(var(--${currentProcessType}))`} onClick={handleMoreMenu} />
+          <MoreIcon
+            width={16}
+            height={16}
+            fill={`rgb(var(--greyText2))`}
+            onClick={handleMoreMenu}
+          />
         </S.MoreIconDiv>
         {moreMenuShow && (
           <MoreMenuModal

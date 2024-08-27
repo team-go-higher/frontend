@@ -10,8 +10,8 @@ export const KanbanCardContainer = styled.div<IKanbanCardContainerProps>`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 18px 35px;
-  border-radius: 19px;
+  padding: 12px 16px;
+  border-radius: 10px;
   box-shadow: ${({ $currentProcessType }) =>
     `0px 0px 3px 0px rgba(var(--${$currentProcessType}), 0.5);`};
   background-color: rgb(var(--cardBackground));
@@ -23,35 +23,36 @@ export const DetailProcess = styled.div<{ $currentProcessType: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 13px;
+  padding: 2px 12px;
   /* max-width: 6rem; */
   width: fit-content;
-  height: 1.375rem;
+  height: 18px;
   border-radius: 12.5px;
-  color: rgb(var(--grayText));
+  color: rgb(var(--greyText));
   font-weight: 500;
+  font-size: 12px;
   background-color: ${({ $currentProcessType }) => `rgb(var(--${$currentProcessType}))`};
 `;
 
 export const CompanyName = styled.p`
-  font-size: 25px;
+  font-size: 18px;
   font-weight: 700;
 `;
 
 export const Job = styled.p`
-  font-size: 18px;
-  color: rgb(var(--grayText));
+  font-size: 14px;
+  color: rgb(var(--greyText));
 `;
 
 export const Schedule = styled.p`
-  font-size: 16px;
+  font-size: 12px;
   color: rgb(var(--redText));
   font-weight: 600;
 `;
 
 export const MoreIconDiv = styled.div`
   position: absolute;
-  bottom: 18px;
-  right: 35px;
+  bottom: 13px;
+  right: 13px;
   cursor: pointer;
 `;
