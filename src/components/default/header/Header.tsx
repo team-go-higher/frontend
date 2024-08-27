@@ -7,8 +7,9 @@ import {
 import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import LogoIcon from 'assets/default/icon_logo.svg';
 
-const MENU_ITEM_ARR = ['지원 현황 모아보기', '공고리스트', '지원서 추가'];
+const MENU_ITEM_ARR = ['지원 현황 모아보기', '지원서 추가'];
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -48,13 +49,14 @@ const Header = () => {
   return (
     <HeaderContainer>
       <div className='headerContainer'>
-        <div
+        <img
           className='headerLogo'
+          src={LogoIcon}
+          alt='logoIcon'
           onClick={() => {
             navigate('/');
-          }}>
-          Go-Higher
-        </div>
+          }}
+        />
         <div className='rightContainer'>
           <HeaderMenuContainer>
             {MENU_ITEM_ARR.map((e, index) => {

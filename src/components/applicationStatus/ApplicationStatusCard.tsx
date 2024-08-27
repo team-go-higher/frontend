@@ -1,44 +1,69 @@
-import { useState } from 'react';
-import {
-  ContentContainer,
-  ToggleContainer,
-  UtilContainer,
-  Wrapper,
-} from './ApplicationStatusStyledComponents';
+import { ToggleContainer, UtilContainer, Wrapper } from './ApplicationStatusStyledComponents';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import { format } from 'date-fns';
 import { Label } from 'components/default/label/Label';
-import { ApplicationStatusCardData } from 'pages/applicationStatus';
+import {
+  ApplicationStatusCardData,
+  deleteApplication,
+  patchApplicationsFinished,
+} from 'apis/applications';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from 'apis/queryKeys';
 
 interface ApplicationStatusCardProps {
   data: ApplicationStatusCardData;
 }
 
 const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
-  const [isView, setIsView] = useState(true);
-  const { companyName, position, specificPosition } = data;
+  const queryClient = useQueryClient();
+  const { companyName, position, specificPosition, isCompleted } = data;
   const { type, schedule } = data.process;
 
-  return (
-    <Wrapper isView={isView}>
-      <Label process={type} />
+  const inValidateApplications = () => {
+    queryClient.invalidateQueries({ queryKey: [queryKeys.APPLICATIONS] });
+  };
 
-      <ContentContainer>
-        <div className='companyName'>{companyName}</div>
-        <div className='contentBox'>
-          {/* 해당하는 내용 포지션? 세부 포지션? 확인 필요 */}
-          <div className='content'>
-            {position}/{specificPosition}
-          </div>
+  const applicationFinishedMutation = useMutation({
+    mutationFn: () => patchApplicationsFinished(data.applicationId, !isCompleted),
+    onSuccess: inValidateApplications,
+  });
+
+  const deleteApplicationMutation = useMutation({
+    mutationFn: () => deleteApplication(data.applicationId),
+    onSuccess: () => {
+      inValidateApplications();
+    },
+  });
+
+  return (
+    <Wrapper $isView={isCompleted}>
+      <div className='labelContainer'>
+        <Label process={type} />
+      </div>
+
+      <div className='companyName'>{companyName}</div>
+      <div className='contentBox'>
+        <div className='content'>
+          {position}
+          {specificPosition && `/${specificPosition}`}
         </div>
-      </ContentContainer>
+      </div>
 
       <UtilContainer>
-        <div className='deadline'>{format(new Date(schedule), 'yy년 M월 dd일 HH:mm')}</div>
-        <ToggleContainer onClick={() => setIsView(!isView)}>
-          <div className={`toggleCircle ${isView ? '' : 'false'}`} />
+        <div className='deadline'>
+          {schedule
+            ? format(new Date(schedule), 'yyyy년 M월 dd일 HH:mm')
+            : '전형일을 기다리고 있어요'}
+        </div>
+        <ToggleContainer onClick={() => applicationFinishedMutation.mutate()}>
+          <div className={`toggleCircle ${!isCompleted ? '' : 'false'}`} />
         </ToggleContainer>
-        <img src={CloseIcon} className='closeIcon' alt='closeIcon' />
+        <img
+          src={CloseIcon}
+          className='closeIcon'
+          alt='closeIcon'
+          onClick={() => deleteApplicationMutation.mutate()}
+        />
       </UtilContainer>
     </Wrapper>
   );

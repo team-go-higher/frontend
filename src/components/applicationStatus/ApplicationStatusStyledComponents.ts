@@ -1,47 +1,32 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div<{ isView: boolean }>`
+export const Wrapper = styled.div<{ $isView: boolean }>`
   display: flex;
   width: 100%;
   border-top: 1px solid #d6d6d6;
   padding: 26px 0;
   align-items: center;
 
-  .companyName {
-    color: ${props => !props.isView && '#DCDCDC !important'};
-  }
+  .labelContainer {
+    min-width: 16%;
 
-  .contentBox > .content {
-    color: ${props => !props.isView && '#DCDCDC !important'};
+    label {
+      margin: 0;
+      display: flex;
+      height: 23px;
+      width: fit-content;
+      padding-top: 4.5px;
+      background-color: ${({ $isView }) => $isView && '#DCDCDC'};
+      border-color: ${({ $isView }) => $isView && '#DCDCDC'};
+    }
   }
-
-  .deadline {
-    color: ${props => !props.isView && '#DCDCDC !important'};
-  }
-
-  label {
-    background-color: ${props => !props.isView && '#DCDCDC !important'};
-    border-color: ${props => !props.isView && '#DCDCDC !important'};
-  }
-
-  label {
-    margin: 0 55px 0 0;
-    display: flex;
-    height: 23px;
-  }
-`;
-
-export const ContentContainer = styled.div`
-  display: flex;
-  gap: 110px;
-  align-items: center;
-  height: 31px;
 
   .companyName {
     color: #333;
     font-size: 24px;
     margin-top: 5px;
     font-weight: 600;
+    min-width: 20%;
   }
 
   .contentBox {
@@ -55,6 +40,12 @@ export const ContentContainer = styled.div`
       font-size: 20px;
       font-weight: 600;
     }
+  }
+
+  .companyName,
+  .deadline,
+  .contentBox > .content {
+    color: ${({ $isView }) => $isView && '#DCDCDC'};
   }
 `;
 
