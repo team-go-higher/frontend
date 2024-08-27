@@ -4,7 +4,7 @@ import {
   updateApplicationProcess,
   createNewProcess,
 } from 'apis/kanban';
-import { IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
+import { ICreateNewProcess, IRegisterNewApplication } from 'types/interfaces/KanbanProcess';
 
 class ModalModel {
   registerApplication(newApplication: IRegisterNewApplication) {
@@ -21,8 +21,8 @@ class ModalModel {
     return updateApplicationProcess(applicationId, processId);
   }
 
-  createNewProcess(applicationId: number, newProcessData: any) {
-    return createNewProcess(applicationId, newProcessData);
+  createNewProcess(newProcess: ICreateNewProcess) {
+    return createNewProcess(newProcess);
   }
 }
 
