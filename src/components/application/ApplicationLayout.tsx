@@ -184,7 +184,7 @@ const ApplicationLayout = ({
           />
         </S.RowContainer>
         <S.RowContainer>
-          <ApplicationLabel label='고용 형태' isRequired={true} />
+          <ApplicationLabel label='고용 형태' />
           <S.RadioInputWrapper>
             {[
               { label: '정규직', value: 'PERMANENT' },
