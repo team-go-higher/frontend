@@ -1,4 +1,5 @@
 import apiService from 'apis';
+import { objectToParams } from 'utils/params';
 
 export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 export interface ApplicationStatusCardData {
@@ -30,26 +31,23 @@ export const getApplications = async (
   process?: ApplicationProcess,
   complete?: boolean | null,
 ) => {
-  let params = '';
-  if (companyName !== '') params += `&companyName=${companyName}`;
-  if (sort) params += `&sort=${sort}`;
-  if (process && process.length > 0) {
-    params = process.reduce((acc, el) => {
-      return (acc += `&process=${el}`);
-    }, params);
-  }
-  if (complete !== null) params += `&completed=${complete}`;
+  const params = objectToParams({
+    page: pageNumber,
+    size: 10,
+    companyName,
+    sort,
+    complete,
+    process,
+  });
 
-  const data = await apiService.Get<GetApplicationsRes>(
-    `/v1/applications?page=${pageNumber}&size=10` + params,
-  );
+  const data = await apiService.Get<GetApplicationsRes>(`/v1/applications?` + params.toString());
 
   return data;
 };
 
 export const patchApplicationsFinished = async (applicationId: number, isCompleted: boolean) => {
   const data = await apiService.Patch(`/v1/applications/${applicationId}/finished`, {
-    isCompleted: isCompleted,
+    isCompleted,
   });
 
   return data.data;
