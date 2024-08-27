@@ -1,4 +1,6 @@
 import apiService from 'apis';
+import { IApplicationSpecific } from 'types/interfaces/Application';
+import { IApplication } from 'types/interfaces/KanbanProcess';
 import { objectToParams } from 'utils/params';
 
 export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
@@ -50,6 +52,30 @@ export const patchApplicationsFinished = async (applicationId: number, isComplet
     isCompleted,
   });
 
+  return data.data;
+};
+
+export const getApplicationSpecific = async (applicationId: number) => {
+  const data = await apiService.Get<IApplicationSpecific>(`/v1/applications/${applicationId}`);
+  return data.data;
+};
+
+export const createNewApplicationSpecific = async (newApplicationData: IApplicationSpecific) => {
+  const data = await apiService.Post<IApplicationSpecific>(
+    `/v1/applications/specific`,
+    newApplicationData,
+  );
+  return data.data;
+};
+
+export const editApplicationSpecific = async (
+  applicationId: number,
+  newApplicationData: IApplicationSpecific,
+) => {
+  const data = await apiService.Put<IApplicationSpecific>(
+    `/v1/applications/${applicationId}/specific`,
+    newApplicationData,
+  );
   return data.data;
 };
 
