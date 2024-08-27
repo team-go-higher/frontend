@@ -14,17 +14,11 @@ export const Wrapper = styled.div<{ $isView: boolean }>`
       margin: 0;
       display: flex;
       height: 23px;
-      width: fit-content !important;
+      width: fit-content;
       padding-top: 4.5px;
-      background-color: ${({ $isView }) => $isView && '#DCDCDC !important'};
-      border-color: ${({ $isView }) => $isView && '#DCDCDC !important'};
+      background-color: ${({ $isView }) => $isView && '#DCDCDC'};
+      border-color: ${({ $isView }) => $isView && '#DCDCDC'};
     }
-  }
-
-  .companyName,
-  .deadline,
-  .contentBox > .content {
-    color: ${({ $isView }) => $isView && '#DCDCDC !important'};
   }
 
   .companyName {
@@ -46,6 +40,12 @@ export const Wrapper = styled.div<{ $isView: boolean }>`
       font-size: 20px;
       font-weight: 600;
     }
+  }
+
+  .companyName,
+  .deadline,
+  .contentBox > .content {
+    color: ${({ $isView }) => $isView && '#DCDCDC'};
   }
 `;
 

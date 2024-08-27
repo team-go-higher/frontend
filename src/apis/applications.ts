@@ -36,7 +36,7 @@ export const getApplications = async (
     size: 10,
     companyName,
     sort,
-    complete,
+    completed: complete,
     process,
   });
 
