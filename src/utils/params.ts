@@ -7,7 +7,7 @@ export const objectToParams = (o: Object): URLSearchParams => {
         return searchParams.append(k, e);
       });
     }
-    if (!Array.isArray(v) && v) searchParams.append(k, v.toString());
+    if (!Array.isArray(v) && v !== undefined && v !== null) searchParams.append(k, v.toString());
   });
 
   return searchParams;
