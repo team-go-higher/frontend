@@ -81,66 +81,36 @@ const ApplicationProcess = ({
 
   return (
     <ProcessContainer>
-      {applicationType === 'default' ? (
-        <div>
-          {ProcessArr.map((e, index: number) => (
-            <div style={{ display: 'flex', width: '100%' }} key={index}>
-              <div className='label' key={index}>
-                <Label process={e.type} isPast={true} />
-              </div>
-              <div className='calendarInput default'>
-                {fields.map((v: any, index: number) => (
-                  <div key={index}>
-                    {v.type === e.type && (
-                      <CalendarInput
-                        onChange={updateFieldArray}
-                        applicationType={applicationType}
-                        process={v.type}
-                        detailProcess={v.description}
-                        schedule={v.schedule}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+      <div>
+        {ProcessArr.map((event: any, index: number) => (
+          <div style={{ display: 'flex', width: '100%' }} key={event.id}>
+            <div className='label'>
+              <DropDown
+                process={event.type}
+                options={ProcessArr.find(e => e.type === event.type)?.description || []}
+                selectedOptions={selectedOptions}
+                onSelect={handleSelectCheckbox}
+                disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
+              />
             </div>
-          ))}
-        </div>
-      ) : (
-        <div>
-          {ProcessArr.map((event: any, index: number) => (
-            <div style={{ display: 'flex', width: '100%' }} key={event.id}>
-              <div className='label'>
-                {event.type === 'DOCUMENT' ? (
-                  <Label process='DOCUMENT'></Label>
-                ) : (
-                  <DropDown
-                    process={event.type}
-                    options={ProcessArr.find(e => e.type === event.type)?.description || []}
-                    selectedOptions={selectedOptions}
-                    onSelect={handleSelectCheckbox}
-                  />
-                )}
-              </div>
-              <div className='calendarInput'>
-                {fields.map((field: any, index: number) => (
-                  <div>
-                    {field.type === event.type && (
-                      <CalendarInput
-                        onChange={updateFieldArray}
-                        applicationType={applicationType}
-                        process={field.type}
-                        detailProcess={field.description}
-                        schedule={field.schedule}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+            <div className='calendarInput'>
+              {fields.map((field: any, index: number) => (
+                <div>
+                  {field.type === event.type && (
+                    <CalendarInput
+                      onChange={updateFieldArray}
+                      applicationType={applicationType}
+                      process={field.type}
+                      detailProcess={field.description}
+                      schedule={field.schedule}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
     </ProcessContainer>
   );
 };
