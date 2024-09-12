@@ -33,11 +33,12 @@ export const ContentContainer = styled.form`
 export const RowContainer = styled.div`
   display: flex;
   align-items: flex-start;
+  min-height: 50px;
 
   & > :first-child {
     width: 130px;
     flex-shrink: 0;
-    margin-top: 12px;
+    margin-top: 13px;
   }
   & > :nth-child(2) {
     flex-grow: 1;

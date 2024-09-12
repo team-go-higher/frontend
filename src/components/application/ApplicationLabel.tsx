@@ -8,10 +8,8 @@ interface ApplicationLabelProps {
 const ApplicationLabel = ({ label, isRequired = false }: ApplicationLabelProps) => {
   return (
     <LabelContainer>
-      <label>
-        {label}
-        {isRequired && <span> *</span>}
-      </label>
+      {label}
+      {isRequired && <span> *</span>}
     </LabelContainer>
   );
 };
@@ -20,11 +18,10 @@ export default ApplicationLabel;
 
 const LabelContainer = styled.div`
   width: 130px;
-  label {
-    color: rgb(var(--inputBorder));
-    font-size: 1.1rem;
-    font-weight: 500;
-  }
+  color: rgb(var(--inputBorder));
+  font-size: 1.1rem;
+  font-weight: 500;
+
   span {
     color: rgb(var(--redText));
   }

@@ -1,13 +1,11 @@
-import { Control, FieldPath, FieldValues } from 'react-hook-form';
+import { FieldValues, UseControllerProps } from 'react-hook-form';
 import { Input } from 'components/default/input/Input';
 import { Textarea } from 'components/default/input/Textarea';
 
-interface ApplicationInputProps {
+interface ApplicationInputProps extends UseControllerProps<FieldValues> {
   applicationType: 'edit' | 'default' | 'add';
   label: string;
   inputType?: 'input' | 'textarea';
-  control: Control<FieldValues>;
-  name: FieldPath<FieldValues>;
   isRequired?: boolean;
   value?: string;
 }
@@ -19,7 +17,7 @@ interface DefaultContentViewProps {
 
 const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
   return (
-    <div>
+    <>
       {name === 'url' ? (
         <a className='content url' href={value}>
           채용사이트
@@ -27,7 +25,7 @@ const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
       ) : (
         <div className='content'>{value === '' ? '-' : value}</div>
       )}
-    </div>
+    </>
   );
 };
 

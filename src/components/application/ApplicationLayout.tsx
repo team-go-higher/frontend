@@ -51,9 +51,7 @@ const ApplicationLayout = ({
     name: 'processes',
   });
 
-  // 작성완료 버튼 클릭 시 동작, data를 통해서 입력값 확인 가능
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
     if (applicationType === 'add') {
       registerApplicationMutation.mutate(data);
     }
