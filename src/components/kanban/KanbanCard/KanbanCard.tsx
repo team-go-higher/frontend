@@ -165,7 +165,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
           <MoreIcon
             width={16}
             height={16}
-            fill={`rgb(var(--greyText2))`}
+            fill={'rgb(var(--greyText2))'}
             onClick={handleMoreMenu}
           />
         </S.MoreIconDiv>

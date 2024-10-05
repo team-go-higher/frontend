@@ -84,7 +84,6 @@ export const StyledCalendarInput = styled.div<{
     border-radius: 5px;
     line-height: 30px;
     input {
-      width: 300px;
       font-size: 14px;
       font-weight: 500;
       ${({ process }) => process && TYPE_PROCESS[process]};
@@ -93,6 +92,7 @@ export const StyledCalendarInput = styled.div<{
         font-weight: 500;
         ${({ process }) => process && TYPE_PROCESS[process]};
       }
+      background-color: transparent;
     }
   }
 `;

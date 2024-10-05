@@ -15,7 +15,6 @@ export const Wrapper = styled.div`
 `;
 
 export const ContentContainer = styled.form`
-  width: 50%;
   min-width: 500px;
   display: flex;
   flex-direction: column;

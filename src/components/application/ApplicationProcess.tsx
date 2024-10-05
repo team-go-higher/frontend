@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { FieldValues, FieldArrayWithId } from 'react-hook-form';
 import { DropDown } from 'components/default/dropdown/DropDown';
-import { Label } from 'components/default/label/Label';
 import { CalendarInput } from 'components/default/input/CalendarInput';
 import styled from 'styled-components';
 import { ProcessType } from 'types/interfaces/Application';
 import { ProcessArr } from 'constants/application';
+import LogoIcon from 'assets/default/icon_logo.svg';
+import LogoGreyIcon from 'assets/default/icon_grey_logo.svg';
 
 interface ApplicationProcessProps {
   applicationType: 'edit' | 'default' | 'add';
   fields: FieldArrayWithId<FieldValues>[];
   append: (
-    value?: Partial<FieldValues> | Partial<FieldValues>[] | undefined,
+    value?: Partial<FieldValues> | Partial<FieldValues>[],
     options?: { shouldFocus?: boolean },
   ) => void;
   update: (index: number, value: Partial<FieldValues>) => void;
@@ -32,7 +33,7 @@ const ApplicationProcess = ({
   useEffect(() => {
     if (selectedOptions.length === 0 && applicationType === 'add') {
       setSelectedOptions([{ process: 'DOCUMENT', option: '서류전형' }]);
-      append({ type: 'DOCUMENT', description: '서류전형', schedule: '' });
+      append({ type: 'DOCUMENT', description: '서류전형', schedule: '', isCurrent: true });
     } else if (applicationType === 'edit') {
       fields.forEach((v: any) =>
         setSelectedOptions(prevOptions => [
@@ -52,9 +53,9 @@ const ApplicationProcess = ({
       setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
       const fieldIndex = fields.findIndex((v: any) => v.type === process);
       if (fieldIndex !== -1) {
-        update(fieldIndex, { type: process, description: option, schedule: '' });
+        update(fieldIndex, { type: process, description: option, schedule: '', isCurrent: false });
       } else {
-        append({ type: process, description: option, schedule: '' });
+        append({ type: process, description: option, schedule: '', isCurrent: false });
       }
     } else {
       if (itemIndex !== -1) {
@@ -67,7 +68,7 @@ const ApplicationProcess = ({
         }
       } else {
         setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
-        append({ type: process, description: option, schedule: '' });
+        append({ type: process, description: option, schedule: '', isCurrent: false });
       }
     }
   };
@@ -75,56 +76,109 @@ const ApplicationProcess = ({
   const updateFieldArray = (process: ProcessType, option: string, date: Date | null) => {
     const index = fields.findIndex((v: any) => v.type === process && v.description === option);
     if (index !== -1) {
-      update(index, { type: process, description: option, schedule: date });
+      update(index, { type: process, description: option, schedule: date, isCurrent: false });
     }
+  };
+
+  const handleLogoClick = (process: ProcessType, option: string) => {
+    const index = fields.findIndex((v: any) => v.type === process && v.description === option);
+
+    fields.forEach((field: any, idx: number) => {
+      if (idx === index) {
+        update(idx, { ...field, isCurrent: true });
+      } else {
+        update(idx, { ...field, isCurrent: false });
+      }
+    });
   };
 
   return (
     <ProcessContainer>
-      <div>
-        {ProcessArr.map((event: any, index: number) => (
-          <div style={{ display: 'flex', width: '100%' }} key={event.id}>
-            <div className='label'>
-              <DropDown
-                process={event.type}
-                options={ProcessArr.find(e => e.type === event.type)?.description || []}
-                selectedOptions={selectedOptions}
-                onSelect={handleSelectCheckbox}
-                disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
-              />
-            </div>
-            <div className='calendarInput'>
-              {fields.map((field: any, index: number) => (
-                <div>
-                  {field.type === event.type && (
+      {ProcessArr.map((event: any) => (
+        <ProcessRowContainer>
+          <LabelContainer>
+            <DropDown
+              process={event.type}
+              options={ProcessArr.find(e => e.type === event.type)?.description || []}
+              selectedOptions={selectedOptions}
+              onSelect={handleSelectCheckbox}
+              disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
+            />
+          </LabelContainer>
+          <CalendarInputContainer process={event.type}>
+            {fields.map((field: any) => (
+              <div className={`field ${field.isCurrent ? 'isCurrent' : ''}`}>
+                {field.type === event.type && (
+                  <CalendarInputWrapper>
                     <CalendarInput
+                      key={field.description}
                       onChange={updateFieldArray}
                       applicationType={applicationType}
                       process={field.type}
                       detailProcess={field.description}
                       schedule={field.schedule}
                     />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+                    <img
+                      className='headerLogo'
+                      src={field.isCurrent ? LogoIcon : LogoGreyIcon}
+                      alt='logoIcon'
+                      onClick={() => handleLogoClick(field.type, field.description)}
+                    />
+                  </CalendarInputWrapper>
+                )}
+              </div>
+            ))}
+          </CalendarInputContainer>
+        </ProcessRowContainer>
+      ))}
     </ProcessContainer>
   );
 };
 
 export default ApplicationProcess;
 
+export const TYPE_PROCESS = {
+  DOCUMENT: 'rgb(var(--defaultPink), 0.15)',
+  TEST: 'rgb(var(--defaultPurple), 0.15)',
+  INTERVIEW: 'rgb(var(--defaultSkyblue), 0.15)',
+  COMPLETE: 'rgb(var(--defaultRed), 0.15)',
+};
+
 const ProcessContainer = styled.div`
   width: 100%;
-  .label {
-    width: 140px !important;
-    line-height: 40px;
+`;
+
+const ProcessRowContainer = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+const LabelContainer = styled.div`
+  width: 140px !important;
+  line-height: 40px;
+`;
+
+const CalendarInputContainer = styled.div<{ process: ProcessType }>`
+  width: calc(100% - 140px);
+  line-height: 40px;
+
+  .field {
+    padding: 0 10px;
   }
-  .calendarInput {
-    width: calc(100% - 140px);
-    line-height: 40px;
+
+  .field.isCurrent {
+    background-color: ${props => props.process && TYPE_PROCESS[props.process]};
+    border-radius: 5px;
+  }
+`;
+
+const CalendarInputWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    width: 22px;
+    cursor: pointer;
   }
 `;

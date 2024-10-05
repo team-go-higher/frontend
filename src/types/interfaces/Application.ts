@@ -5,6 +5,7 @@ export interface IProcesses {
   type: ProcessType;
   description: string;
   schedule: Date;
+  isCurrent: boolean;
 }
 
 export interface IApplicationSpecific {

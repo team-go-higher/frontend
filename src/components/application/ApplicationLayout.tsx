@@ -52,13 +52,18 @@ const ApplicationLayout = ({
   });
 
   const onSubmit = (data: FieldValues) => {
+    const sanitizedData = {
+      ...data,
+      processes: data.processes.map(({ id, ...rest }: any) => rest), // id 제거
+    };
+
     if (applicationType === 'add') {
-      registerApplicationMutation.mutate(data);
+      registerApplicationMutation.mutate(sanitizedData);
     }
     if (applicationType === 'edit' && applicationId !== undefined) {
       editApplicationMutation.mutate({
         applicationId,
-        newApplicationData: data,
+        newApplicationData: sanitizedData,
       });
     }
   };
@@ -183,12 +188,12 @@ const ApplicationLayout = ({
           />
         </S.RowContainer>
         <S.RowContainer>
-          <ApplicationLabel label='고용 형태' />
+          <ApplicationLabel label='고용 형태' isRequired={true} />
           <S.RadioInputWrapper>
             {[
               { label: '정규직', value: 'PERMANENT' },
-              { label: '계약직', value: 'PERMANENT' },
-              { label: '인턴', value: 'PERMANENT' },
+              { label: '계약직', value: 'TEMPORARY' },
+              { label: '인턴', value: 'INTERN' },
             ].map(option => (
               <RadioInput
                 key={option.label}
