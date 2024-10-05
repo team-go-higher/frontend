@@ -54,7 +54,10 @@ const ApplicationLayout = ({
   const onSubmit = (data: FieldValues) => {
     const sanitizedData = {
       ...data,
-      processes: data.processes.map(({ id, ...rest }: any) => rest), // id 제거
+      processes: data.processes.map(({ id, schedule, ...rest }: any) => ({
+        ...rest,
+        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : null,
+      })),
     };
 
     if (applicationType === 'add') {
