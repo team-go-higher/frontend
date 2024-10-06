@@ -23,19 +23,13 @@ const useMutateApplication = () => {
   const registerApplicationMutation = useMutation({
     mutationFn: (newApplicationData: IApplicationSpecific) =>
       createNewApplicationSpecific(newApplicationData),
-    onSuccess: () => {
-      onSuccess();
-      navigate('/applicationStatus');
-    },
+    onSuccess,
     onError: error => onError(error),
   });
 
   const deleteApplicationMutation = useMutation({
     mutationFn: (applicationId: number) => deleteApplication(applicationId),
-    onSuccess: () => {
-      onSuccess();
-      navigate('/applicationStatus');
-    },
+    onSuccess,
     onError: error => onError(error),
   });
 
@@ -47,10 +41,7 @@ const useMutateApplication = () => {
       applicationId: number;
       newApplicationData: IApplicationSpecific;
     }) => editApplicationSpecific(applicationId, newApplicationData),
-    onSuccess: applicationId => {
-      onSuccess();
-      navigate(`/application/${applicationId}`);
-    },
+    onSuccess,
     onError: error => onError(error),
   });
 

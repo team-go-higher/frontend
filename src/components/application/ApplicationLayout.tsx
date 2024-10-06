@@ -1,4 +1,5 @@
 import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
+import { useEffect } from 'react';
 import * as S from './ApplicationLayoutStyledComponents';
 import ApplicationInput from './ApplicationInput';
 import ApplicationLabel from './ApplicationLabel';
@@ -27,32 +28,53 @@ const ApplicationLayout = ({
   const methods = useForm<FieldValues>({
     mode: 'onChange',
     defaultValues: {
-      companyName: data.companyName || '',
-      team: data.team || '',
-      location: data.location || '',
-      contact: data.contact || '',
-      position: data.position || '',
-      specificPosition: data.specificPosition || '',
-      jobDescription: data.jobDescription || '',
-      workType: data.workType || '',
-      employmentType: data.employmentType || '',
-      careerRequirement: data.careerRequirement || '',
-      requiredCapability: data.requiredCapability || '',
-      preferredQualification: data.preferredQualification || '',
-      processes: data.processes || [],
-      url: data.url || '',
+      companyName: '',
+      team: '',
+      location: '',
+      contact: '',
+      position: '',
+      specificPosition: '',
+      jobDescription: '',
+      workType: '',
+      employmentType: '',
+      careerRequirement: '',
+      requiredCapability: '',
+      preferredQualification: '',
+      processes: [],
+      url: '',
     },
   });
 
-  const { control, handleSubmit } = methods;
-
+  const { control, handleSubmit, reset } = methods;
   const { fields, append, update, remove } = useFieldArray({
     control,
     name: 'processes',
   });
 
+  useEffect(() => {
+    if (data) {
+      reset({
+        companyName: data.companyName || '',
+        team: data.team || '',
+        location: data.location || '',
+        contact: data.contact || '',
+        position: data.position || '',
+        specificPosition: data.specificPosition || '',
+        jobDescription: data.jobDescription || '',
+        workType: data.workType || '',
+        employmentType: data.employmentType || '',
+        careerRequirement: data.careerRequirement || '',
+        requiredCapability: data.requiredCapability || '',
+        preferredQualification: data.preferredQualification || '',
+        processes: data.processes || [],
+        url: data.url || '',
+      });
+    }
+  }, [data, reset]);
+
   const onSubmit = (data: FieldValues) => {
-    const sanitizedData = {
+    // id 제거, 시간 포맷 `년-월-일T시:분`으로
+    const newApplicationData = {
       ...data,
       processes: data.processes.map(({ id, schedule, ...rest }: any) => ({
         ...rest,
@@ -60,13 +82,32 @@ const ApplicationLayout = ({
       })),
     };
 
+    // 등록했을 때
     if (applicationType === 'add') {
-      registerApplicationMutation.mutate(sanitizedData);
+      registerApplicationMutation.mutate(newApplicationData, {
+        onSuccess: () => navigate('/applicationStatus'),
+      });
     }
+
+    // 수정했을 때
     if (applicationType === 'edit' && applicationId !== undefined) {
-      editApplicationMutation.mutate({
-        applicationId,
-        newApplicationData: sanitizedData,
+      editApplicationMutation.mutate(
+        {
+          applicationId,
+          newApplicationData,
+        },
+        {
+          onSuccess: () => navigate(`/application/detail/${applicationId}`),
+        },
+      );
+    }
+  };
+
+  // 삭제했을 때
+  const onClickDeleteButton = () => {
+    if (applicationId !== undefined) {
+      deleteApplicationMutation.mutate(applicationId, {
+        onSuccess: () => navigate('/applicationStatus'),
       });
     }
   };
@@ -83,9 +124,10 @@ const ApplicationLayout = ({
             name='companyName'
             control={control}
             isRequired={true}
-            value={data.companyName}
+            value={data?.companyName || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='부서' />
           <ApplicationInput
@@ -93,9 +135,10 @@ const ApplicationLayout = ({
             label='부서'
             name='team'
             control={control}
-            value={data.team}
+            value={data?.team || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
           <ApplicationInput
@@ -104,9 +147,10 @@ const ApplicationLayout = ({
             name='position'
             control={control}
             isRequired={true}
-            value={data.position}
+            value={data?.position || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='세부직무' />
           <ApplicationInput
@@ -114,9 +158,10 @@ const ApplicationLayout = ({
             label='세부직무'
             name='specificPosition'
             control={control}
-            value={data.specificPosition}
+            value={data?.specificPosition || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='전형 단계' />
           <ApplicationProcess
@@ -127,6 +172,7 @@ const ApplicationLayout = ({
             applicationType={applicationType}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='주요 업무' />
           <ApplicationInput
@@ -135,9 +181,10 @@ const ApplicationLayout = ({
             name='jobDescription'
             inputType='textarea'
             control={control}
-            value={data.jobDescription}
+            value={data?.jobDescription || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='필수 역량' />
           <ApplicationInput
@@ -146,9 +193,10 @@ const ApplicationLayout = ({
             inputType='textarea'
             name='requiredCapability'
             control={control}
-            value={data.requiredCapability}
+            value={data?.requiredCapability || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='공고 URL' />
           <ApplicationInput
@@ -156,40 +204,10 @@ const ApplicationLayout = ({
             label='공고 URL'
             name='url'
             control={control}
-            value={data.url}
+            value={data?.url || ''}
           />
         </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='회사 위치' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='회사 위치'
-            name='location'
-            control={control}
-            value={data.location}
-          />
-        </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='우대 사항' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='우대 사항'
-            inputType='textarea'
-            name='preferredQualification'
-            control={control}
-            value={data.preferredQualification}
-          />
-        </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='채용 담당' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='채용 담당'
-            name='contact'
-            control={control}
-            value={data.contact}
-          />
-        </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='고용 형태' isRequired={true} />
           <S.RadioInputWrapper>
@@ -209,6 +227,7 @@ const ApplicationLayout = ({
             ))}
           </S.RadioInputWrapper>
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='경력 조건' />
           <S.RadioInputWrapper>
@@ -224,6 +243,7 @@ const ApplicationLayout = ({
             ))}
           </S.RadioInputWrapper>
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='근무 형태' />
           <S.RadioInputWrapper>
@@ -244,14 +264,7 @@ const ApplicationLayout = ({
         <div className='btnContainer'>
           {applicationType === 'default' ? (
             <>
-              <Button
-                variant='secondary'
-                type='button'
-                onClick={() => {
-                  if (applicationId !== undefined) {
-                    deleteApplicationMutation.mutate(applicationId);
-                  }
-                }}>
+              <Button variant='secondary' type='button' onClick={onClickDeleteButton}>
                 삭제하기
               </Button>
               <Button type='button' onClick={() => navigate(`/application/edit/${applicationId}`)}>

@@ -36,7 +36,7 @@ const ApplicationInput = ({
   name,
   control,
   isRequired = false,
-  value,
+  value = '',
 }: ApplicationInputProps) => {
   return applicationType === 'default' ? (
     <DefaultContentView name={name} value={value}></DefaultContentView>
