@@ -173,7 +173,9 @@ const FilterModal = ({ isOpen, closeModal, setSort, setProcess, setComplete }: F
 
           <FilterContentContainer>
             <div className='contentContainer'>
-              <div className='contentTitle'>전형별</div>
+              <div className='contentTitle'>
+                전형별 <span>복수선택 가능</span>
+              </div>
 
               <div className='contentItemContainer'>
                 {FILTER_OPTIONS.process.map((e, idx) => (
@@ -241,7 +243,7 @@ const FilterItem = ({
 
 const filterModalStyles: Styles = {
   overlay: {
-    backgroundColor: 'rgba(var(--grayText), 0.8)',
+    backgroundColor: 'rgba(var(--greyText), 0.8)',
     zIndex: 1000,
   },
   content: {
@@ -337,9 +339,16 @@ const FilterContentContainer = styled.div`
 
     & > .contentTitle {
       color: #3253ff;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: -0.64px;
+
+      span {
+        color: #ff5555;
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.2rem;
+      }
     }
 
     & > .contentItemContainer {
@@ -352,7 +361,7 @@ const FilterContentContainer = styled.div`
 const FilterItemContainer = styled.div<{ $isActive: boolean }>`
   display: flex;
   border-radius: 3rem;
-  border: ${({ $isActive }) => ($isActive ? '1.5px solid #3253FF' : '0.7px solid #676767')};
+  border: ${({ $isActive }) => ($isActive ? '2px solid #3253FF' : '1px solid #676767')};
   background: ${({ $isActive }) => ($isActive ? 'rgba(255, 255, 255, 0.00)' : '#fff')};
 
   width: 9.5rem;
