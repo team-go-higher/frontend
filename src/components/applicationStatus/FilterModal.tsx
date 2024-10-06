@@ -250,10 +250,10 @@ const filterModalStyles: Styles = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '63.6rem',
+    width: '636px',
     height: 'fit-content',
-    padding: '3.5rem 4.2rem 2.6rem',
-    borderRadius: '1rem',
+    padding: '35px 42px 26px',
+    borderRadius: '10px',
     border: '1px #D3D3D3',
   },
 };
@@ -261,7 +261,7 @@ const filterModalStyles: Styles = {
 const FilterModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 18px;
 
   & > .titleContainer {
     display: flex;
@@ -271,14 +271,14 @@ const FilterModalContainer = styled.div`
 
     & > .title {
       color: #000;
-      font-size: 2rem;
+      font-size: 20px;
       font-weight: 600;
       letter-spacing: -0.8px;
     }
 
     & > .closeButton {
       color: #333;
-      font-size: 1.2rem;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
     }
@@ -286,15 +286,15 @@ const FilterModalContainer = styled.div`
 
   & > .line {
     width: 100%;
-    height: 0.1rem;
+    height: 1px;
     background-color: #d3d3d3;
-    margin-bottom: 0.5rem;
+    margin-bottom: 5px;
   }
 
   & > .filterContentWrapper {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 10px;
   }
 
   & > .buttonContainer {
@@ -302,12 +302,12 @@ const FilterModalContainer = styled.div`
     justify-content: space-between;
 
     & > button {
-      width: 9.4rem;
-      border-radius: 3rem;
-      height: 3.4rem;
+      width: 94px;
+      border-radius: 30px;
+      height: 34px;
       align-items: center;
       color: #333;
-      font-size: 1.4rem;
+      font-size: 14px;
       font-weight: 500;
     }
 
@@ -327,19 +327,19 @@ const FilterModalContainer = styled.div`
 const FilterContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1.3rem 2.5rem;
-  border-radius: 0.8rem;
+  padding: 13px 25px;
+  border-radius: 8px;
   background: #f6f6f6;
-  gap: 3.3rem;
+  gap: 33px;
 
   & > .contentContainer {
     display: flex;
     flex-direction: column;
-    gap: 1.1rem;
+    gap: 11px;
 
     & > .contentTitle {
       color: #3253ff;
-      font-size: 1.2rem;
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.64px;
 
@@ -353,23 +353,23 @@ const FilterContentContainer = styled.div`
 
     & > .contentItemContainer {
       display: flex;
-      gap: 1.2rem;
+      gap: 12px;
     }
   }
 `;
 
 const FilterItemContainer = styled.div<{ $isActive: boolean }>`
   display: flex;
-  border-radius: 3rem;
   border: ${({ $isActive }) => ($isActive ? '2px solid #3253FF' : '1px solid #676767')};
+  border-radius: 30px;
   background: ${({ $isActive }) => ($isActive ? 'rgba(255, 255, 255, 0.00)' : '#fff')};
 
-  width: 9.5rem;
-  height: 3.4rem;
+  width: 95px;
+  height: 34px;
   align-items: center;
   justify-content: center;
   color: #333;
-  font-size: 1.4rem;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
 `;
