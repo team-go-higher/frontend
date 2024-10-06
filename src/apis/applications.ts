@@ -1,29 +1,11 @@
 import apiService from 'apis';
-import { IApplicationSpecific } from 'types/interfaces/Application';
+import {
+  ApplicationProcess,
+  ApplicationSort,
+  GetApplicationsRes,
+  IApplicationSpecific,
+} from 'types/interfaces/Application';
 import { objectToParams } from 'utils/params';
-
-export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-export interface ApplicationStatusCardData {
-  applicationId: number;
-  companyName: string;
-  position: string;
-  specificPosition: string;
-  isCompleted: boolean;
-  process: {
-    id: number;
-    type: ApplicationProcessType;
-    description: string;
-    schedule: string;
-  };
-}
-
-interface GetApplicationsRes {
-  hasNext: boolean;
-  content: ApplicationStatusCardData[];
-}
-
-export type ApplicationSort = 'processType' | 'reverseProcessType' | 'closing' | null;
-export type ApplicationProcess = ApplicationProcessType[] | null;
 
 export const getApplications = async (
   pageNumber: number,

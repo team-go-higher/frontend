@@ -9,16 +9,16 @@ import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatu
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
-import {
-  ApplicationProcess,
-  ApplicationSort,
-  ApplicationStatusCardData,
-  getApplications,
-} from 'apis/applications';
+import { getApplications } from 'apis/applications';
 import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 import FilterModal from 'components/applicationStatus/FilterModal';
 import { useSearchParams } from 'react-router-dom';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
+import {
+  ApplicationProcess,
+  ApplicationSort,
+  ApplicationStatusCardData,
+} from 'types/interfaces/Application';
 
 const ApplicationStatus = () => {
   const [searchValue, setSearhValue] = useState('');

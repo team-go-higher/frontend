@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import Modal, { Styles } from 'react-modal';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { ApplicationProcess, ApplicationProcessType, ApplicationSort } from 'apis/applications';
 import { useSearchParams } from 'react-router-dom';
+import {
+  ApplicationProcess,
+  ApplicationProcessType,
+  ApplicationSort,
+} from 'types/interfaces/Application';
 
 interface FilterModalProp {
   isOpen: boolean;

@@ -2,10 +2,10 @@ import { ToggleContainer, UtilContainer, Wrapper } from './ApplicationStatusStyl
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import { format } from 'date-fns';
 import { Label } from 'components/default/label/Label';
-import { ApplicationStatusCardData, deleteApplication } from 'apis/applications';
 import { useNavigate } from 'react-router-dom';
 import useMutateApplication from 'hooks/application/useMutateApplication';
 import React from 'react';
+import { ApplicationStatusCardData } from 'types/interfaces/Application';
 
 interface ApplicationStatusCardProps {
   data: ApplicationStatusCardData;

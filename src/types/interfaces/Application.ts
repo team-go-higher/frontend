@@ -26,3 +26,28 @@ export interface IApplicationSpecific {
   currentProcessOrder?: number;
   url?: string;
 }
+
+export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+
+export interface ApplicationStatusCardData {
+  applicationId: number;
+  companyName: string;
+  position: string;
+  specificPosition: string;
+  isCompleted: boolean;
+  process: {
+    id: number;
+    type: ApplicationProcessType;
+    description: string;
+    schedule: string;
+  };
+}
+
+export interface GetApplicationsRes {
+  hasNext: boolean;
+  content: ApplicationStatusCardData[];
+}
+
+export type ApplicationSort = 'processType' | 'reverseProcessType' | 'closing' | null;
+
+export type ApplicationProcess = ApplicationProcessType[] | null;
