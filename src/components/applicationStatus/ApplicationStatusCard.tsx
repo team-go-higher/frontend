@@ -47,7 +47,7 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
           onClick={e => {
             e.stopPropagation();
             applicationFinishedMutation.mutate({
-              applicationId: data.applicationId,
+              applicationId,
               isCompleted: !isCompleted,
             });
           }}>
@@ -60,7 +60,7 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
           alt='closeIcon'
           onClick={e => {
             e.stopPropagation();
-            deleteApplicationMutation.mutate(data.applicationId);
+            deleteApplicationMutation.mutate(applicationId);
           }}
         />
       </UtilContainer>
