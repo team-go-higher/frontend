@@ -17,7 +17,7 @@ const ApplicationLabel = ({ label, isRequired = false }: ApplicationLabelProps) 
 export default ApplicationLabel;
 
 const LabelContainer = styled.div`
-  width: 130px;
+  width: 100px;
   flex-shrink: 0;
   color: rgb(var(--inputBorder));
   font-size: 1.1rem;

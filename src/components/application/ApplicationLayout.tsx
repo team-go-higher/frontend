@@ -114,7 +114,7 @@ const ApplicationLayout = ({
 
   return (
     <S.Wrapper>
-      <div className='title'>내 지원서</div>
+      <S.ApplicationTitle>내 지원서</S.ApplicationTitle>
       <S.ContentContainer onSubmit={handleSubmit(onSubmit)}>
         <S.RowContainer>
           <ApplicationLabel label='회사명' isRequired={true} />

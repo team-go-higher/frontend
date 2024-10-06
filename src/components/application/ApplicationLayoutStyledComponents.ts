@@ -5,13 +5,16 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 5.4rem 11rem;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+`;
 
-  .title {
-    color: rgb(var(--title));
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 700;
-  }
+export const ApplicationTitle = styled.h1`
+  color: rgb(var(--title));
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
 `;
 
 export const ContentContainer = styled.form`
@@ -19,7 +22,7 @@ export const ContentContainer = styled.form`
   display: flex;
   flex-direction: column;
   margin: 3.3rem 0 5rem;
-  gap: 2.7rem;
+  gap: 1.5rem;
 
   .btnContainer {
     display: flex;
@@ -34,8 +37,6 @@ export const RowContainer = styled.div<{ isProcessRow?: boolean }>`
   align-items: ${props => (props.isProcessRow ? 'flex-start' : 'center')};
 
   & > :first-child {
-    width: 130px;
-    flex-shrink: 0;
     margin-top: ${props => (props.isProcessRow ? '13px' : '0')};
   }
 
@@ -47,5 +48,5 @@ export const RowContainer = styled.div<{ isProcessRow?: boolean }>`
 export const RadioInputWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 1rem;
 `;
