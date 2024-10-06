@@ -154,7 +154,7 @@ const ProcessRowContainer = styled.div`
 `;
 
 const LabelContainer = styled.div`
-  width: 140px !important;
+  width: 140px;
   line-height: 40px;
 `;
 

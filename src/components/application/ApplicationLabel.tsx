@@ -18,6 +18,7 @@ export default ApplicationLabel;
 
 const LabelContainer = styled.div`
   width: 130px;
+  flex-shrink: 0;
   color: rgb(var(--inputBorder));
   font-size: 1.1rem;
   font-weight: 500;
