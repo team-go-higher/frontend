@@ -3,6 +3,7 @@ import {
   deleteApplication,
   editApplicationSpecific,
   createNewApplicationSpecific,
+  patchApplicationsFinished,
 } from 'apis/applications';
 import { queryKeys } from 'apis/queryKeys';
 import { useNavigate } from 'react-router-dom';
@@ -45,10 +46,18 @@ const useMutateApplication = () => {
     onError: error => onError(error),
   });
 
+  const applicationFinishedMutation = useMutation({
+    mutationFn: ({ applicationId, isCompleted }: { applicationId: number; isCompleted: boolean }) =>
+      patchApplicationsFinished(applicationId, isCompleted),
+    onSuccess,
+    onError: error => onError(error),
+  });
+
   return {
     registerApplicationMutation,
     deleteApplicationMutation,
     editApplicationMutation,
+    applicationFinishedMutation,
   };
 };
 
