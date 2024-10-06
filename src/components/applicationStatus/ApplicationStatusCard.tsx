@@ -9,14 +9,16 @@ import {
 } from 'apis/applications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
+import { useNavigate } from 'react-router-dom';
 
 interface ApplicationStatusCardProps {
   data: ApplicationStatusCardData;
 }
 
 const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { companyName, position, specificPosition, isCompleted } = data;
+  const { applicationId, companyName, position, specificPosition, isCompleted } = data;
   const { type, schedule } = data.process;
 
   const inValidateApplications = () => {
@@ -32,11 +34,12 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
     mutationFn: () => deleteApplication(data.applicationId),
     onSuccess: () => {
       inValidateApplications();
+      navigate('/applicationStatus');
     },
   });
 
   return (
-    <Wrapper $isView={isCompleted}>
+    <Wrapper $isView={isCompleted} onClick={() => navigate(`/application/detail/${applicationId}`)}>
       <div className='labelContainer'>
         <Label process={type} />
       </div>
