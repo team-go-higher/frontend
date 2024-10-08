@@ -7,11 +7,14 @@ export const HeaderContainer = styled.div`
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid #d6d6d6;
+
   .headerContainer {
     display: flex;
     align-items: center;
     width: 996px;
     justify-content: space-between;
+    position: relative;
+
     .headerLogo {
       color: #333;
       font-size: 18px;
@@ -28,6 +31,7 @@ export const HeaderMenuContainer = styled.div`
   display: flex;
   gap: 50px;
   align-items: center;
+
   .menuItem {
     cursor: pointer;
     text-align: center;
