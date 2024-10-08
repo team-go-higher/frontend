@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import Modal, { Styles } from 'react-modal';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { ApplicationProcess, ApplicationProcessType, ApplicationSort } from 'apis/applications';
 import { useSearchParams } from 'react-router-dom';
+import {
+  ApplicationProcess,
+  ApplicationProcessType,
+  ApplicationSort,
+} from 'types/interfaces/Application';
 
 interface FilterModalProp {
   isOpen: boolean;
@@ -169,7 +173,9 @@ const FilterModal = ({ isOpen, closeModal, setSort, setProcess, setComplete }: F
 
           <FilterContentContainer>
             <div className='contentContainer'>
-              <div className='contentTitle'>전형별</div>
+              <div className='contentTitle'>
+                전형별 <span>복수선택 가능</span>
+              </div>
 
               <div className='contentItemContainer'>
                 {FILTER_OPTIONS.process.map((e, idx) => (
@@ -336,6 +342,13 @@ const FilterContentContainer = styled.div`
       font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.64px;
+
+      span {
+        color: #ff5555;
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.2rem;
+      }
     }
 
     & > .contentItemContainer {
@@ -347,8 +360,8 @@ const FilterContentContainer = styled.div`
 
 const FilterItemContainer = styled.div<{ $isActive: boolean }>`
   display: flex;
+  border: ${({ $isActive }) => ($isActive ? '2px solid #3253FF' : '1px solid #676767')};
   border-radius: 30px;
-  border: ${({ $isActive }) => ($isActive ? '1.5px solid #3253FF' : '0.7px solid #676767')};
   background: ${({ $isActive }) => ($isActive ? 'rgba(255, 255, 255, 0.00)' : '#fff')};
 
   width: 95px;

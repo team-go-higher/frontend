@@ -180,6 +180,9 @@ export const Circle = styled.div`
 `;
 
 export const EventContainer = styled.div<EventProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   position: relative;
   box-sizing: border-box;
   width: 222px;

@@ -2,41 +2,28 @@ import { ToggleContainer, UtilContainer, Wrapper } from './ApplicationStatusStyl
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import { format } from 'date-fns';
 import { Label } from 'components/default/label/Label';
-import {
-  ApplicationStatusCardData,
-  deleteApplication,
-  patchApplicationsFinished,
-} from 'apis/applications';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from 'apis/queryKeys';
+import { useNavigate } from 'react-router-dom';
+import useMutateApplication from 'hooks/application/useMutateApplication';
+import React from 'react';
+import { ApplicationStatusCardData } from 'types/interfaces/Application';
 
 interface ApplicationStatusCardProps {
   data: ApplicationStatusCardData;
 }
 
 const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
-  const queryClient = useQueryClient();
-  const { companyName, position, specificPosition, isCompleted } = data;
+  const navigate = useNavigate();
+  const { deleteApplicationMutation, applicationFinishedMutation } = useMutateApplication();
+  const { applicationId, companyName, position, specificPosition, isCompleted } = data;
   const { type, schedule } = data.process;
 
-  const inValidateApplications = () => {
-    queryClient.invalidateQueries({ queryKey: [queryKeys.APPLICATIONS] });
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    navigate(`/application/detail/${applicationId}`);
   };
 
-  const applicationFinishedMutation = useMutation({
-    mutationFn: () => patchApplicationsFinished(data.applicationId, !isCompleted),
-    onSuccess: inValidateApplications,
-  });
-
-  const deleteApplicationMutation = useMutation({
-    mutationFn: () => deleteApplication(data.applicationId),
-    onSuccess: () => {
-      inValidateApplications();
-    },
-  });
-
   return (
-    <Wrapper $isView={isCompleted}>
+    <Wrapper $isView={isCompleted} onClick={handleCardClick}>
       <div className='labelContainer'>
         <Label process={type} />
       </div>
@@ -55,14 +42,26 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
             ? format(new Date(schedule), 'yyyy년 M월 dd일 HH:mm')
             : '전형일을 기다리고 있어요'}
         </div>
-        <ToggleContainer onClick={() => applicationFinishedMutation.mutate()}>
+
+        <ToggleContainer
+          onClick={e => {
+            e.stopPropagation();
+            applicationFinishedMutation.mutate({
+              applicationId,
+              isCompleted: !isCompleted,
+            });
+          }}>
           <div className={`toggleCircle ${!isCompleted ? '' : 'false'}`} />
         </ToggleContainer>
+
         <img
           src={CloseIcon}
           className='closeIcon'
           alt='closeIcon'
-          onClick={() => deleteApplicationMutation.mutate()}
+          onClick={e => {
+            e.stopPropagation();
+            deleteApplicationMutation.mutate(applicationId);
+          }}
         />
       </UtilContainer>
     </Wrapper>

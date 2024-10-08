@@ -6,8 +6,8 @@ const ApplicationEdit = React.lazy(() => import('./ApplicationEdit'));
 const ApplicationAdd = React.lazy(() => import('./ApplicationAdd'));
 
 const routes = [
-  { path: '/detail', element: <ApplicationDetail /> },
-  { path: '/edit', element: <ApplicationEdit /> },
+  { path: '/detail/:applicationId', element: <ApplicationDetail /> },
+  { path: '/edit/:applicationId', element: <ApplicationEdit /> },
   { path: '/add', element: <ApplicationAdd /> },
 ];
 

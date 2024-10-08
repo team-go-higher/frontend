@@ -1,18 +1,10 @@
 import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
-import {
-  UseControllerProps,
-  useController,
-  Control,
-  FieldPath,
-  FieldValues,
-} from 'react-hook-form';
+import { UseControllerProps, useController } from 'react-hook-form';
 
 interface TextareaProps extends UseControllerProps {
   error: boolean;
   label: string;
-  control: Control<FieldValues>;
-  name: FieldPath<FieldValues>;
   isRequired: boolean;
 }
 
@@ -65,6 +57,7 @@ export const Textarea = ({
       {...field}
       error={error}
       placeholder={placeholder}
+      defaultValue={defaultValue}
       {...rest}
     />
   );

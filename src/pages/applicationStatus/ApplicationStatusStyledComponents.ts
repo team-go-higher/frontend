@@ -15,7 +15,7 @@ export const ApplicationStatusContainer = styled.div`
   .title {
     color: #333;
     text-align: center;
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 41px;
   }

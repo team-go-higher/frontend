@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
 import { formatProcessToKor } from 'utils/process';
 import { useDropdown } from 'hooks/feature/useDropDown';
 import CheckIcon from 'assets/default/check_icon.svg';
@@ -12,6 +12,7 @@ interface DropdownProps {
   options: string[] | null;
   selectedOptions: { process: ProcessType; option: string }[];
   onSelect: (process: ProcessType, option: string) => void;
+  disabled: boolean;
 }
 
 export const TYPE_PROCESS = {
@@ -29,16 +30,21 @@ const DropdownContainer = styled.div`
 const DropdownButton = styled.button<{
   isOpen?: boolean;
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  disabled?: boolean;
 }>`
   position: relative;
   padding: 3px 10px;
   margin-bottom: 10px;
   border: 1px solid ${props => props.process && TYPE_PROCESS[props.process]};
-  border-radius: 12.5px;
+  border-radius: 15px;
   background-color: ${props =>
-    props.isOpen ? props.process && TYPE_PROCESS[props.process] : 'rgb(var(--white));'};
+    props.isOpen || props.disabled
+      ? props.process && TYPE_PROCESS[props.process]
+      : 'rgb(var(--white));'};
   color: ${props =>
-    props.isOpen ? 'rgb(var(--white));' : props.process && TYPE_PROCESS[props.process]};
+    props.isOpen || props.disabled
+      ? 'rgb(var(--white));'
+      : props.process && TYPE_PROCESS[props.process]};
   font-size: 14px;
   cursor: pointer;
   z-index: ${props => (props.isOpen ? '3' : '1')};
@@ -122,7 +128,13 @@ const CheckboxLabel = styled.label<{
   }
 `;
 
-export const DropDown = ({ process, options, selectedOptions, onSelect }: DropdownProps) => {
+export const DropDown = ({
+  process,
+  options,
+  selectedOptions,
+  onSelect,
+  disabled,
+}: DropdownProps) => {
   const { isOpen, toggleDropdown, dropdownRef } = useDropdown();
 
   const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -136,9 +148,15 @@ export const DropDown = ({ process, options, selectedOptions, onSelect }: Dropdo
 
   return (
     <DropdownContainer ref={dropdownRef}>
-      <DropdownButton isOpen={isOpen} process={process} onClick={handleButtonClick}>
+      <DropdownButton
+        isOpen={isOpen}
+        process={process}
+        onClick={handleButtonClick}
+        disabled={disabled}>
         <div className='process-text'>{process && formatProcessToKor(process)}</div>
-        <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : process && TYPE_PROCESS[process]} />
+        {!disabled && (
+          <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : process && TYPE_PROCESS[process]} />
+        )}
       </DropdownButton>
       {options && (
         <DropdownContent isOpen={isOpen} process={process}>

@@ -1,4 +1,5 @@
 import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
+import { useEffect } from 'react';
 import * as S from './ApplicationLayoutStyledComponents';
 import ApplicationInput from './ApplicationInput';
 import ApplicationLabel from './ApplicationLabel';
@@ -6,56 +7,114 @@ import ApplicationProcess from './ApplicationProcess';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/default/button/Button';
 import { RadioInput } from 'components/default/input/RadioInput';
+import useMutateApplication from 'hooks/application/useMutateApplication';
+import { IApplicationSpecific } from 'types/interfaces/Application';
 
 interface ApplicationLayoutProps {
   applicationType: 'edit' | 'default' | 'add';
-  data?: any; //TODO api 연결 이후 응답 데이터 applicationType으로 수정 필요
+  applicationId?: number;
+  data?: IApplicationSpecific;
 }
 
-const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProps) => {
+const ApplicationLayout = ({
+  applicationType,
+  applicationId,
+  data = {},
+}: ApplicationLayoutProps) => {
   const navigate = useNavigate();
+  const { registerApplicationMutation, deleteApplicationMutation, editApplicationMutation } =
+    useMutateApplication();
 
   const methods = useForm<FieldValues>({
     mode: 'onChange',
     defaultValues: {
-      companyName: data.companyName || '',
-      team: data.team || '',
-      position: data.position || '',
-      specificPosition: data.specificPosition || '',
-      processes: data.processes || [],
-      jobDescription: data.jobDescription || '',
-      requiredCapability: data.requiredCapability || '',
-      url: data.url || '',
-      location: data.location || '',
-      preferredQualification: data.preferredQualification || '',
-      contact: data.contact || '',
-      workType: data.workType || '',
-      employmentType: data.employmentType || '',
-      careerRequirement: data.careerRequirement || '',
+      companyName: '',
+      team: '',
+      location: '',
+      contact: '',
+      position: '',
+      specificPosition: '',
+      jobDescription: '',
+      workType: '',
+      employmentType: '',
+      careerRequirement: '',
+      requiredCapability: '',
+      preferredQualification: '',
+      processes: [],
+      url: '',
     },
   });
 
-  const { control, handleSubmit } = methods;
-
+  const { control, handleSubmit, reset } = methods;
   const { fields, append, update, remove } = useFieldArray({
     control,
     name: 'processes',
   });
 
-  // 작성완료 버튼 클릭 시 동작, data를 통해서 입력값 확인 가능
+  useEffect(() => {
+    if (data) {
+      reset({
+        companyName: data.companyName || '',
+        team: data.team || '',
+        location: data.location || '',
+        contact: data.contact || '',
+        position: data.position || '',
+        specificPosition: data.specificPosition || '',
+        jobDescription: data.jobDescription || '',
+        workType: data.workType || '',
+        employmentType: data.employmentType || '',
+        careerRequirement: data.careerRequirement || '',
+        requiredCapability: data.requiredCapability || '',
+        preferredQualification: data.preferredQualification || '',
+        processes: data.processes || [],
+        url: data.url || '',
+      });
+    }
+  }, [data, reset]);
+
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    if (applicationType === 'edit') {
-      //   TODO 수정 API 연결
-      return;
+    // id 제거, 시간 포맷 `년-월-일T시:분`으로
+    const newApplicationData = {
+      ...data,
+      processes: data.processes.map(({ id, schedule, ...rest }: any) => ({
+        ...rest,
+        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : null,
+      })),
+    };
+
+    // 등록했을 때
+    if (applicationType === 'add') {
+      registerApplicationMutation.mutate(newApplicationData, {
+        onSuccess: () => navigate('/applicationStatus'),
+      });
     }
 
-    // TODO 등록 API 연결
+    // 수정했을 때
+    if (applicationType === 'edit' && applicationId !== undefined) {
+      editApplicationMutation.mutate(
+        {
+          applicationId,
+          newApplicationData,
+        },
+        {
+          onSuccess: () => navigate(`/application/detail/${applicationId}`),
+        },
+      );
+    }
+  };
+
+  // 삭제했을 때
+  const onClickDeleteButton = () => {
+    if (applicationId !== undefined) {
+      deleteApplicationMutation.mutate(applicationId, {
+        onSuccess: () => navigate('/applicationStatus'),
+      });
+    }
   };
 
   return (
     <S.Wrapper>
-      <div className='title'>내 지원서</div>
+      <S.ApplicationTitle>내 지원서</S.ApplicationTitle>
       <S.ContentContainer onSubmit={handleSubmit(onSubmit)}>
         <S.RowContainer>
           <ApplicationLabel label='회사명' isRequired={true} />
@@ -65,9 +124,10 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             name='companyName'
             control={control}
             isRequired={true}
-            value={data.companyName}
+            value={data?.companyName || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='부서' />
           <ApplicationInput
@@ -75,9 +135,10 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             label='부서'
             name='team'
             control={control}
-            value={data.team}
+            value={data?.team || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
           <ApplicationInput
@@ -86,9 +147,10 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             name='position'
             control={control}
             isRequired={true}
-            value={data.position}
+            value={data?.position || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='세부직무' />
           <ApplicationInput
@@ -96,10 +158,11 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             label='세부직무'
             name='specificPosition'
             control={control}
-            value={data.specificPosition}
+            value={data?.specificPosition || ''}
           />
         </S.RowContainer>
-        <S.RowContainer>
+
+        <S.RowContainer isProcessRow>
           <ApplicationLabel label='전형 단계' />
           <ApplicationProcess
             fields={fields}
@@ -109,18 +172,19 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             applicationType={applicationType}
           />
         </S.RowContainer>
+
         <S.RowContainer>
-          <ApplicationLabel label='주요 업무' isRequired={true} />
+          <ApplicationLabel label='주요 업무' />
           <ApplicationInput
             applicationType={applicationType}
             label='주요 업무'
             name='jobDescription'
             inputType='textarea'
             control={control}
-            isRequired={true}
-            value={data.jobDescription}
+            value={data?.jobDescription || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='필수 역량' />
           <ApplicationInput
@@ -129,66 +193,41 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             inputType='textarea'
             name='requiredCapability'
             control={control}
-            value={data.requiredCapability}
+            value={data?.requiredCapability || ''}
           />
         </S.RowContainer>
+
         <S.RowContainer>
-          <ApplicationLabel label='공고 URL' isRequired={true} />
+          <ApplicationLabel label='공고 URL' />
           <ApplicationInput
             applicationType={applicationType}
             label='공고 URL'
             name='url'
             control={control}
-            isRequired={true}
-            value={data.url}
+            value={data?.url || ''}
           />
         </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='회사 위치' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='회사 위치'
-            name='location'
-            control={control}
-            value={data.location}
-          />
-        </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='우대 사항' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='우대 사항'
-            inputType='textarea'
-            name='preferredQualification'
-            control={control}
-            value={data.preferredQualification}
-          />
-        </S.RowContainer>
-        <S.RowContainer>
-          <ApplicationLabel label='채용 담당' />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='채용 담당'
-            name='contact'
-            control={control}
-            value={data.contact}
-          />
-        </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='고용 형태' isRequired={true} />
           <S.RadioInputWrapper>
-            {['정규직', '계약직', '파견직', '인턴'].map(option => (
+            {[
+              { label: '정규직', value: 'PERMANENT' },
+              { label: '계약직', value: 'TEMPORARY' },
+              { label: '인턴', value: 'INTERN' },
+            ].map(option => (
               <RadioInput
-                key={option}
+                key={option.label}
                 name='employmentType'
-                label={option}
+                label={option.label}
                 control={control}
-                radioValue={option}
+                radioValue={option.value}
                 readOnly={applicationType === 'default'}
               />
             ))}
           </S.RadioInputWrapper>
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='경력 조건' />
           <S.RadioInputWrapper>
@@ -204,6 +243,7 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
             ))}
           </S.RadioInputWrapper>
         </S.RowContainer>
+
         <S.RowContainer>
           <ApplicationLabel label='근무 형태' />
           <S.RadioInputWrapper>
@@ -224,14 +264,16 @@ const ApplicationLayout = ({ applicationType, data = [] }: ApplicationLayoutProp
         <div className='btnContainer'>
           {applicationType === 'default' ? (
             <>
-              <Button variant='secondary'>삭제하기</Button>
-              <Button onClick={() => navigate('/application/edit')}>수정하기</Button>
+              <Button variant='secondary' type='button' onClick={onClickDeleteButton}>
+                삭제하기
+              </Button>
+              <Button type='button' onClick={() => navigate(`/application/edit/${applicationId}`)}>
+                수정하기
+              </Button>
             </>
           ) : (
             <>
-              <Button type='submit' onClick={() => navigate('/application/detail')}>
-                작성완료
-              </Button>
+              <Button>작성완료</Button>
             </>
           )}
         </div>

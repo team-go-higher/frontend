@@ -6,6 +6,7 @@ export const Wrapper = styled.div<{ $isView: boolean }>`
   border-top: 1px solid #d6d6d6;
   padding: 26px 0;
   align-items: center;
+  cursor: pointer;
 
   .labelContainer {
     min-width: 16%;
@@ -46,6 +47,10 @@ export const Wrapper = styled.div<{ $isView: boolean }>`
   .deadline,
   .contentBox > .content {
     color: ${({ $isView }) => $isView && '#DCDCDC'};
+  }
+
+  &:hover {
+    background-color: #f3f3f3;
   }
 `;
 

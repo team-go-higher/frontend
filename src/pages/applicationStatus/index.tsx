@@ -9,19 +9,19 @@ import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatu
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
-import {
-  ApplicationProcess,
-  ApplicationSort,
-  ApplicationStatusCardData,
-  getApplications,
-} from 'apis/applications';
+import { getApplications } from 'apis/applications';
 import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 import FilterModal from 'components/applicationStatus/FilterModal';
 import { useSearchParams } from 'react-router-dom';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
+import {
+  ApplicationProcess,
+  ApplicationSort,
+  ApplicationStatusCardData,
+} from 'types/interfaces/Application';
 
 const ApplicationStatus = () => {
-  const [searchValue, setSearhValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [companyName, setCompanyName] = useState('');
 
   const [searchParams] = useSearchParams();
@@ -88,7 +88,7 @@ const ApplicationStatus = () => {
             <input
               className='searchInput'
               value={searchValue}
-              onChange={e => setSearhValue(e.target.value)}
+              onChange={e => setSearchValue(e.target.value)}
               placeholder='회사명을 입력하세요'
               onKeyDown={activeEnter}
             />
@@ -97,7 +97,7 @@ const ApplicationStatus = () => {
               alt='closeIcon'
               className='closeIcon'
               onClick={() => {
-                setSearhValue('');
+                setSearchValue('');
                 setCompanyName('');
               }}
             />
