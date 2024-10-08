@@ -3,11 +3,13 @@ import AlertIcon from 'assets/default/icon_profile.svg';
 import { useMutation } from '@tanstack/react-query';
 import { postLogout } from 'apis/auth';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 
-const ProfileModal = () => {
+const ProfileModal = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const userInfo = JSON.parse(localStorage.getItem('userPositionInfo') || '');
+  const userInfo = JSON.parse(localStorage.getItem('userPositionInfo') || '{}');
 
   const handleLogoutMutation = useMutation({
     mutationFn: () => postLogout(),
@@ -19,8 +21,18 @@ const ProfileModal = () => {
     onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
   });
 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        closeModal();
+      }
+    };
+    window.addEventListener('mousedown', handleClick);
+    return () => window.removeEventListener('mousedown', handleClick);
+  }, [modalRef]);
+
   return (
-    <ProfileContainer>
+    <ProfileContainer ref={modalRef}>
       <ProfileBoxContainer>
         <div className='profile'>고하</div>
         <div className='infoContainer'>
@@ -30,6 +42,7 @@ const ProfileModal = () => {
       </ProfileBoxContainer>
       <LogoutContainer
         onClick={() => {
+          closeModal();
           handleLogoutMutation.mutate();
         }}>
         <img src={AlertIcon} alt='alertIcon' />

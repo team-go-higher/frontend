@@ -79,7 +79,7 @@ const Header = () => {
             </div>
           </HeaderPersonalContainer>
         </div>
-        {isProfileBox && <ProfileModal />}
+        {isProfileBox && <ProfileModal closeModal={() => setIsProfileBox(false)} />}
       </div>
     </HeaderContainer>
   );
