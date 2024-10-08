@@ -9,6 +9,7 @@ import ArrowDownImg from 'assets/header/header_arrow_down.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LogoIcon from 'assets/default/icon_logo.svg';
 import ProfileModal from './ProfileModal';
+import { useDropdown } from 'hooks/feature/useDropDown';
 
 const MENU_ITEM_ARR = ['지원 현황 모아보기', '지원서 추가'];
 
@@ -16,7 +17,8 @@ const Header = () => {
   const { pathname } = useLocation();
   const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
-  const [isProfileBox, setIsProfileBox] = useState(false);
+
+  const { isOpen, toggleDropdown, dropdownRef } = useDropdown();
 
   const handlePage = (item: string) => {
     if (item === '지원서 추가') {
@@ -48,7 +50,7 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <div className='headerContainer'>
+      <div className='headerContainer' ref={dropdownRef}>
         <img
           className='headerLogo'
           src={LogoIcon}
@@ -72,14 +74,14 @@ const Header = () => {
           </HeaderMenuContainer>
           <HeaderPersonalContainer>
             <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
-            <div className='personalBox' onClick={() => setIsProfileBox(true)}>
+            <div className='personalBox' onClick={toggleDropdown}>
               <div className='profile'>고하</div>
               <div className='profileName'>사용자</div>
               <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
             </div>
           </HeaderPersonalContainer>
         </div>
-        {isProfileBox && <ProfileModal closeModal={() => setIsProfileBox(false)} />}
+        {isOpen && <ProfileModal closeModal={toggleDropdown} />}
       </div>
     </HeaderContainer>
   );

@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 
 export const useDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleOutsideClick = (event: MouseEvent) => {
     const targetNode = event.target as Node;
-    if (dropdownRef.current && !isDescendant(dropdownRef.current, targetNode)) {
+    if (dropdownRef.current && !dropdownRef.current.contains(targetNode)) {
       setIsOpen(false);
     }
   };
@@ -23,15 +23,4 @@ export const useDropdown = () => {
   }, []);
 
   return { isOpen, toggleDropdown, dropdownRef };
-};
-
-const isDescendant = (parent: Node, child: Node | null): boolean => {
-  let node = child;
-  while (node !== null) {
-    if (node === parent) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
 };
