@@ -1,7 +1,22 @@
 import styled from 'styled-components';
 import AlertIcon from 'assets/default/icon_profile.svg';
+import { useMutation } from '@tanstack/react-query';
+import { postLogout } from 'apis/auth';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileModal = () => {
+  const navigate = useNavigate();
+
+  const handleLogoutMutation = useMutation({
+    mutationFn: () => postLogout(),
+    onSuccess: () => {
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('userPositionInfo');
+      navigate('/signin');
+    },
+    onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
+  });
+
   return (
     <ProfileContainer>
       <ProfileBoxContainer>
@@ -11,7 +26,10 @@ const ProfileModal = () => {
           <div className='email'>ghkim@go-higher.com</div>
         </div>
       </ProfileBoxContainer>
-      <LogoutContainer>
+      <LogoutContainer
+        onClick={() => {
+          handleLogoutMutation.mutate();
+        }}>
         <img src={AlertIcon} alt='alertIcon' />
         <div className='logout'>로그아웃</div>
       </LogoutContainer>
