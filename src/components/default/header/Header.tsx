@@ -16,10 +16,8 @@ const Header = () => {
   const { pathname } = useLocation();
   const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
-
   const [isProfileBox, setIsProfileBox] = useState(false);
 
-  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   const handlePage = (item: string) => {
     if (item === '지원서 추가') {
       setIsSelect(item);
@@ -33,7 +31,6 @@ const Header = () => {
     }
   };
 
-  //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   useEffect(() => {
     if (pathname === '/') {
       setIsSelect('');

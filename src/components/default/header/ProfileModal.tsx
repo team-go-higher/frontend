@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 const ProfileModal = () => {
   const navigate = useNavigate();
 
+  const userInfo = JSON.parse(localStorage.getItem('userPositionInfo') || '');
+
   const handleLogoutMutation = useMutation({
     mutationFn: () => postLogout(),
     onSuccess: () => {
@@ -23,7 +25,7 @@ const ProfileModal = () => {
         <div className='profile'>고하</div>
         <div className='infoContainer'>
           <div className='name'>김고하</div>
-          <div className='email'>ghkim@go-higher.com</div>
+          <div className='email'>{userInfo?.email || ''}</div>
         </div>
       </ProfileBoxContainer>
       <LogoutContainer
