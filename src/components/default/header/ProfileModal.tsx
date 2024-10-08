@@ -1,0 +1,94 @@
+import styled from 'styled-components';
+import AlertIcon from 'assets/default/icon_profile.svg';
+
+const ProfileModal = () => {
+  return (
+    <ProfileContainer>
+      <ProfileBoxContainer>
+        <div className='profile'>고하</div>
+        <div className='infoContainer'>
+          <div className='name'>김고하</div>
+          <div className='email'>ghkim@go-higher.com</div>
+        </div>
+      </ProfileBoxContainer>
+      <LogoutContainer>
+        <img src={AlertIcon} alt='alertIcon' />
+        <div className='logout'>로그아웃</div>
+      </LogoutContainer>
+    </ProfileContainer>
+  );
+};
+
+export default ProfileModal;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 19px;
+  background: #fff;
+  box-shadow: 0px 0px 5px 0px rgba(50, 83, 255, 0.3);
+  position: absolute;
+
+  min-height: 130px;
+  width: 259px;
+
+  top: 50px;
+  z-index: 10;
+  right: 0;
+`;
+
+const ProfileBoxContainer = styled.div`
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 19px 24px 17px 26px;
+  border-bottom: 1px solid #969696;
+
+  & > .profile {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #9570e2;
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  & > .infoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    & > .name {
+      color: #333;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    & > .email {
+      color: #969696;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.28px;
+    }
+  }
+`;
+
+const LogoutContainer = styled.div`
+  display: flex;
+  gap: 7px;
+  padding: 8px 24px 10px 26px;
+  cursor: pointer;
+  align-items: center;
+
+  & > .logout {
+    color: #555;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+  }
+`;

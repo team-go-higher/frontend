@@ -8,6 +8,7 @@ import AlarmImg from 'assets/header/header_alarm.svg';
 import ArrowDownImg from 'assets/header/header_arrow_down.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LogoIcon from 'assets/default/icon_logo.svg';
+import ProfileModal from './ProfileModal';
 
 const MENU_ITEM_ARR = ['지원 현황 모아보기', '지원서 추가'];
 
@@ -15,6 +16,8 @@ const Header = () => {
   const { pathname } = useLocation();
   const [isSelect, setIsSelect] = useState('');
   const navigate = useNavigate();
+
+  const [isProfileBox, setIsProfileBox] = useState(false);
 
   //TODO 다른 페이지 개발 시 이동 처리 추가 필요
   const handlePage = (item: string) => {
@@ -72,13 +75,14 @@ const Header = () => {
           </HeaderMenuContainer>
           <HeaderPersonalContainer>
             <img src={AlarmImg} className='alarmImg' alt='alarmImg' />
-            <div className='personalBox' onClick={() => navigate('/mypage')}>
+            <div className='personalBox' onClick={() => setIsProfileBox(true)}>
               <div className='profile'>고하</div>
               <div className='profileName'>사용자</div>
               <img className='arrowDown' alt='arrowDownImg' src={ArrowDownImg} />
             </div>
           </HeaderPersonalContainer>
         </div>
+        {isProfileBox && <ProfileModal />}
       </div>
     </HeaderContainer>
   );
