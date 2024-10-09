@@ -52,7 +52,7 @@ const ApplicationLayout = ({
   });
 
   useEffect(() => {
-    if (data) {
+    if (applicationType !== 'add' && data) {
       reset({
         companyName: data.companyName || '',
         team: data.team || '',
@@ -70,7 +70,7 @@ const ApplicationLayout = ({
         url: data.url || '',
       });
     }
-  }, [data, reset]);
+  }, [applicationType, data, reset]);
 
   const onSubmit = (data: FieldValues) => {
     // id 제거, 시간 포맷 `년-월-일T시:분`으로
