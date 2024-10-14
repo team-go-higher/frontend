@@ -105,9 +105,12 @@ const ApplicationProcess = ({
               disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
             />
           </LabelContainer>
-          <CalendarInputContainer process={event.type}>
+          <CalendarInputContainer>
             {fields.map((field: any) => (
-              <div className={`field ${field.isCurrent ? 'isCurrent' : ''}`}>
+              <FieldContainer
+                isCurrent={field.isCurrent}
+                process={event.type}
+                key={field.description}>
                 {field.type === event.type && (
                   <CalendarInputWrapper>
                     <CalendarInput
@@ -126,7 +129,7 @@ const ApplicationProcess = ({
                     />
                   </CalendarInputWrapper>
                 )}
-              </div>
+              </FieldContainer>
             ))}
           </CalendarInputContainer>
         </ProcessRowContainer>
@@ -158,18 +161,16 @@ const LabelContainer = styled.div`
   line-height: 40px;
 `;
 
-const CalendarInputContainer = styled.div<{ process: ProcessType }>`
+const CalendarInputContainer = styled.div`
   width: calc(100% - 140px);
   line-height: 40px;
+`;
 
-  .field {
-    padding: 0 10px;
-  }
-
-  .field.isCurrent {
-    background-color: ${props => props.process && TYPE_PROCESS[props.process]};
-    border-radius: 5px;
-  }
+const FieldContainer = styled.div<{ isCurrent: boolean; process: ProcessType }>`
+  padding: 0 10px;
+  background-color: ${({ isCurrent, process }) =>
+    isCurrent && process ? TYPE_PROCESS[process] : 'transparent'};
+  border-radius: ${({ isCurrent }) => (isCurrent ? '5px' : '0')};
 `;
 
 const CalendarInputWrapper = styled.div`
