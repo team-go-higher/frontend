@@ -4,6 +4,7 @@ import { formatProcessToKor } from 'utils/process';
 import { useDropdown } from 'hooks/feature/useDropDown';
 import CheckIcon from 'assets/default/check_icon.svg';
 import { ReactComponent as SelectArrowIcon } from 'assets/main/main_modal_select_arrow.svg';
+import { TYPE_PROCESS } from 'styles/processColor';
 
 type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 
@@ -14,13 +15,6 @@ interface DropdownProps {
   onSelect: (process: ProcessType, option: string) => void;
   disabled: boolean;
 }
-
-export const TYPE_PROCESS = {
-  DOCUMENT: 'rgb(var(--defaultPink))',
-  TEST: 'rgb(var(--defaultPurple))',
-  INTERVIEW: 'rgb(var(--defaultSkyblue))',
-  COMPLETE: 'rgb(var(--defaultRed))',
-};
 
 const DropdownContainer = styled.div`
   position: relative;

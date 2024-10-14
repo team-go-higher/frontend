@@ -1,19 +1,5 @@
-import styled, { css } from 'styled-components';
-
-export const TYPE_PROCESS = {
-  DOCUMENT: css`
-    color: rgb(var(--defaultPink));
-  `,
-  TEST: css`
-    color: rgb(var(--defaultPurple));
-  `,
-  INTERVIEW: css`
-    color: rgb(var(--defaultSkyblue));
-  `,
-  COMPLETE: css`
-    color: rgb(var(--defaultRed));
-  `,
-};
+import styled from 'styled-components';
+import { TYPE_PROCESS } from 'styles/processColor';
 
 export const StyledCalendarInput = styled.div<{
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
@@ -86,11 +72,11 @@ export const StyledCalendarInput = styled.div<{
     input {
       font-size: 14px;
       font-weight: 500;
-      ${({ process }) => process && TYPE_PROCESS[process]};
+      color: ${({ process }) => process && TYPE_PROCESS[process]};
       &::placeholder {
         font-size: 14px;
         font-weight: 500;
-        ${({ process }) => process && TYPE_PROCESS[process]};
+        color: ${({ process }) => process && TYPE_PROCESS[process]};
       }
       background-color: transparent;
     }
