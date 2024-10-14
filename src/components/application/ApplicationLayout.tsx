@@ -78,7 +78,7 @@ const ApplicationLayout = ({
       ...data,
       processes: data.processes.map(({ id, schedule, ...rest }: any) => ({
         ...rest,
-        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : null,
+        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : '',
       })),
     };
 
@@ -115,7 +115,7 @@ const ApplicationLayout = ({
   return (
     <S.Wrapper>
       <S.ApplicationTitle>내 지원서</S.ApplicationTitle>
-      <S.ContentContainer onSubmit={handleSubmit(onSubmit)}>
+      <S.FormContainer onSubmit={handleSubmit(onSubmit)}>
         <S.RowContainer>
           <ApplicationLabel label='회사명' isRequired={true} />
           <ApplicationInput
@@ -209,7 +209,7 @@ const ApplicationLayout = ({
         </S.RowContainer>
 
         <S.RowContainer>
-          <ApplicationLabel label='고용 형태' isRequired={true} />
+          <ApplicationLabel label='고용 형태' />
           <S.RadioInputWrapper>
             {[
               { label: '정규직', value: 'PERMANENT' },
@@ -273,11 +273,11 @@ const ApplicationLayout = ({
             </>
           ) : (
             <>
-              <Button>작성완료</Button>
+              <Button type='submit'>작성완료</Button>
             </>
           )}
         </div>
-      </S.ContentContainer>
+      </S.FormContainer>
     </S.Wrapper>
   );
 };

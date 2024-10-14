@@ -4,7 +4,6 @@ import { formatProcessToKor } from 'utils/process';
 
 interface LabelProps {
   process?: processType;
-  isPast?: boolean;
 }
 
 const StyledLabel = styled.label<LabelProps>`
@@ -14,17 +13,12 @@ const StyledLabel = styled.label<LabelProps>`
   outline: none;
   border: 1px solid ${props => props.process && `rgb(var(--${props.process}))`};
   border-radius: 12.5px;
-  background-color: ${props =>
-    props.isPast ? props.process && `rgb(var(--${props.process}))` : 'rgb(var(--white));'};
-  color: ${props => (props.isPast ? 'rgb(var(--white));' : `rgb(var(--${props.process}))`)};
+  background-color: ${props => props.process && `rgb(var(--${props.process}))`};
+  color: rgb(var(--white));
   font-size: 14px;
   cursor: default;
 `;
 
-export const Label = ({ process, isPast = true }: LabelProps) => {
-  return (
-    <StyledLabel process={process} isPast={isPast}>
-      {process && formatProcessToKor(process)}
-    </StyledLabel>
-  );
+export const Label = ({ process }: LabelProps) => {
+  return <StyledLabel process={process}>{process && formatProcessToKor(process)}</StyledLabel>;
 };
