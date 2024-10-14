@@ -9,6 +9,7 @@ import { Button } from 'components/default/button/Button';
 import { RadioInput } from 'components/default/input/RadioInput';
 import useMutateApplication from 'hooks/application/useMutateApplication';
 import { IApplicationSpecific } from 'types/interfaces/Application';
+import ApplicationDropdown from './ApplicationDropdown';
 
 interface ApplicationLayoutProps {
   applicationType: 'edit' | 'default' | 'add';
@@ -22,6 +23,7 @@ const ApplicationLayout = ({
   data = {},
 }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
+  const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') || '{}');
   const { registerApplicationMutation, deleteApplicationMutation, editApplicationMutation } =
     useMutateApplication();
 
@@ -73,6 +75,7 @@ const ApplicationLayout = ({
   }, [applicationType, data, reset]);
 
   const onSubmit = (data: FieldValues) => {
+    console.log(data);
     // id 제거, 시간 포맷 `년-월-일T시:분`으로
     const newApplicationData = {
       ...data,
@@ -141,13 +144,11 @@ const ApplicationLayout = ({
 
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='직군'
-            name='position'
+          <ApplicationDropdown
+            dropdownItems={desiredPositions}
             control={control}
-            isRequired={true}
-            value={data?.position || ''}
+            name='position'
+            readonly={applicationType === 'default'}
           />
         </S.RowContainer>
 
