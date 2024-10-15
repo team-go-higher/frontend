@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const KanbanListContainer = styled.div<{ $processType: string }>`
   min-width: 240px;
   height: 835px;
-  background-color: rgb(var(--kanbanBackground));
+  background: ${({ $processType }) => `rgba(var(--${$processType}), 0.2)`};
   border-radius: 15px;
   border: ${({ $processType }) => `1px solid rgb(var(--${$processType}))`};
   display: flex;
@@ -30,5 +30,4 @@ export const KanbanCardContainer = styled.div<{ $processType: string }>`
   gap: 15px;
   padding: 16px 14px;
   overflow-y: auto;
-  background: ${({ $processType }) => `rgba(var(--${$processType}), 0.2)`};
 `;

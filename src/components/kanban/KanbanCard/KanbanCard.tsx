@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatProcessToKor } from 'utils/process';
 import { queryKeys } from 'apis/queryKeys';
 import { ModalModel } from 'components/default';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   item: IApplication;
@@ -37,6 +38,7 @@ export interface IProcess {
 
 const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData }: IProps) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [moreMenuShow, setMoreMenuShow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -152,6 +154,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
         />
       )}
       <S.KanbanCardContainer
+        onClick={() => navigate(`/application/detail/${item.applicationId}`)}
         ref={ref}
         $isdragging={isDragging}
         $currentProcessType={currentProcessType}>
