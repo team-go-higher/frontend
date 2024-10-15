@@ -7,6 +7,7 @@ import { ProcessType } from 'types/interfaces/Application';
 import { ProcessArr } from 'constants/application';
 import LogoIcon from 'assets/default/icon_logo.svg';
 import LogoGreyIcon from 'assets/default/icon_grey_logo.svg';
+import { TYPE_PROCESS } from 'styles/processColor';
 
 interface ApplicationProcessProps {
   applicationType: 'edit' | 'default' | 'add';
@@ -105,9 +106,13 @@ const ApplicationProcess = ({
               disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
             />
           </LabelContainer>
-          <CalendarInputContainer process={event.type}>
+
+          <CalendarInputContainer>
             {fields.map((field: any) => (
-              <div className={`field ${field.isCurrent ? 'isCurrent' : ''}`}>
+              <FieldContainer
+                isCurrent={field.isCurrent}
+                process={event.type}
+                key={field.description}>
                 {field.type === event.type && (
                   <CalendarInputWrapper>
                     <CalendarInput
@@ -126,7 +131,7 @@ const ApplicationProcess = ({
                     />
                   </CalendarInputWrapper>
                 )}
-              </div>
+              </FieldContainer>
             ))}
           </CalendarInputContainer>
         </ProcessRowContainer>
@@ -137,11 +142,10 @@ const ApplicationProcess = ({
 
 export default ApplicationProcess;
 
-export const TYPE_PROCESS = {
-  DOCUMENT: 'rgb(var(--defaultPink), 0.15)',
-  TEST: 'rgb(var(--defaultPurple), 0.15)',
-  INTERVIEW: 'rgb(var(--defaultSkyblue), 0.15)',
-  COMPLETE: 'rgb(var(--defaultRed), 0.15)',
+const getRgbaColor = (rgbaValue: string, alpha: number) => {
+  const rgbaParts = rgbaValue.split(',');
+  rgbaParts[rgbaParts.length - 1] = ` ${alpha})`;
+  return rgbaParts.join(',');
 };
 
 const ProcessContainer = styled.div`
@@ -158,18 +162,16 @@ const LabelContainer = styled.div`
   line-height: 40px;
 `;
 
-const CalendarInputContainer = styled.div<{ process: ProcessType }>`
+const CalendarInputContainer = styled.div`
   width: calc(100% - 140px);
+`;
+
+const FieldContainer = styled.div<{ isCurrent: boolean; process: ProcessType }>`
   line-height: 40px;
-
-  .field {
-    padding: 0 10px;
-  }
-
-  .field.isCurrent {
-    background-color: ${props => props.process && TYPE_PROCESS[props.process]};
-    border-radius: 5px;
-  }
+  padding: 0 10px;
+  background-color: ${({ isCurrent, process }) =>
+    isCurrent && process ? getRgbaColor(TYPE_PROCESS[process], 0.15) : 'transparent'};
+  border-radius: ${({ isCurrent }) => (isCurrent ? '5px' : '0')};
 `;
 
 const CalendarInputWrapper = styled.div`

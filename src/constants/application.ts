@@ -28,7 +28,7 @@ export const ProcessArr: { type: ProcessType; description: string[] | null }[] =
       '인적성검사',
       '인성검사',
       '역량검사',
-      '기타(직접입력)',
+      '기타',
     ],
   },
   { type: 'INTERVIEW', description: ['1차면접', '2차면접', '3차면접', '인성면접', '직무면접'] },

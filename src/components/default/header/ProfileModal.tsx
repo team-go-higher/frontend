@@ -51,7 +51,8 @@ const ProfileContainer = styled.div`
   position: absolute;
 
   min-height: 130px;
-  width: 259px;
+  width: fit-content;
+  min-width: 259px;
 
   top: 50px;
   z-index: 10;

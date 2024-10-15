@@ -6,12 +6,10 @@ import {
   patchApplicationsFinished,
 } from 'apis/applications';
 import { queryKeys } from 'apis/queryKeys';
-import { useNavigate } from 'react-router-dom';
 import { IApplicationSpecific } from 'types/interfaces/Application';
 
 const useMutateApplication = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: [queryKeys.APPLICATIONS] });

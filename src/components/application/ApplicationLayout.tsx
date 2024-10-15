@@ -9,6 +9,7 @@ import { Button } from 'components/default/button/Button';
 import { RadioInput } from 'components/default/input/RadioInput';
 import useMutateApplication from 'hooks/application/useMutateApplication';
 import { IApplicationSpecific } from 'types/interfaces/Application';
+import ApplicationDropdown from './ApplicationDropdown';
 
 interface ApplicationLayoutProps {
   applicationType: 'edit' | 'default' | 'add';
@@ -22,6 +23,7 @@ const ApplicationLayout = ({
   data = {},
 }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
+  const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') || '{}');
   const { registerApplicationMutation, deleteApplicationMutation, editApplicationMutation } =
     useMutateApplication();
 
@@ -52,7 +54,7 @@ const ApplicationLayout = ({
   });
 
   useEffect(() => {
-    if (data) {
+    if (applicationType !== 'add' && data) {
       reset({
         companyName: data.companyName || '',
         team: data.team || '',
@@ -70,15 +72,16 @@ const ApplicationLayout = ({
         url: data.url || '',
       });
     }
-  }, [data, reset]);
+  }, [applicationType, data, reset]);
 
   const onSubmit = (data: FieldValues) => {
+    console.log(data);
     // id 제거, 시간 포맷 `년-월-일T시:분`으로
     const newApplicationData = {
       ...data,
       processes: data.processes.map(({ id, schedule, ...rest }: any) => ({
         ...rest,
-        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : null,
+        schedule: schedule ? new Date(schedule).toISOString().slice(0, 16) : '',
       })),
     };
 
@@ -115,7 +118,7 @@ const ApplicationLayout = ({
   return (
     <S.Wrapper>
       <S.ApplicationTitle>내 지원서</S.ApplicationTitle>
-      <S.ContentContainer onSubmit={handleSubmit(onSubmit)}>
+      <S.FormContainer onSubmit={handleSubmit(onSubmit)}>
         <S.RowContainer>
           <ApplicationLabel label='회사명' isRequired={true} />
           <ApplicationInput
@@ -141,13 +144,11 @@ const ApplicationLayout = ({
 
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
-          <ApplicationInput
-            applicationType={applicationType}
-            label='직군'
-            name='position'
+          <ApplicationDropdown
+            dropdownItems={desiredPositions}
             control={control}
-            isRequired={true}
-            value={data?.position || ''}
+            name='position'
+            readonly={applicationType === 'default'}
           />
         </S.RowContainer>
 
@@ -209,7 +210,7 @@ const ApplicationLayout = ({
         </S.RowContainer>
 
         <S.RowContainer>
-          <ApplicationLabel label='고용 형태' isRequired={true} />
+          <ApplicationLabel label='고용 형태' />
           <S.RadioInputWrapper>
             {[
               { label: '정규직', value: 'PERMANENT' },
@@ -273,11 +274,11 @@ const ApplicationLayout = ({
             </>
           ) : (
             <>
-              <Button>작성완료</Button>
+              <Button type='submit'>작성완료</Button>
             </>
           )}
         </div>
-      </S.ContentContainer>
+      </S.FormContainer>
     </S.Wrapper>
   );
 };

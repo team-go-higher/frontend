@@ -17,7 +17,7 @@ export const ApplicationTitle = styled.h1`
   font-weight: 700;
 `;
 
-export const ContentContainer = styled.form`
+export const FormContainer = styled.form`
   min-width: 500px;
   display: flex;
   flex-direction: column;
