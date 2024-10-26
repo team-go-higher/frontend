@@ -31,6 +31,7 @@ const ApplicationProcess = ({
     { process: ProcessType; option: string }[]
   >([]);
 
+  // 지원서 상세 페이지: 서류전형 / 수정 페이지: 유저 데이터 로 초기화
   useEffect(() => {
     if (selectedOptions.length === 0 && applicationType === 'add') {
       setSelectedOptions([{ process: 'DOCUMENT', option: '서류전형' }]);
@@ -45,11 +46,13 @@ const ApplicationProcess = ({
     }
   }, []);
 
+  // 드롭다운 상세 전형 클릭 함수
   const handleSelectCheckbox = (process: ProcessType, option: string) => {
     const itemIndex = selectedOptions.findIndex(
       item => item.process === process && item.option === option,
     );
 
+    // 최종 발표는 하나만 선택가능
     if (process === 'COMPLETE') {
       setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
       const fieldIndex = fields.findIndex((v: any) => v.type === process);
@@ -58,32 +61,37 @@ const ApplicationProcess = ({
       } else {
         append({ type: process, description: option, schedule: '', isCurrent: false });
       }
-    } else {
-      if (itemIndex !== -1) {
-        setSelectedOptions(prevOptions =>
-          prevOptions.filter(item => !(item.process === process && item.option === option)),
-        );
-        const index = fields.findIndex((v: any) => v.type === process && v.description === option);
-        if (index !== -1) {
-          remove(index);
-        }
-      } else {
-        setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
-        append({ type: process, description: option, schedule: '', isCurrent: false });
+      return;
+    }
+
+    // 그 외는 여러개 선택 가능
+    if (itemIndex !== -1) {
+      setSelectedOptions(prevOptions =>
+        prevOptions.filter(item => !(item.process === process && item.option === option)),
+      );
+      const index = fields.findIndex((v: any) => v.type === process && v.description === option);
+      if (index !== -1) {
+        remove(index);
       }
+    } else {
+      setSelectedOptions(prevOptions => [...prevOptions, { process, option }]);
+      append({ type: process, description: option, schedule: '', isCurrent: false });
     }
   };
 
-  const updateFieldArray = (process: ProcessType, option: string, date: Date | null) => {
+  // schedule 변경 함수
+  const handleUpdateSchedule = (process: ProcessType, option: string, date: Date | null) => {
     const index = fields.findIndex((v: any) => v.type === process && v.description === option);
     if (index !== -1) {
       update(index, { type: process, description: option, schedule: date, isCurrent: false });
     }
   };
 
+  // isCurrent 변경 함수
   const handleLogoClick = (process: ProcessType, option: string) => {
-    const index = fields.findIndex((v: any) => v.type === process && v.description === option);
+    if (applicationType === 'default') return;
 
+    const index = fields.findIndex((v: any) => v.type === process && v.description === option);
     fields.forEach((field: any, idx: number) => {
       if (idx === index) {
         update(idx, { ...field, isCurrent: true });
@@ -117,14 +125,13 @@ const ApplicationProcess = ({
                   <CalendarInputWrapper>
                     <CalendarInput
                       key={field.description}
-                      onChange={updateFieldArray}
+                      onChange={handleUpdateSchedule}
                       applicationType={applicationType}
                       process={field.type}
                       detailProcess={field.description}
                       schedule={field.schedule}
                     />
-                    <img
-                      className='headerLogo'
+                    <IsCurrentImage
                       src={field.isCurrent ? LogoIcon : LogoGreyIcon}
                       alt='logoIcon'
                       onClick={() => handleLogoClick(field.type, field.description)}
@@ -178,9 +185,9 @@ const CalendarInputWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
 
-  img {
-    width: 22px;
-    cursor: pointer;
-  }
+const IsCurrentImage = styled.img`
+  width: 22px;
+  cursor: pointer;
 `;
