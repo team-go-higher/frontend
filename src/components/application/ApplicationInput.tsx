@@ -16,6 +16,10 @@ interface DefaultContentViewProps {
 }
 
 const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
+  if (value === '') {
+    return <div className='content'>-</div>;
+  }
+
   return (
     <>
       {name === 'url' ? (
@@ -23,7 +27,7 @@ const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
           채용사이트
         </a>
       ) : (
-        <div className='content'>{value === '' ? '-' : value}</div>
+        <div className='content'>{value}</div>
       )}
     </>
   );

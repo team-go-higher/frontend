@@ -145,10 +145,11 @@ const ApplicationLayout = ({
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
           <ApplicationDropdown
+            applicationType={applicationType}
             dropdownItems={desiredPositions}
             control={control}
             name='position'
-            readonly={applicationType === 'default'}
+            value={data?.position || ''}
           />
         </S.RowContainer>
 
