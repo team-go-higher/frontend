@@ -12,11 +12,6 @@ export const Wrapper = styled.div<{ $isView: boolean }>`
     min-width: 16%;
 
     label {
-      margin: 0;
-      display: flex;
-      height: 23px;
-      width: fit-content;
-      padding-top: 4.5px;
       background-color: ${({ $isView }) => $isView && '#DCDCDC'};
       border-color: ${({ $isView }) => $isView && '#DCDCDC'};
     }

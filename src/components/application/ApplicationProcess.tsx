@@ -3,11 +3,12 @@ import { FieldValues, FieldArrayWithId } from 'react-hook-form';
 import { DropDown } from 'components/default/dropdown/DropDown';
 import { CalendarInput } from 'components/default/input/CalendarInput';
 import styled from 'styled-components';
-import { ProcessType } from 'types/interfaces/Application';
 import { ProcessArr } from 'constants/application';
 import LogoIcon from 'assets/default/icon_logo.svg';
 import LogoGreyIcon from 'assets/default/icon_grey_logo.svg';
 import { TYPE_PROCESS } from 'styles/processColor';
+import { Label } from 'components/default/label/Label';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface ApplicationProcessProps {
   applicationType: 'edit' | 'default' | 'add';
@@ -101,18 +102,27 @@ const ApplicationProcess = ({
     });
   };
 
+  // 각 type별로 schedule 값이 비어있는지 확인하는 함수
+  const isTypeScheduleEmpty = (process: ProcessType) => {
+    return fields.filter((v: any) => v.type === process).every((v: any) => v.schedule === '');
+  };
+
   return (
     <ProcessContainer>
       {ProcessArr.map((event: any) => (
         <ProcessRowContainer>
           <LabelContainer>
-            <DropDown
-              process={event.type}
-              options={ProcessArr.find(e => e.type === event.type)?.description || []}
-              selectedOptions={selectedOptions}
-              onSelect={handleSelectCheckbox}
-              disabled={applicationType === 'default' || event.type === 'DOCUMENT'}
-            />
+            {applicationType === 'default' ? (
+              <Label process={event.type} isEmpty={isTypeScheduleEmpty(event.type)} />
+            ) : (
+              <DropDown
+                process={event.type}
+                options={ProcessArr.find(e => e.type === event.type)?.description || []}
+                selectedOptions={selectedOptions}
+                onSelect={handleSelectCheckbox}
+                disabled={event.type === 'DOCUMENT'}
+              />
+            )}
           </LabelContainer>
 
           <CalendarInputContainer>
@@ -165,8 +175,10 @@ const ProcessRowContainer = styled.div`
 `;
 
 const LabelContainer = styled.div`
+  display: flex;
   width: 140px;
-  line-height: 40px;
+  height: 40px;
+  align-items: center;
 `;
 
 const CalendarInputContainer = styled.div`
