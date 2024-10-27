@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
 import ModalModel from './ModalModel';
 import { processTypeInfo } from 'constants/process';
-import { ProcessType } from 'types/interfaces/Application';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface ProcessEditModalProps {
   modalIsOpen: boolean;

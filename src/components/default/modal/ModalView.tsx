@@ -5,16 +5,16 @@ import { useForm, Controller } from 'react-hook-form';
 import * as S from './ModalStyledComponents';
 import { processTypeInfo, processTypeList } from 'constants/process';
 import { modalModeType } from 'hooks/feature/useModal';
-import { processType } from 'types/interfaces/KanbanProcess';
 import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';
 import { fetchUserPoistionInfo } from 'apis/auth';
 import { getUserInfo } from 'utils/localStorage';
+import { ProcessType } from 'types/interfaces/Common';
 interface ModalViewModelProps {
   handleApplicationSubmission: handleApplicationSubmissionType;
   mode: modalModeType;
-  currentProcessType: processType;
+  currentProcessType: ProcessType;
   fetchedProcessData: any; // 적절한 타입으로 변경해주세요.
   applicationInfo: any; // 적절한 타입으로 변경해주세요.
 }
@@ -242,7 +242,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
               }
               isPlaceHolder={defaultValues?.processType !== getValues('processType')}
               isArrowIconRequired={isDetailedProcessTypeRequired()}
-              itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
+              itemList={processTypeInfo[getValues('processType') as ProcessType]?.detailed}
               dropDownToggleHandler={detailedDropDownToggleHandler}
               dropDownItemHandler={detailedDropDownItemHandler}
             />
@@ -320,7 +320,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
                 defaultValues?.detailedProcessType !== getValues('detailedProcessType')
               }
               isArrowIconRequired={mode !== 'simpleEdit' && isDetailedProcessTypeRequired()}
-              itemList={processTypeInfo[getValues('processType') as processType]?.detailed}
+              itemList={processTypeInfo[getValues('processType') as ProcessType]?.detailed}
               dropDownToggleHandler={detailedDropDownToggleHandler}
               dropDownItemHandler={detailedDropDownItemHandler}
             />

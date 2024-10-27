@@ -1,4 +1,4 @@
-import { processType } from 'types/interfaces/KanbanProcess';
+import { ProcessType } from 'types/interfaces/Common';
 
 export const formatProcessToKor = (process: string) => {
   switch (process) {
@@ -17,7 +17,7 @@ export const formatProcessToKor = (process: string) => {
   }
 };
 
-export const fomatProcessTypeToEng = (process: string): processType => {
+export const fomatProcessTypeToEng = (process: string): ProcessType => {
   switch (process) {
     case '지원예정':
       return 'TO_APPLY';

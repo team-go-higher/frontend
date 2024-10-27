@@ -1,4 +1,4 @@
-import { ProcessType } from 'types/interfaces/Application';
+import { ProcessType } from 'types/interfaces/Common';
 import { IApplication } from 'types/interfaces/KanbanProcess';
 
 export const initialApplicationInfo: IApplication = {
@@ -7,7 +7,7 @@ export const initialApplicationInfo: IApplication = {
   position: '',
   process: {
     id: 0,
-    type: '',
+    type: '' as ProcessType,
     description: '',
     schedule: '',
   },

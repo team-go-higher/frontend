@@ -1,8 +1,10 @@
+import { ProcessType } from './Common';
+
 export interface ICalendarData {
   applicationId: number;
   processId: number;
   name: string;
-  processType: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  processType: ProcessType;
   schedule: string;
 }
 
@@ -11,7 +13,7 @@ export interface IDetailData {
   companyName: string;
   process: {
     id: number;
-    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+    type: ProcessType;
     description: string;
     schedule: string;
   };
@@ -28,7 +30,7 @@ export interface IUnscheduledContent {
   specificPosition: string | null;
   process: {
     id: number;
-    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+    type: ProcessType;
     description: string;
     schedule: string;
   };

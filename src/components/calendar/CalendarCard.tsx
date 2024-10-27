@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { EventContainer } from './CalendarStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
-import { modalModeType } from 'hooks/feature/useModal';
+import { OpenModalParameter } from 'hooks/feature/useModal';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
+import { IApplication } from 'types/interfaces/KanbanProcess';
 interface CalendarCardProps {
   event: {
     applicationId: number;
@@ -15,11 +16,7 @@ interface CalendarCardProps {
       schedule: string;
     };
   };
-  openModal?: (parameter: {
-    mode: modalModeType;
-    processType?: string;
-    applicationInfo: any;
-  }) => void;
+  openModal?: (parameter: OpenModalParameter) => void;
 }
 
 export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
@@ -30,7 +27,7 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
   };
 
   const handleEditButton = () => {
-    openModal?.({ mode: 'simpleEdit', applicationInfo: event });
+    openModal?.({ mode: 'simpleEdit', applicationInfo: event as IApplication });
     setMoreMenuShow(false);
   };
 
