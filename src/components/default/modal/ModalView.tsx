@@ -8,9 +8,11 @@ import { modalModeType } from 'hooks/feature/useModal';
 import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';
-import { fetchUserPoistionInfo } from 'apis/auth';
+import { fetchUserPositionInfo } from 'apis/auth';
 import { getUserInfo } from 'utils/localStorage';
 import { ProcessType } from 'types/interfaces/Common';
+import { IPosition } from 'types/interfaces/Auth';
+
 interface ModalViewModelProps {
   handleApplicationSubmission: handleApplicationSubmissionType;
   mode: modalModeType;
@@ -33,7 +35,7 @@ export type FormValuesType = {
   url: string;
 };
 
-// TODO : defaulValue 설정 로직 수정
+// TODO : defaultValue 설정 로직 수정
 const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   const {
     handleApplicationSubmission,
@@ -42,7 +44,7 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
     fetchedProcessData,
     applicationInfo,
   } = viewModel;
-  const [desiredPositionList, setDesiredPositionList] = useState([]);
+  const [desiredPositionList, setDesiredPositionList] = useState<string[]>([]);
   const FormValues: FormValuesType = {
     companyName: '',
     processType: currentProcessType ? currentProcessType : applicationInfo.process.type,
@@ -152,14 +154,13 @@ const ModalView = ({ viewModel, modalIsOpen, closeModal }: IProps) => {
   }
 
   const storeUserPositionInfo = async () => {
-    const userPositionInfo = await fetchUserPoistionInfo();
+    const userPositionInfo = await fetchUserPositionInfo();
     if (userPositionInfo) {
-      localStorage.setItem('userPositionInfo', JSON.stringify(userPositionInfo));
+      localStorage.setItem('userPositionInfo', JSON.stringify(userPositionInfo.data));
 
-      const { desiredPositions } = userPositionInfo;
-      setDesiredPositionList(
-        desiredPositions.map((item: { id: number; position: string }) => item.position),
-      );
+      const { desiredPositions } = userPositionInfo.data;
+
+      setDesiredPositionList(desiredPositions.map((item: IPosition) => item.position));
     }
   };
 

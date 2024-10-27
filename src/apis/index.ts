@@ -41,7 +41,7 @@ const getRefreshToken = async (): Promise<string | void> => {
     lock = false;
     subscribers = [];
     localStorage.clear();
-    window.location.replace('/signin');
+    window.location.replace('/signIn');
   }
 };
 

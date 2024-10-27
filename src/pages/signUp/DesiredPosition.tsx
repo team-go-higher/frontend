@@ -27,7 +27,7 @@ const DesiredPosition = () => {
       const errorCode = error.response.data.error.code;
       if (errorCode === 'USER_002') {
         alert('게스트가 아닙니다. 로그인해주세요.');
-        navigate('/signin');
+        navigate('/signIn');
       } else {
         alert('문제가 발생했습니다. 다시 선택해주세요.');
       }
@@ -45,7 +45,7 @@ const DesiredPosition = () => {
     }
   };
 
-  const handlePostion = () => {
+  const handlePosition = () => {
     if (position.length > 0) {
       postPositionsMutation.mutate();
     }
@@ -59,9 +59,9 @@ const DesiredPosition = () => {
         <div className='mainTitle'>희망 직무를 선택하세요</div>
 
         <PositionContainer>
-          {positionList && positionList.length > 1 && (
+          {positionList && positionList.data.length > 1 && (
             <>
-              {positionList.map((item: IPosition) => {
+              {positionList.data.map((item: IPosition) => {
                 return (
                   <PositionCardContainer
                     active={position.includes(item.id)}
@@ -87,7 +87,7 @@ const DesiredPosition = () => {
           active={position.length > 0}
           onClick={() => {
             if (position.length > 0) {
-              handlePostion();
+              handlePosition();
             }
           }}>
           고하이어 시작하기

@@ -10,6 +10,7 @@ import {
   fetchApplicationUnscheduled,
 } from 'apis/calendar';
 import { queryKeys } from 'apis/queryKeys';
+import { ICalendarData, IDetailData } from 'types/interfaces/CalendarProcess';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -17,7 +18,7 @@ const Calendar = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   //api 연결
-  const { data: calendarData = [] } = useQuery({
+  const { data: calendarData } = useQuery({
     queryKey: [queryKeys.CALENDAR, 'fetchApplicationByMonth', currentMonth],
     queryFn: () =>
       fetchApplicationByMonth(
@@ -26,7 +27,7 @@ const Calendar = () => {
       ),
   });
 
-  const { data: detailData = [] } = useQuery({
+  const { data: detailData } = useQuery({
     queryKey: [queryKeys.CALENDAR, 'fetchApplicationByDate', selectedDate],
     queryFn: () => fetchApplicationByDate(format(selectedDate, 'yyyy-MM-dd')),
   });
@@ -86,7 +87,7 @@ const Calendar = () => {
             currentMonth={currentMonth}
             selectedDate={selectedDate}
             onDateClick={onDateClick}
-            calendarData={calendarData}
+            calendarData={calendarData?.data as ICalendarData[]}
           />
         </S.CalendarContainer>
 
@@ -95,14 +96,14 @@ const Calendar = () => {
             selectedDate={selectedDate}
             prevDay={prevDay}
             nextDay={nextDay}
-            detailData={detailData}
+            detailData={detailData?.data as IDetailData[]}
           />
         </S.DayContainer>
       </div>
       <S.UnscheduledContainer>
-        {unscheduledData && unscheduledData.content.length !== 0 && (
+        {unscheduledData && unscheduledData.data.content.length !== 0 && (
           <RenderUnscheduled
-            unscheduledData={unscheduledData}
+            unscheduledData={unscheduledData.data}
             currentPage={currentPage}
             prevPage={prevPage}
             nextPage={nextPage}></RenderUnscheduled>

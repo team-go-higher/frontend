@@ -14,7 +14,7 @@ const ProfileModal = ({ closeModal }: { closeModal: () => void }) => {
     onSuccess: () => {
       localStorage.removeItem('userInfo');
       localStorage.removeItem('userPositionInfo');
-      navigate('/signin');
+      navigate('/signIn');
     },
     onError: () => alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.'),
   });

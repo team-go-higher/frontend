@@ -19,7 +19,11 @@ const Kanban = () => {
     useModal();
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
-  const { data, isLoading, isSuccess } = useQuery({
+  const {
+    data: kanbanList,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: [queryKeys.KANBAN, 'fetchKanbanList'],
     queryFn: fetchKanbanList,
   });
@@ -35,10 +39,9 @@ const Kanban = () => {
 
   useEffect(() => {
     if (!isLoading && isSuccess) {
-      const kanbanList = data.data;
-      dispatch(setApplications(kanbanList));
+      dispatch(setApplications(kanbanList.data));
     }
-  }, [isLoading, isSuccess, data, dispatch]);
+  }, [isLoading, isSuccess, kanbanList, dispatch]);
 
   return (
     <DndProvider backend={HTML5Backend}>
