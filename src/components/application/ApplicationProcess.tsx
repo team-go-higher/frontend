@@ -102,9 +102,9 @@ const ApplicationProcess = ({
     });
   };
 
-  // 각 type별로 schedule 값이 비어있는지 확인하는 함수
+  // 각 type별로 이 상세 전형이 비어있는지 확인하는 함수
   const isTypeScheduleEmpty = (process: ProcessType) => {
-    return fields.filter((v: any) => v.type === process).every((v: any) => v.schedule === '');
+    return fields.filter((v: any) => v.type === process).length === 0;
   };
 
   return (
