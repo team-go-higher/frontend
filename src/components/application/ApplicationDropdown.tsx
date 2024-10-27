@@ -1,6 +1,7 @@
 import { useDropdown } from 'hooks/feature/useDropDown';
 import { Controller, Control } from 'react-hook-form';
 import styled, { keyframes } from 'styled-components';
+import * as S from './ApplicationLayoutStyledComponents';
 
 const dropdown = keyframes`
   0% {
@@ -90,7 +91,7 @@ interface DefaultContentViewProps {
 }
 
 const DefaultContentView = ({ value = '' }: DefaultContentViewProps) => {
-  return <div className='content'>{value === '' ? '-' : value}</div>;
+  return <S.ContentBox>{value === '' ? '-' : value}</S.ContentBox>;
 };
 
 const ApplicationDropdown = ({

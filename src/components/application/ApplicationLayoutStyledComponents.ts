@@ -25,12 +25,14 @@ export const FormContainer = styled.form`
   gap: 1.5rem;
 `;
 
-export const RowContainer = styled.div<{ isProcessRow?: boolean }>`
+export const RowContainer = styled.div`
   display: flex;
-  align-items: ${props => (props.isProcessRow ? 'flex-start' : 'center')};
 
   & > :first-child {
-    margin-top: ${props => (props.isProcessRow ? '13px' : '0')};
+    display: flex;
+    align-items: center;
+    height: 40px;
+    flex-shrink: 0;
   }
 
   & > :nth-child(2) {
@@ -41,6 +43,7 @@ export const RowContainer = styled.div<{ isProcessRow?: boolean }>`
 export const RadioInputWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   gap: 1rem;
 `;
 
@@ -50,4 +53,13 @@ export const ButtonContainer = styled.div`
   justify-content: center;
   gap: 2.7rem;
   margin-top: 3rem;
+`;
+
+export const ContentBox = styled.div`
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  min-height: 40px;
+  line-height: 20px;
+  padding: 10px 0;
 `;

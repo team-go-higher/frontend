@@ -156,7 +156,7 @@ const ApplicationLayout = ({
           />
         </S.RowContainer>
 
-        <S.RowContainer isProcessRow>
+        <S.RowContainer>
           <ApplicationLabel label='전형 단계' />
           <ApplicationProcess
             fields={fields}
