@@ -29,6 +29,7 @@ export interface IUnscheduledContent {
   process: IProcessData;
 }
 export interface IUnscheduledData {
+  pageNumber: number;
   hasNext: boolean;
   content: IUnscheduledContent[];
 }

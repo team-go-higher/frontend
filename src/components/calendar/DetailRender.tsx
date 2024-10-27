@@ -4,12 +4,11 @@ import { CalendarCard } from './CalendarCard';
 import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
 import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
 import * as S from './CalendarStyledComponents';
-import { IDetailData, IUnscheduledData } from 'types/interfaces/CalendarProcess';
+import { IDetailData } from 'types/interfaces/CalendarProcess';
 import { useModal } from 'hooks/feature/useModal';
 import { ModalView, ModalViewModel } from 'components/default';
 import { queryKeys } from 'apis/queryKeys';
 
-// 일별로 띄우기
 interface RenderDetailProps {
   selectedDate: Date;
   prevDay: () => void;
@@ -17,7 +16,7 @@ interface RenderDetailProps {
   detailData: IDetailData[];
 }
 
-export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
+const DetailRender = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
   const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
     useModal();
 
@@ -60,59 +59,4 @@ export const RenderDetail = ({ selectedDate, prevDay, nextDay, detailData }: Ren
   );
 };
 
-// 전형일 없는 것 띄우기
-interface RenderUnscheduledProps {
-  unscheduledData: IUnscheduledData;
-  currentPage: number;
-  prevPage: () => void;
-  nextPage: () => void;
-}
-
-export const RenderUnscheduled = ({
-  unscheduledData,
-  currentPage,
-  prevPage,
-  nextPage,
-}: RenderUnscheduledProps) => {
-  const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
-    useModal();
-
-  const modalViewModel = ModalViewModel({
-    mode,
-    queryKey: [queryKeys.CALENDAR],
-    closeModal,
-    currentProcessType,
-    applicationInfo,
-  });
-
-  return (
-    <S.RenderUnscheduledContainer>
-      <ModalView viewModel={modalViewModel} modalIsOpen={modalIsOpen} closeModal={closeModal} />
-      <S.TitleSection>
-        {currentPage > 1 ? (
-          <div className='arrow' onClick={prevPage}>
-            ◁
-          </div>
-        ) : (
-          <div></div>
-        )}
-        <p className='text'>전형일을 기다리고 있어요</p>
-        {unscheduledData.hasNext ? (
-          <div className='arrow' onClick={nextPage}>
-            ▷
-          </div>
-        ) : (
-          <div></div>
-        )}
-      </S.TitleSection>
-      <S.CalendarCardDiv>
-        {unscheduledData.content.map((event: any) => (
-          <CalendarCard
-            key={event.applicationId}
-            event={event}
-            openModal={openModal}></CalendarCard>
-        ))}
-      </S.CalendarCardDiv>
-    </S.RenderUnscheduledContainer>
-  );
-};
+export default DetailRender;

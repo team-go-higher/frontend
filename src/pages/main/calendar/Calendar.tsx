@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format, addMonths, subMonths, addDays, subDays } from 'date-fns';
 import { RenderHeader, RenderDays, RenderCells } from 'components/calendar/CalendarRender';
-import { RenderDetail, RenderUnscheduled } from 'components/calendar/DetailRender';
 import * as S from './CalendarStyledComponents';
 import {
   fetchApplicationByMonth,
@@ -11,6 +10,8 @@ import {
 } from 'apis/calendar';
 import { queryKeys } from 'apis/queryKeys';
 import { ICalendarData, IDetailData } from 'types/interfaces/CalendarProcess';
+import DetailRender from 'components/calendar/DetailRender';
+import UnscheduledRender from 'components/calendar/UnscheduledRender';
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -80,7 +81,7 @@ const Calendar = () => {
         nextMonth={nextMonth}
         onMonthClick={onMonthClick}
       />
-      <div className='calendar-detail'>
+      <S.CalenderSection>
         <S.CalendarContainer>
           <RenderDays />
           <RenderCells
@@ -92,23 +93,23 @@ const Calendar = () => {
         </S.CalendarContainer>
 
         <S.DayContainer>
-          <RenderDetail
+          <DetailRender
             selectedDate={selectedDate}
             prevDay={prevDay}
             nextDay={nextDay}
             detailData={detailData?.data as IDetailData[]}
           />
         </S.DayContainer>
-      </div>
-      <S.UnscheduledContainer>
+      </S.CalenderSection>
+      <S.UnscheduledSection>
         {unscheduledData && unscheduledData.data.content.length !== 0 && (
-          <RenderUnscheduled
+          <UnscheduledRender
             unscheduledData={unscheduledData.data}
             currentPage={currentPage}
             prevPage={prevPage}
-            nextPage={nextPage}></RenderUnscheduled>
+            nextPage={nextPage}></UnscheduledRender>
         )}
-      </S.UnscheduledContainer>
+      </S.UnscheduledSection>
     </S.CalendarPage>
   );
 };
