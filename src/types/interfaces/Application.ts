@@ -42,6 +42,7 @@ export interface ApplicationStatusCardData {
 }
 
 export interface GetApplicationsRes {
+  pageNumber: number;
   hasNext: boolean;
   content: ApplicationStatusCardData[];
 }

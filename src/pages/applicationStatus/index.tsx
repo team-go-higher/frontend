@@ -6,7 +6,7 @@ import {
 } from './ApplicationStatusStyledComponents';
 import SortIcon from '../../assets/applicationStatus/applicationStatus_sort.svg';
 import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatusCard';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from 'apis/queryKeys';
 import { getApplications } from 'apis/applications';
@@ -26,8 +26,6 @@ const ApplicationStatus = () => {
 
   const [searchParams] = useSearchParams();
 
-  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
-
   const [sort, setSort] = useState<ApplicationSort>(
     (searchParams.get('sort') as ApplicationSort) || null,
   );
@@ -40,38 +38,32 @@ const ApplicationStatus = () => {
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { isVisible, targetRef } = useInfiniteScroll();
+  const { data, status, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: [queryKeys.APPLICATIONS, companyName, sort, process, complete],
+      queryFn: async ({ pageParam }) =>
+        getApplications(pageParam, companyName, sort, process, complete),
+      initialPageParam: 1,
+      getNextPageParam: lastPage => (lastPage.data.hasNext ? lastPage.data.pageNumber + 1 : null),
+    });
 
-  const { data, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: [queryKeys.APPLICATIONS, companyName, sort, process, complete],
-    queryFn: async ({ pageParam }) => {
-      const res = await getApplications(pageParam, companyName, sort, process, complete);
+  const applicationStatusList = data?.pages.flatMap(page => page.data.content) || [];
 
-      setPage(pageParam);
+  const handlePage = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
-      return res;
-    },
-    initialPageParam: 1,
-    getNextPageParam: lastPage => {
-      if (lastPage.data.hasNext) {
-        return page + 1;
-      }
-      return null;
-    },
-    select: data => data?.pages.flatMap(page => page.data.content),
-  });
+  const targetRef = useInfiniteScroll(handlePage);
+
+  const isAddPageAble = status !== 'error' && hasNextPage;
 
   const activeEnter = (e: { key: string }) => {
     if (e.key === 'Enter') {
       setCompanyName(searchValue);
     }
   };
-
-  useEffect(() => {
-    if (isVisible) {
-      fetchNextPage();
-    }
-  }, [isVisible]);
 
   return (
     <Wrapper>
@@ -105,12 +97,13 @@ const ApplicationStatus = () => {
         </HeaderContainer>
 
         <ContentContainer>
-          {!isFetching &&
-            data?.map((item: ApplicationStatusCardData) => {
-              return <ApplicationStatusCard key={item.applicationId} data={item} />;
-            })}
+          {applicationStatusList.map((item: ApplicationStatusCardData) => (
+            <ApplicationStatusCard key={item.applicationId} data={item} />
+          ))}
         </ContentContainer>
-        <div ref={targetRef} style={{ height: '20px', width: '100%' }}></div>
+        {isAddPageAble && (
+          <div ref={targetRef}>{(isFetching || isFetchingNextPage) && <div>로딩 중!</div>}</div>
+        )}
       </ApplicationStatusContainer>
 
       <FilterModal
