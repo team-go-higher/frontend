@@ -23,13 +23,6 @@ export const FormContainer = styled.form`
   flex-direction: column;
   margin: 3.3rem 0 5rem;
   gap: 1.5rem;
-
-  .btnContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 2.7rem;
-  }
 `;
 
 export const RowContainer = styled.div<{ isProcessRow?: boolean }>`
@@ -49,4 +42,12 @@ export const RadioInputWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2.7rem;
+  margin-top: 3rem;
 `;
