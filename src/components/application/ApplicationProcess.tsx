@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { ProcessArr } from 'constants/application';
 import LogoIcon from 'assets/default/icon_logo.svg';
 import LogoGreyIcon from 'assets/default/icon_grey_logo.svg';
-import { TYPE_PROCESS } from 'styles/processColor';
 import { Label } from 'components/default/label/Label';
 import { ProcessType } from 'types/interfaces/Common';
 
@@ -159,12 +158,6 @@ const ApplicationProcess = ({
 
 export default ApplicationProcess;
 
-const getRgbaColor = (rgbaValue: string, alpha: number) => {
-  const rgbaParts = rgbaValue.split(',');
-  rgbaParts[rgbaParts.length - 1] = ` ${alpha})`;
-  return rgbaParts.join(',');
-};
-
 const ProcessContainer = styled.div`
   width: 100%;
 `;
@@ -189,7 +182,7 @@ const FieldContainer = styled.div<{ isCurrent: boolean; process: ProcessType }>`
   line-height: 40px;
   padding: 0 10px;
   background-color: ${({ isCurrent, process }) =>
-    isCurrent && process ? getRgbaColor(TYPE_PROCESS[process], 0.15) : 'transparent'};
+    isCurrent && process ? `rgba(var(--${process}), 0.15)` : 'transparent'};
   border-radius: ${({ isCurrent }) => (isCurrent ? '5px' : '0')};
 `;
 

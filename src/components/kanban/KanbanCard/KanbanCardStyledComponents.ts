@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface IKanbanCardContainerProps {
-  $isdragging: boolean;
+  $isDragging: boolean;
   $currentProcessType: string;
 }
 
@@ -15,7 +15,7 @@ export const KanbanCardContainer = styled.div<IKanbanCardContainerProps>`
   box-shadow: ${({ $currentProcessType }) =>
     `0px 0px 3px 0px rgba(var(--${$currentProcessType}), 0.5);`};
   background-color: rgb(var(--cardBackground));
-  opacity: ${({ $isdragging }) => ($isdragging ? '0.5' : '1')};
+  opacity: ${({ $isDragging }) => ($isDragging ? '0.5' : '1')};
   cursor: pointer;
 `;
 

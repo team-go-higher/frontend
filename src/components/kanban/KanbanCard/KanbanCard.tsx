@@ -150,7 +150,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
       )}
       <S.KanbanCardContainer
         ref={ref}
-        $isdragging={isDragging}
+        $isDragging={isDragging}
         $currentProcessType={currentProcessType}>
         <S.DetailProcess $currentProcessType={currentProcessType}>
           {item.process.description}

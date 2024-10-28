@@ -4,7 +4,6 @@ import { formatProcessToKor } from 'utils/process';
 import { useDropdown } from 'hooks/feature/useDropDown';
 import CheckIcon from 'assets/default/check_icon.svg';
 import { ReactComponent as SelectArrowIcon } from 'assets/main/main_modal_select_arrow.svg';
-import { TYPE_PROCESS } from 'styles/processColor';
 import { ProcessType } from 'types/interfaces/Common';
 
 interface DropdownProps {
@@ -30,12 +29,12 @@ const DropdownButton = styled.button<{
   gap: 5px;
   position: relative;
   padding: 3px 10px;
-  border: 1px solid ${props => TYPE_PROCESS[props.$process]};
+  border: 1px solid ${props => `rgb(var(--${props.$process}))`};
   border-radius: 15px;
   background-color: ${props =>
-    props.$isOpen || props.$disabled ? TYPE_PROCESS[props.$process] : 'rgb(var(--white));'};
+    props.$isOpen || props.$disabled ? `rgb(var(--${props.$process}))` : 'rgb(var(--white));'};
   color: ${props =>
-    props.$isOpen || props.$disabled ? 'rgb(var(--white));' : TYPE_PROCESS[props.$process]};
+    props.$isOpen || props.$disabled ? 'rgb(var(--white));' : `rgb(var(--${props.$process}))`};
   font-size: 14px;
   cursor: pointer;
   z-index: ${props => (props.$isOpen ? '3' : '1')};
@@ -51,10 +50,10 @@ const DropdownContent = styled.div<{
   left: 0;
   padding: ${props => (props.$process === 'COMPLETE' ? '10.9px' : '8px')};
   padding-top: 20px;
-  border: 0.5px solid ${props => TYPE_PROCESS[props.$process]};
+  border: 0.5px solid ${props => `rgb(var(--${props.$process}))`};
   border-top: 0;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0px 0px 4px 0px ${props => TYPE_PROCESS[props.$process]};
+  box-shadow: 0px 0px 4px 0px ${props => `rgb(var(--${props.$process}))`};
   background-color: rgb(var(--white));
   z-index: 2;
 `;
@@ -68,7 +67,7 @@ const CheckboxLabel = styled.label<{
   display: ${props => (props.$process === 'COMPLETE' ? '' : 'inline-block')};
   line-height: 24px;
   font-size: 12px;
-  color: ${props => TYPE_PROCESS[props.$process]};
+  color: ${props => `rgb(var(--${props.$process}))`};
 
   .checkbox-container {
     display: ${props => (props.$process === 'COMPLETE' ? 'none' : 'block')};
@@ -105,7 +104,7 @@ const CheckboxLabel = styled.label<{
     height: 12px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background-color: ${props => props.$process && TYPE_PROCESS[props.$process]};
+    background-color: ${props => `rgb(var(--${props.$process}))`};
     z-index: -1;
   }
 
@@ -125,6 +124,7 @@ export const DropDown = ({
 
   const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    if (disabled) return;
     toggleDropdown();
   };
 
@@ -141,7 +141,7 @@ export const DropDown = ({
         $disabled={disabled}>
         <div className='process-text'>{process && formatProcessToKor(process)}</div>
         {!disabled && (
-          <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : process && TYPE_PROCESS[process]} />
+          <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : `rgb(var(--${process}))`} />
         )}
       </DropdownButton>
       {options && (

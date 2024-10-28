@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { TYPE_PROCESS } from 'styles/processColor';
 import { ProcessType } from 'types/interfaces/Common';
 import { formatProcessToKor } from 'utils/process';
 
@@ -13,10 +12,11 @@ const StyledLabel = styled.label<LabelProps>`
   white-space: nowrap;
   width: fit-content;
   padding: 3px 10px;
-  border: 1px solid ${props => TYPE_PROCESS[props.process]};
+  border: 1px solid ${props => `rgb(var(--${props.process}))`};
   border-radius: 15px;
-  background-color: ${props => (props.isEmpty ? `rgb(var(--white))` : TYPE_PROCESS[props.process])};
-  color: ${props => (props.isEmpty ? TYPE_PROCESS[props.process] : `rgb(var(--white))`)};
+  background-color: ${props =>
+    props.isEmpty ? `rgb(var(--white))` : `rgb(var(--${props.process}))`};
+  color: ${props => (props.isEmpty ? `rgb(var(--${props.process}))` : `rgb(var(--white))`)};
 
   font-size: 14px;
   cursor: default;
