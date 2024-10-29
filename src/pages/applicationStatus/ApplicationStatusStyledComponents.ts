@@ -4,6 +4,8 @@ export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   margin: auto;
+  width: 1000px;
+  overflow: hidden;
 `;
 
 export const ApplicationStatusContainer = styled.div`
@@ -29,7 +31,6 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  margin-bottom: 21.5px;
 
   .sortContainer {
     display: flex;
@@ -44,7 +45,6 @@ export const HeaderContainer = styled.div`
       font-size: 20px;
       font-weight: 500;
       letter-spacing: -0.8px;
-      margin-top: 5px;
     }
   }
 
@@ -84,5 +84,5 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 800px;
+  margin: 40px auto;
 `;

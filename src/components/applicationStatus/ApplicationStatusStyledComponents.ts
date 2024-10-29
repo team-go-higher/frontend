@@ -10,6 +10,10 @@ export const Wrapper = styled.div<{ $isCompleted: boolean }>`
   padding: 26px 0;
   cursor: pointer;
 
+  &:last-child {
+    border-bottom: 1px solid #d6d6d6;
+  }
+
   .labelContainer {
     width: 100px;
 
