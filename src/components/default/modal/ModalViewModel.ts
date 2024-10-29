@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import ModalModel from './ModalModel';
-import { modalModeType } from 'hooks/feature/useModal';
+import { modalModeType } from 'hooks/feature/useApplicationModal';
 import { formatProcessToKor } from 'utils/process';
 import { FieldValues } from 'react-hook-form';
 import { ProcessType } from 'types/interfaces/Common';

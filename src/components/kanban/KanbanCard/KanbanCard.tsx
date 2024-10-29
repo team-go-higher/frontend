@@ -5,7 +5,7 @@ import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.sv
 import * as S from './KanbanCardStyledComponents';
 import { IApplication } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
-import { OpenModalParameter } from 'hooks/feature/useModal';
+import { OpenModalParameter } from 'hooks/feature/useApplicationModal';
 import { formatDataType } from 'utils/date';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
 import ProcessEditModal from 'components/default/modal/ProcessEditModal';

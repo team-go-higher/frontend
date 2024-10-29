@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 
 import * as S from './ModalStyledComponents';
 import { processTypeInfo, processTypeList } from 'constants/process';
-import { modalModeType } from 'hooks/feature/useModal';
+import { modalModeType } from 'hooks/feature/useApplicationModal';
 import useDropDownHandler from 'hooks/feature/useDropDownHandler';
 import ModalDropDown from './ModalDropDown';
 import { handleApplicationSubmissionType } from './ModalViewModel';

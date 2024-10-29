@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useQuery } from '@tanstack/react-query';
 
 import { useAppDispatch } from 'redux/store';
-import { useModal } from 'hooks/feature/useModal';
+import { useApplicationModal } from 'hooks/feature/useApplicationModal';
 import { fetchKanbanList } from 'apis/kanban';
 import { setApplications } from 'redux/kanbanSlice';
 import * as S from './KanbanStyledComponents';
@@ -16,7 +16,7 @@ const Kanban = () => {
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
-    useModal();
+    useApplicationModal();
   const [fetchedProcessData, setFetchedProcessData] = useState();
 
   const {

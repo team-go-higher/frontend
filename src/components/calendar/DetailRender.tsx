@@ -5,7 +5,7 @@ import dayLeft from 'assets/calendar/calendar_day_left_arrow.svg';
 import dayRight from 'assets/calendar/calendar_day_right_arrow.svg';
 import * as S from './CalendarStyledComponents';
 import { IDetailData } from 'types/interfaces/CalendarProcess';
-import { useModal } from 'hooks/feature/useModal';
+import { useApplicationModal } from 'hooks/feature/useApplicationModal';
 import { ModalView, ModalViewModel } from 'components/default';
 import { queryKeys } from 'apis/queryKeys';
 
@@ -18,7 +18,7 @@ interface RenderDetailProps {
 
 const DetailRender = ({ selectedDate, prevDay, nextDay, detailData }: RenderDetailProps) => {
   const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
-    useModal();
+    useApplicationModal();
 
   const modalViewModel = ModalViewModel({
     mode,

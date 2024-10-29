@@ -1,6 +1,6 @@
 import { queryKeys } from 'apis/queryKeys';
 import { ModalView, ModalViewModel } from 'components/default';
-import { useModal } from 'hooks/feature/useModal';
+import { useApplicationModal } from 'hooks/feature/useApplicationModal';
 import { IUnscheduledData } from 'types/interfaces/CalendarProcess';
 import * as S from './CalendarStyledComponents';
 import { CalendarCard } from './CalendarCard';
@@ -19,7 +19,7 @@ const UnscheduledRender = ({
   nextPage,
 }: RenderUnscheduledProps) => {
   const { openModal, closeModal, mode, modalIsOpen, applicationInfo, currentProcessType } =
-    useModal();
+    useApplicationModal();
 
   const modalViewModel = ModalViewModel({
     mode,

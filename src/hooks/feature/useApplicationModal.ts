@@ -12,7 +12,7 @@ export interface OpenModalParameter {
   schedule?: string;
 }
 
-export function useModal() {
+export function useApplicationModal() {
   const [mode, setMode] = useState<modalModeType>('simpleRegister');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [applicationInfo, setApplicationInfo] = useState<any>(initialApplicationInfo);

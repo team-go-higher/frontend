@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import {
   ApplicationStatusContainer,
   ContentContainer,
@@ -7,25 +8,23 @@ import {
 import SortIcon from '../../assets/applicationStatus/applicationStatus_sort.svg';
 import ApplicationStatusCard from 'components/applicationStatus/ApplicationStatusCard';
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { queryKeys } from 'apis/queryKeys';
-import { getApplications } from 'apis/applications';
-import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
 import FilterModal from 'components/applicationStatus/FilterModal';
-import { useSearchParams } from 'react-router-dom';
 import CloseIcon from 'assets/applicationStatus/applicationStatus_close.svg';
 import {
   ApplicationProcess,
   ApplicationSort,
   ApplicationStatusCardData,
 } from 'types/interfaces/Application';
+import useInfiniteScroll from 'hooks/feature/useInfiniteScroll';
+import useInfiniteApplications from 'hooks/application/useInfiniteApplications';
 
 const ApplicationStatus = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const [companyName, setCompanyName] = useState('');
-
   const [searchParams] = useSearchParams();
 
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const [searchValue, setSearchValue] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [sort, setSort] = useState<ApplicationSort>(
     (searchParams.get('sort') as ApplicationSort) || null,
   );
@@ -36,28 +35,18 @@ const ApplicationStatus = () => {
     (searchParams.get('completed') === 'true' ? true : false) || null,
   );
 
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const { data, status, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: [queryKeys.APPLICATIONS, companyName, sort, process, complete],
-      queryFn: async ({ pageParam }) =>
-        getApplications(pageParam, companyName, sort, process, complete),
-      initialPageParam: 1,
-      getNextPageParam: lastPage => (lastPage.data.hasNext ? lastPage.data.pageNumber + 1 : null),
-    });
-
-  const applicationStatusList = data?.pages.flatMap(page => page.data.content) || [];
-
-  const handlePage = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-
+  const {
+    data: applicationStatusList,
+    handlePage,
+    canLoadMore,
+    isLoading,
+  } = useInfiniteApplications({
+    companyName,
+    sort,
+    process,
+    complete,
+  });
   const targetRef = useInfiniteScroll(handlePage);
-
-  const isAddPageAble = status !== 'error' && hasNextPage;
 
   const activeEnter = (e: { key: string }) => {
     if (e.key === 'Enter') {
@@ -97,13 +86,11 @@ const ApplicationStatus = () => {
         </HeaderContainer>
 
         <ContentContainer>
-          {applicationStatusList.map((item: ApplicationStatusCardData) => (
+          {applicationStatusList?.map((item: ApplicationStatusCardData) => (
             <ApplicationStatusCard key={item.applicationId} data={item} />
           ))}
         </ContentContainer>
-        {isAddPageAble && (
-          <div ref={targetRef}>{(isFetching || isFetchingNextPage) && <div>로딩 중!</div>}</div>
-        )}
+        {canLoadMore && <div ref={targetRef}>{isLoading && <div>로딩 중!</div>}</div>}
       </ApplicationStatusContainer>
 
       <FilterModal

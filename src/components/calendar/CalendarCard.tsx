@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { EventContainer } from './CalendarStyledComponents';
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
-import { OpenModalParameter } from 'hooks/feature/useModal';
+import { OpenModalParameter } from 'hooks/feature/useApplicationModal';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
 import { IApplication } from 'types/interfaces/KanbanProcess';
 interface CalendarCardProps {
