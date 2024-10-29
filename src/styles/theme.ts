@@ -21,6 +21,7 @@ export const theme = {
     dropDownHover: '237, 237, 237',
     main: '50, 83, 255',
     title: '51, 51, 51',
+    hoverBackground: '243, 243, 243',
   },
 };
 

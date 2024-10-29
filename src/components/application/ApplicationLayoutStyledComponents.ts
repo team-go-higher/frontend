@@ -4,16 +4,19 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5.4rem 11rem;
   width: 100%;
   max-width: 800px;
   margin: auto;
 `;
 
 export const ApplicationTitle = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  margin: 20px auto;
   color: rgb(var(--title));
-  text-align: center;
-  font-size: 2rem;
+  font-size: 22px;
   font-weight: 700;
 `;
 

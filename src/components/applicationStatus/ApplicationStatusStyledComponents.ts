@@ -1,63 +1,59 @@
 import styled from 'styled-components';
+import { EllipsisText } from 'styles/common';
 
-export const Wrapper = styled.div<{ $isView: boolean }>`
+export const Wrapper = styled.div<{ $isCompleted: boolean }>`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   border-top: 1px solid #d6d6d6;
   padding: 26px 0;
-  align-items: center;
   cursor: pointer;
 
   .labelContainer {
-    min-width: 16%;
+    width: 100px;
 
     label {
-      background-color: ${({ $isView }) => $isView && '#DCDCDC'};
-      border-color: ${({ $isView }) => $isView && '#DCDCDC'};
+      background-color: ${({ $isCompleted }) => $isCompleted && 'rgb(var(--border))'};
+      border-color: ${({ $isCompleted }) => $isCompleted && 'rgb(var(--border))'};
     }
   }
 
   .companyName {
     color: #333;
-    font-size: 24px;
-    margin-top: 5px;
-    font-weight: 600;
-    min-width: 20%;
+    font-size: 18px;
+    font-weight: 700;
+    width: 250px;
+    ${EllipsisText}
   }
 
-  .contentBox {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-    margin-top: 5px;
-
-    .content {
-      color: #555;
-      font-size: 20px;
-      font-weight: 600;
-    }
+  .content {
+    color: rgb(var(--greyText));
+    font-size: 18px;
+    font-weight: 400;
+    width: 180px;
+    ${EllipsisText}
   }
 
   .companyName,
   .deadline,
-  .contentBox > .content {
-    color: ${({ $isView }) => $isView && '#DCDCDC'};
+  .content {
+    color: ${({ $isCompleted }) => $isCompleted && 'rgb(var(--border))'};
   }
 
   &:hover {
-    background-color: #f3f3f3;
+    background-color: rgb(var(--hoverBackground));
   }
 `;
 
-export const UtilContainer = styled.div`
+export const UtilContainer = styled.div<{ $isCompleted: boolean }>`
   display: flex;
-  margin-left: auto;
   gap: 15px;
-  align-items: flex-start;
+  align-items: center;
 
   .deadline {
-    color: #f55;
-    font-size: 20px;
+    color: ${({ $isCompleted }) => ($isCompleted ? 'rgb(var(--border))' : 'rgb(var(--redText))')};
+    font-size: 14px;
     font-weight: 600;
   }
 
@@ -68,9 +64,11 @@ export const UtilContainer = styled.div`
 `;
 
 export const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  width: 32.4px;
-  height: 18.3px;
+  width: 30px;
+  height: 15px;
   border-radius: 17.5px;
   background: rgb(var(--border));
   position: relative;

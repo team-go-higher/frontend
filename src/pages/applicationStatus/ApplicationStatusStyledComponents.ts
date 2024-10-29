@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  margin: 73px auto;
+  margin: auto;
 `;
 
 export const ApplicationStatusContainer = styled.div`
@@ -13,11 +13,14 @@ export const ApplicationStatusContainer = styled.div`
   flex-direction: column;
 
   .title {
-    color: #333;
-    text-align: center;
-    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    margin: 20px auto;
+    color: rgb(var(--title));
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 41px;
   }
 `;
 
