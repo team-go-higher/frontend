@@ -1,4 +1,4 @@
-export type ProcessType = 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+import { ProcessType } from './Common';
 
 export interface IProcesses {
   id?: number;
@@ -27,8 +27,6 @@ export interface IApplicationSpecific {
   url?: string;
 }
 
-export type ApplicationProcessType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-
 export interface ApplicationStatusCardData {
   applicationId: number;
   companyName: string;
@@ -37,17 +35,18 @@ export interface ApplicationStatusCardData {
   isCompleted: boolean;
   process: {
     id: number;
-    type: ApplicationProcessType;
+    type: ProcessType;
     description: string;
     schedule: string;
   };
 }
 
 export interface GetApplicationsRes {
+  pageNumber: number;
   hasNext: boolean;
   content: ApplicationStatusCardData[];
 }
 
 export type ApplicationSort = 'processType' | 'reverseProcessType' | 'closing' | null;
 
-export type ApplicationProcess = ApplicationProcessType[] | null;
+export type ApplicationProcess = ProcessType[] | null;

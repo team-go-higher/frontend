@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react';
 import { useAppSelector } from 'redux/store';
-import { modalModeType } from 'hooks/feature/useModal';
+import { modalModeType } from 'hooks/feature/useApplicationModal';
 import { processTypeList } from 'constants/process';
-import { IApplication, IKabanData, processType } from 'types/interfaces/KanbanProcess';
+import { IApplication, IKabanData } from 'types/interfaces/KanbanProcess';
 import * as S from './KanbanStyledComponents';
-import * as List from 'components/kanban/KanbanList/KanbanListStyledComponents';
 import { KanbanList, KanbanCard } from 'components/kanban';
 import { initialApplicationInfo } from 'constants/application';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface KanbanBoardProps {
   openModal: (parameter: {
     mode: modalModeType;
-    processType?: string;
+    processType?: ProcessType;
     applicationInfo: IApplication;
   }) => void;
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
@@ -20,7 +20,7 @@ interface KanbanBoardProps {
 const KanbanBoard = ({ openModal, setFetchedProcessData }: KanbanBoardProps) => {
   const kanbanList: IKabanData[] = useAppSelector(state => state.kanban);
 
-  function kanbanListHandler(processType: processType): ReactElement[] | ReactElement {
+  function kanbanListHandler(processType: ProcessType): ReactElement[] | ReactElement {
     if (kanbanList) {
       const applicationListByProcessType = kanbanList.filter(
         data => data.processType === processType,

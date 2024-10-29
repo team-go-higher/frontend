@@ -1,6 +1,6 @@
-import { processType } from 'types/interfaces/KanbanProcess';
+import { ProcessType } from 'types/interfaces/Common';
 
-type IProcessTypeInfo = Record<processType, { detailed: null | string[]; korean: string }>;
+type IProcessTypeInfo = Record<ProcessType, { detailed: null | string[]; korean: string }>;
 
 export const processTypeInfo: IProcessTypeInfo = {
   TO_APPLY: { detailed: null, korean: '지원예정' },
@@ -13,5 +13,5 @@ export const processTypeInfo: IProcessTypeInfo = {
   COMPLETE: { detailed: ['합격', '불합격', '기타'], korean: '완료' },
 };
 
-export const processTypeList: processType[] = Object.keys(processTypeInfo) as processType[];
+export const processTypeList: ProcessType[] = Object.keys(processTypeInfo) as ProcessType[];
 export const processTypeListToKorean = Object.values(processTypeInfo).map(info => info.korean);

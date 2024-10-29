@@ -10,7 +10,7 @@ const ApplicationDetail = () => {
     <ApplicationLayout
       applicationType='default'
       applicationId={applicationId}
-      data={applicationData}
+      data={applicationData?.data}
     />
   );
 };

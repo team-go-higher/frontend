@@ -24,8 +24,7 @@ const ApplicationLayout = ({
 }: ApplicationLayoutProps) => {
   const navigate = useNavigate();
   const { desiredPositions } = JSON.parse(localStorage.getItem('userPositionInfo') || '{}');
-  const { registerApplicationMutation, deleteApplicationMutation, editApplicationMutation } =
-    useMutateApplication();
+  const { registerApplicationMutation, editApplicationMutation } = useMutateApplication();
 
   const methods = useForm<FieldValues>({
     mode: 'onChange',
@@ -75,7 +74,6 @@ const ApplicationLayout = ({
   }, [applicationType, data, reset]);
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
     // id 제거, 시간 포맷 `년-월-일T시:분`으로
     const newApplicationData = {
       ...data,
@@ -88,7 +86,10 @@ const ApplicationLayout = ({
     // 등록했을 때
     if (applicationType === 'add') {
       registerApplicationMutation.mutate(newApplicationData, {
-        onSuccess: () => navigate('/applicationStatus'),
+        onSuccess: headers => {
+          const applicationId = headers.location.split('/').pop();
+          navigate(`/application/detail/${applicationId}`);
+        },
       });
     }
 
@@ -103,15 +104,6 @@ const ApplicationLayout = ({
           onSuccess: () => navigate(`/application/detail/${applicationId}`),
         },
       );
-    }
-  };
-
-  // 삭제했을 때
-  const onClickDeleteButton = () => {
-    if (applicationId !== undefined) {
-      deleteApplicationMutation.mutate(applicationId, {
-        onSuccess: () => navigate('/applicationStatus'),
-      });
     }
   };
 
@@ -145,10 +137,11 @@ const ApplicationLayout = ({
         <S.RowContainer>
           <ApplicationLabel label='직군' isRequired={true} />
           <ApplicationDropdown
+            applicationType={applicationType}
             dropdownItems={desiredPositions}
             control={control}
             name='position'
-            readonly={applicationType === 'default'}
+            value={data?.position || ''}
           />
         </S.RowContainer>
 
@@ -163,7 +156,7 @@ const ApplicationLayout = ({
           />
         </S.RowContainer>
 
-        <S.RowContainer isProcessRow>
+        <S.RowContainer>
           <ApplicationLabel label='전형 단계' />
           <ApplicationProcess
             fields={fields}
@@ -262,14 +255,17 @@ const ApplicationLayout = ({
         </S.RowContainer>
 
         {/* 버튼 */}
-        <div className='btnContainer'>
+        <S.ButtonContainer>
           {applicationType === 'default' ? (
             <>
-              <Button variant='secondary' type='button' onClick={onClickDeleteButton}>
-                삭제하기
-              </Button>
-              <Button type='button' onClick={() => navigate(`/application/edit/${applicationId}`)}>
+              <Button
+                variant='secondary'
+                type='button'
+                onClick={() => navigate(`/application/edit/${applicationId}`)}>
                 수정하기
+              </Button>
+              <Button type='button' onClick={() => navigate('/applicationStatus')}>
+                지원 현황 모아보기
               </Button>
             </>
           ) : (
@@ -277,7 +273,7 @@ const ApplicationLayout = ({
               <Button type='submit'>작성완료</Button>
             </>
           )}
-        </div>
+        </S.ButtonContainer>
       </S.FormContainer>
     </S.Wrapper>
   );

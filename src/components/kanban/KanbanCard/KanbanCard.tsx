@@ -3,9 +3,9 @@ import { useDrag } from 'react-dnd';
 
 import { ReactComponent as MoreIcon } from 'assets/main/main_kanban_card_more.svg';
 import * as S from './KanbanCardStyledComponents';
-import { IApplication, processType } from 'types/interfaces/KanbanProcess';
+import { IApplication } from 'types/interfaces/KanbanProcess';
 import { fetchApplicationStagesByProcessType } from 'apis/kanban';
-import { modalModeType } from 'hooks/feature/useModal';
+import { OpenModalParameter } from 'hooks/feature/useApplicationModal';
 import { formatDataType } from 'utils/date';
 import MoreMenuModal from 'components/default/modal/MoreMenuModal';
 import ProcessEditModal from 'components/default/modal/ProcessEditModal';
@@ -14,15 +14,12 @@ import { formatProcessToKor } from 'utils/process';
 import { queryKeys } from 'apis/queryKeys';
 import { ModalModel } from 'components/default';
 import { useNavigate } from 'react-router-dom';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface IProps {
   item: IApplication;
-  currentProcessType: processType;
-  openModal: (parameter: {
-    mode: modalModeType;
-    processType?: string;
-    applicationInfo: IApplication;
-  }) => void;
+  currentProcessType: ProcessType;
+  openModal: (parameter: OpenModalParameter) => void;
   setFetchedProcessData: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -32,7 +29,7 @@ export interface IProcessArray {
 }
 export interface IProcess {
   applicationId: number;
-  processType: string;
+  processType: ProcessType;
   process: IProcessArray[];
 }
 
@@ -43,8 +40,8 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
   const [moreMenuShow, setMoreMenuShow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [processInfo, setProcessInfo] = useState<IProcess>({
-    processType: '',
     applicationId: 0,
+    processType: '' as ProcessType,
     process: [],
   });
 
@@ -85,7 +82,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
     }),
 
     end: async (draggedItem, monitor) => {
-      const dropResult: { dropEffect: string; processType: processType } | null =
+      const dropResult: { dropEffect: string; processType: ProcessType } | null =
         monitor.getDropResult();
 
       if (dropResult) {
@@ -156,7 +153,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
       <S.KanbanCardContainer
         onClick={() => navigate(`/application/detail/${item.applicationId}`)}
         ref={ref}
-        $isdragging={isDragging}
+        $isDragging={isDragging}
         $currentProcessType={currentProcessType}>
         <S.DetailProcess $currentProcessType={currentProcessType}>
           {item.process.description}

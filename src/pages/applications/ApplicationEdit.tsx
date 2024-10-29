@@ -6,7 +6,7 @@ import { removeProcessIds } from 'utils/removeIds';
 const ApplicationEdit = () => {
   const applicationId = Number(useParams().applicationId);
   const { data: application } = useFetchApplication(applicationId);
-  const applicationData = application ? removeProcessIds(application) : {};
+  const applicationData = application ? removeProcessIds(application.data) : {};
 
   return (
     <ApplicationLayout

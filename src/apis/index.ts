@@ -1,5 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { IUserInfoJson, getUserInfo, updateUserInfo } from 'utils/localStorage';
+
 interface ICommonResponse<T> {
   success: boolean;
   error: any;
@@ -40,7 +41,7 @@ const getRefreshToken = async (): Promise<string | void> => {
     lock = false;
     subscribers = [];
     localStorage.clear();
-    window.location.replace('/signin');
+    window.location.replace('/signIn');
   }
 };
 
@@ -104,11 +105,11 @@ class ApiService {
   public async commonRequest<T>(
     method: 'get' | 'post' | 'put' | 'patch' | 'delete',
     url: string,
-    data?: any,
+    data?: ICommonResponse<T>,
     config?: InternalAxiosRequestConfig,
-  ): Promise<ICommonResponse<T>> {
+  ): Promise<AxiosResponse<ICommonResponse<T>>> {
     const response = await this.api[method](url, data, config);
-    return response.data;
+    return response;
   }
 
   public Get = async <T>(url: string, config?: InternalAxiosRequestConfig) =>

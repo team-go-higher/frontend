@@ -1,21 +1,24 @@
 import { initialApplicationInfo } from 'constants/application';
 import { useState } from 'react';
-import { IApplication, processType } from 'types/interfaces/KanbanProcess';
+import { ProcessType } from 'types/interfaces/Common';
+import { IApplication } from 'types/interfaces/KanbanProcess';
 
 export type modalModeType = 'simpleRegister' | 'simpleEdit' | 'updateCurrentProcess';
 
-export function useModal() {
+export interface OpenModalParameter {
+  mode: modalModeType;
+  processType?: ProcessType | undefined;
+  applicationInfo: IApplication;
+  schedule?: string;
+}
+
+export function useApplicationModal() {
   const [mode, setMode] = useState<modalModeType>('simpleRegister');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [applicationInfo, setApplicationInfo] = useState<any>(initialApplicationInfo);
-  const [currentProcessType, setCurrentProcessType] = useState<processType | string>('');
+  const [currentProcessType, setCurrentProcessType] = useState<ProcessType>('' as ProcessType);
 
-  const openModal = (parameter: {
-    mode: modalModeType;
-    processType?: string;
-    applicationInfo: IApplication;
-    schedule?: string;
-  }) => {
+  const openModal = (parameter: OpenModalParameter) => {
     const { mode, processType, applicationInfo, schedule } = parameter;
 
     setMode(mode);
@@ -37,7 +40,7 @@ export function useModal() {
   };
 
   const closeModal = () => {
-    setCurrentProcessType('');
+    setCurrentProcessType('' as ProcessType);
     setModalIsOpen(false);
     setApplicationInfo(initialApplicationInfo);
   };

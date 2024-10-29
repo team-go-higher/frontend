@@ -23,20 +23,18 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
   };
 
   return (
-    <Wrapper $isView={isCompleted} onClick={handleCardClick}>
+    <Wrapper $isCompleted={isCompleted} onClick={handleCardClick}>
       <div className='labelContainer'>
         <Label process={type} />
       </div>
 
       <div className='companyName'>{companyName}</div>
-      <div className='contentBox'>
-        <div className='content'>
-          {position}
-          {specificPosition && `/${specificPosition}`}
-        </div>
+      <div className='content'>
+        {position}
+        {specificPosition && `/${specificPosition}`}
       </div>
 
-      <UtilContainer>
+      <UtilContainer $isCompleted={isCompleted}>
         <div className='deadline'>
           {schedule
             ? format(new Date(schedule), 'yyyy년 M월 dd일 HH:mm')
