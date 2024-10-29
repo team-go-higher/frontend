@@ -1,6 +1,7 @@
 import { FieldValues, UseControllerProps } from 'react-hook-form';
 import { Input } from 'components/default/input/Input';
 import { Textarea } from 'components/default/input/Textarea';
+import * as S from './ApplicationLayoutStyledComponents';
 
 interface ApplicationInputProps extends UseControllerProps<FieldValues> {
   applicationType: 'edit' | 'default' | 'add';
@@ -16,14 +17,18 @@ interface DefaultContentViewProps {
 }
 
 const DefaultContentView = ({ name, value = '' }: DefaultContentViewProps) => {
+  if (value === '') {
+    return <S.ContentBox>-</S.ContentBox>;
+  }
+
   return (
     <>
       {name === 'url' ? (
-        <a className='content url' href={value}>
-          채용사이트
-        </a>
+        <S.ContentBox>
+          <a href={value}>채용사이트</a>
+        </S.ContentBox>
       ) : (
-        <div className='content'>{value === '' ? '-' : value}</div>
+        <S.ContentBox>{value}</S.ContentBox>
       )}
     </>
   );

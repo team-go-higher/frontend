@@ -2,11 +2,8 @@ import styled from 'styled-components';
 import Modal, { Styles } from 'react-modal';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  ApplicationProcess,
-  ApplicationProcessType,
-  ApplicationSort,
-} from 'types/interfaces/Application';
+import { ApplicationProcess, ApplicationSort } from 'types/interfaces/Application';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface FilterModalProp {
   isOpen: boolean;
@@ -83,7 +80,7 @@ const FilterModal = ({ isOpen, closeModal, setSort, setProcess, setComplete }: F
     setFilterItem({ ...filterItem, sort: filterItem.sort === value ? null : value });
   };
 
-  const handleProcess = (value: ApplicationProcessType) => {
+  const handleProcess = (value: ProcessType) => {
     setFilterItem({
       ...filterItem,
       process:
@@ -183,8 +180,7 @@ const FilterModal = ({ isOpen, closeModal, setSort, setProcess, setComplete }: F
                     item={e}
                     key={idx}
                     isActive={
-                      filterItem.process &&
-                      filterItem.process.includes(e.value as ApplicationProcessType)
+                      filterItem.process && filterItem.process.includes(e.value as ProcessType)
                         ? true
                         : false
                     }

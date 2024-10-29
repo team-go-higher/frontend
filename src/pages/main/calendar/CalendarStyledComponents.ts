@@ -4,10 +4,10 @@ import styled from 'styled-components';
 export const CalendarPage = styled.div`
   width: 996px;
   margin: auto;
-  .calendar-detail {
-    display: flex;
-    flex-direction: row;
-  }
+`;
+
+export const CalenderSection = styled.section`
+  display: flex;
 `;
 
 //CalendarContainer
@@ -26,7 +26,7 @@ export const DayContainer = styled.div`
 `;
 
 // UnscheduledContainer
-export const UnscheduledContainer = styled.div`
+export const UnscheduledSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;

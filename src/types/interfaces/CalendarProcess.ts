@@ -1,24 +1,24 @@
+import { ProcessType } from './Common';
+
+export interface IProcessData {
+  id: number;
+  type: ProcessType;
+  description: string;
+  schedule: string;
+}
+
 export interface ICalendarData {
   applicationId: number;
   processId: number;
   name: string;
-  processType: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
+  processType: ProcessType;
   schedule: string;
 }
 
 export interface IDetailData {
   applicationId: number;
   companyName: string;
-  process: {
-    id: number;
-    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-    description: string;
-    schedule: string;
-  };
-}
-export interface IUnscheduledData {
-  hasNext: boolean;
-  content: IUnscheduledContent[];
+  process: IProcessData;
 }
 
 export interface IUnscheduledContent {
@@ -26,10 +26,10 @@ export interface IUnscheduledContent {
   companyName: string;
   position: string;
   specificPosition: string | null;
-  process: {
-    id: number;
-    type: 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
-    description: string;
-    schedule: string;
-  };
+  process: IProcessData;
+}
+export interface IUnscheduledData {
+  pageNumber: number;
+  hasNext: boolean;
+  content: IUnscheduledContent[];
 }

@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import ModalModel from './ModalModel';
-import { modalModeType } from 'hooks/feature/useModal';
+import { modalModeType } from 'hooks/feature/useApplicationModal';
 import { formatProcessToKor } from 'utils/process';
-import { processType } from 'types/interfaces/KanbanProcess';
 import { FieldValues } from 'react-hook-form';
+import { ProcessType } from 'types/interfaces/Common';
 
 interface IProps {
   mode: modalModeType;
   queryKey: string[];
   closeModal: () => void;
-  currentProcessType: processType;
+  currentProcessType: ProcessType;
   fetchedProcessData?: any;
   applicationInfo: any;
 }
@@ -18,7 +18,7 @@ export interface IFormValues {
   companyName: string;
   position: string;
   url: string;
-  processType: processType;
+  processType: ProcessType;
   detailedProcessType: string;
   schedule: string;
 }

@@ -3,7 +3,9 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  margin: 73px auto;
+  margin: auto;
+  width: 1000px;
+  overflow: hidden;
 `;
 
 export const ApplicationStatusContainer = styled.div`
@@ -13,11 +15,14 @@ export const ApplicationStatusContainer = styled.div`
   flex-direction: column;
 
   .title {
-    color: #333;
-    text-align: center;
-    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    margin: 20px auto;
+    color: rgb(var(--title));
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 41px;
   }
 `;
 
@@ -26,7 +31,6 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  margin-bottom: 21.5px;
 
   .sortContainer {
     display: flex;
@@ -41,7 +45,6 @@ export const HeaderContainer = styled.div`
       font-size: 20px;
       font-weight: 500;
       letter-spacing: -0.8px;
-      margin-top: 5px;
     }
   }
 
@@ -81,5 +84,5 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 800px;
+  margin: 40px auto;
 `;

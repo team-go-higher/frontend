@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { TYPE_PROCESS } from 'styles/processColor';
 
 export const StyledCalendarInput = styled.div<{
   process?: 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE';
 }>`
+  width: 100%;
+
   .react-datepicker__triangle {
     display: none;
   }
@@ -65,18 +66,20 @@ export const StyledCalendarInput = styled.div<{
     background-color: rgb(var(--main));
   }
 
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
   .react-datepicker__input-container {
-    height: 30px;
-    border-radius: 5px;
-    line-height: 30px;
     input {
+      width: 100%;
       font-size: 14px;
       font-weight: 500;
-      color: ${({ process }) => process && TYPE_PROCESS[process]};
+      color: ${({ process }) => `rgb(var(--${process}))`};
       &::placeholder {
         font-size: 14px;
         font-weight: 500;
-        color: ${({ process }) => process && TYPE_PROCESS[process]};
+        color: ${({ process }) => `rgb(var(--${process}))`};
       }
       background-color: transparent;
     }

@@ -1,13 +1,7 @@
 import { useDropdown } from 'hooks/feature/useDropDown';
 import { Controller, Control } from 'react-hook-form';
 import styled, { keyframes } from 'styled-components';
-
-interface DropdownProps {
-  dropdownItems: { id: number; position: string }[];
-  control: Control;
-  name: string;
-  readonly?: boolean;
-}
+import * as S from './ApplicationLayoutStyledComponents';
 
 const dropdown = keyframes`
   0% {
@@ -75,7 +69,7 @@ const DropdownItem = styled.li`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: rgb(var(--placeholder));
+    background-color: rgb(var(--hoverBackground));
   }
 
   span {
@@ -84,10 +78,34 @@ const DropdownItem = styled.li`
   }
 `;
 
-const ApplicationDropdown = ({ dropdownItems, control, name, readonly = false }: DropdownProps) => {
+interface DropdownProps {
+  applicationType: 'edit' | 'default' | 'add';
+  dropdownItems: { id: number; position: string }[];
+  control: Control;
+  name: string;
+  value?: string;
+}
+
+interface DefaultContentViewProps {
+  value?: string;
+}
+
+const DefaultContentView = ({ value = '' }: DefaultContentViewProps) => {
+  return <S.ContentBox>{value === '' ? '-' : value}</S.ContentBox>;
+};
+
+const ApplicationDropdown = ({
+  applicationType,
+  dropdownItems,
+  control,
+  name,
+  value,
+}: DropdownProps) => {
   const { isOpen, toggleDropdown, dropdownRef } = useDropdown();
 
-  return (
+  return applicationType === 'default' ? (
+    <DefaultContentView value={value}></DefaultContentView>
+  ) : (
     <Controller
       name={name}
       control={control}
@@ -99,7 +117,7 @@ const ApplicationDropdown = ({ dropdownItems, control, name, readonly = false }:
 
         return (
           <DropdownContainer ref={dropdownRef}>
-            <DropdownToggle onClick={() => !readonly && toggleDropdown()}>
+            <DropdownToggle onClick={() => toggleDropdown()}>
               {dropdownItems.find(item => item.position === field.value)?.position ||
                 '선택해주세요'}
               <span>{isOpen ? '▲' : '▼'}</span>
@@ -111,8 +129,7 @@ const ApplicationDropdown = ({ dropdownItems, control, name, readonly = false }:
                   {dropdownItems.map(item => (
                     <DropdownItem
                       key={item.id}
-                      onClick={() => handleDropdownItemClick(item.position)} // position 값을 저장
-                    >
+                      onClick={() => handleDropdownItemClick(item.position)}>
                       <span>{item.position}</span>
                     </DropdownItem>
                   ))}

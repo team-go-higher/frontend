@@ -23,13 +23,13 @@ const useMutateApplication = () => {
     mutationFn: (newApplicationData: IApplicationSpecific) =>
       createNewApplicationSpecific(newApplicationData),
     onSuccess,
-    onError: error => onError(error),
+    onError,
   });
 
   const deleteApplicationMutation = useMutation({
     mutationFn: (applicationId: number) => deleteApplication(applicationId),
     onSuccess,
-    onError: error => onError(error),
+    onError,
   });
 
   const editApplicationMutation = useMutation({
@@ -41,14 +41,14 @@ const useMutateApplication = () => {
       newApplicationData: IApplicationSpecific;
     }) => editApplicationSpecific(applicationId, newApplicationData),
     onSuccess,
-    onError: error => onError(error),
+    onError,
   });
 
   const applicationFinishedMutation = useMutation({
     mutationFn: ({ applicationId, isCompleted }: { applicationId: number; isCompleted: boolean }) =>
       patchApplicationsFinished(applicationId, isCompleted),
     onSuccess,
-    onError: error => onError(error),
+    onError,
   });
 
   return {

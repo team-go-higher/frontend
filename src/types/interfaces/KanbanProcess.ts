@@ -1,7 +1,7 @@
-export type processType = 'TO_APPLY' | 'DOCUMENT' | 'TEST' | 'INTERVIEW' | 'COMPLETE' | string;
+import { ProcessType } from './Common';
 
 export interface IKabanData {
-  processType: processType;
+  processType: ProcessType;
   applications: IApplication[];
 }
 
@@ -13,7 +13,7 @@ export interface IApplication {
     description: string;
     id: number;
     schedule: string;
-    type: processType;
+    type: ProcessType;
   };
   specificPosition: null | string;
 }
@@ -23,7 +23,7 @@ export interface IRegisterNewApplication {
   position: string;
   url?: string;
   currentProcess: {
-    type: processType;
+    type: ProcessType;
     description?: string;
     schedule?: string;
   };

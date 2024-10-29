@@ -232,11 +232,12 @@ export const RenderUnscheduledContainer = styled.div`
 export const TitleSection = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 30px;
   gap: 50px;
   .arrow {
+    width: 20px;
     cursor: pointer;
   }
   .text {

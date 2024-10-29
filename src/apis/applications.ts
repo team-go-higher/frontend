@@ -23,44 +23,41 @@ export const getApplications = async (
     process,
   });
 
-  const data = await apiService.Get<GetApplicationsRes>(`/v1/applications?` + params.toString());
+  const config = await apiService.Get<GetApplicationsRes>(`/v1/applications?` + params.toString());
 
-  return data;
+  return config.data;
 };
 
 export const patchApplicationsFinished = async (applicationId: number, isCompleted: boolean) => {
-  const data = await apiService.Patch(`/v1/applications/${applicationId}/finished`, {
+  await apiService.Patch(`/v1/applications/${applicationId}/finished`, {
     isCompleted,
   });
-
-  return data.data;
 };
 
 export const getApplicationSpecific = async (applicationId: number) => {
-  const data = await apiService.Get<IApplicationSpecific>(`/v1/applications/${applicationId}`);
-  return data.data;
+  const config = await apiService.Get<IApplicationSpecific>(`/v1/applications/${applicationId}`);
+  return config.data;
 };
 
 export const createNewApplicationSpecific = async (newApplicationData: IApplicationSpecific) => {
-  const data = await apiService.Post<IApplicationSpecific>(
+  const config = await apiService.Post<IApplicationSpecific>(
     `/v1/applications/specific`,
     newApplicationData,
   );
-  return data.data;
+  return config.headers;
 };
 
 export const editApplicationSpecific = async (
   applicationId: number,
   newApplicationData: IApplicationSpecific,
 ) => {
-  const data = await apiService.Put<IApplicationSpecific>(
+  const config = await apiService.Put<IApplicationSpecific>(
     `/v1/applications/${applicationId}/specific`,
     newApplicationData,
   );
-  return data.data;
+  return config.data;
 };
 
 export const deleteApplication = async (applicationId: number) => {
-  const data = await apiService.Delete(`/v1/applications/${applicationId}`);
-  return data.data;
+  await apiService.Delete(`/v1/applications/${applicationId}`);
 };

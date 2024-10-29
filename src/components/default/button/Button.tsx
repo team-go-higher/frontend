@@ -21,8 +21,10 @@ export const TYPE_VARIANTS = {
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  width: 115px;
+  width: fit-content;
+  min-width: 115px;
   height: 37px;
+  padding: 0 25px;
   outline: none;
   border: 1px solid transparent;
   border-radius: 50px;

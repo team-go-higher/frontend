@@ -34,10 +34,6 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (pathname === '/') {
-      setIsSelect('');
-      return;
-    }
     if (pathname === '/application/add') {
       setIsSelect('지원서 추가');
       return;
@@ -46,6 +42,7 @@ const Header = () => {
       setIsSelect('지원 현황 모아보기');
       return;
     }
+    setIsSelect('');
   }, [pathname]);
 
   return (

@@ -1,22 +1,22 @@
 import apiService from 'apis';
+import { IPosition, IUserInfo } from 'types/interfaces/Auth';
 
 export const getPositions = async () => {
-  const { data }: any = await apiService.Get('/v1/positions');
-  return data;
+  const config = await apiService.Get<IPosition[]>('/v1/positions');
+  return config.data;
 };
 
 export const postPositions = async (positionIds: number[]) => {
-  const { data }: any = await apiService.Post('/v1/desired-positions', {
+  await apiService.Post('/v1/desired-positions', {
     positionIds: positionIds,
     mainPositionId: positionIds[0],
     emptyInput: true,
   });
-  return data;
 };
 
-export const fetchUserPoistionInfo = async () => {
-  const { data }: any = await apiService.Get('/v1/users/me');
-  return data;
+export const fetchUserPositionInfo = async () => {
+  const config = await apiService.Get<IUserInfo>('/v1/users/me');
+  return config.data;
 };
 
 export const postLogout = async () => {

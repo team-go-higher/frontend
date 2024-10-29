@@ -5,8 +5,8 @@ export const theme = {
     TO_APPLY: '255, 233, 116',
     DOCUMENT: '255, 174, 198',
     TEST: '200, 174, 255',
-    INTERVIEW: '158, 220, 255',
-    COMPLETE: '150, 150, 150',
+    INTERVIEW: '96, 207, 254',
+    COMPLETE: '255, 85, 85',
     redText: '255, 85, 85',
     blueText: '50, 83, 255',
     greyText: '85, 85, 85',
@@ -20,11 +20,8 @@ export const theme = {
     placeholder: '200, 200, 200',
     dropDownHover: '237, 237, 237',
     main: '50, 83, 255',
-    defaultPink: '255, 174, 198',
-    defaultPurple: '149, 112, 226',
-    defaultSkyblue: '96, 207, 254',
-    defaultRed: '255, 85, 85',
     title: '51, 51, 51',
+    hoverBackground: '243, 243, 243',
   },
 };
 
