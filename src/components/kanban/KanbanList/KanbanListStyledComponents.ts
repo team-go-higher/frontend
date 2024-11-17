@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const KanbanListContainer = styled.div<{ $processType: string }>`
-  min-width: 240px;
+  width: 240px;
   height: 835px;
   background: ${({ $processType }) => `rgba(var(--${$processType}), 0.2)`};
   border-radius: 15px;
@@ -25,6 +25,7 @@ export const ProcessTitle = styled.div<{ $processType: string }>`
 `;
 
 export const KanbanCardContainer = styled.div<{ $processType: string }>`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 15px;
