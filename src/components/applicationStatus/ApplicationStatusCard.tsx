@@ -28,7 +28,9 @@ const ApplicationStatusCard = ({ data }: ApplicationStatusCardProps) => {
         <Label process={type} />
       </div>
 
-      <div className='companyName'>{companyName}</div>
+      <div title={companyName} className='companyName'>
+        {companyName}
+      </div>
       <div className='content'>
         {position}
         {specificPosition && `/${specificPosition}`}

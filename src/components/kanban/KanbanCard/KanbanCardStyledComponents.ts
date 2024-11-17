@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { EllipsisText } from 'styles/common';
 
 interface IKanbanCardContainerProps {
   $isDragging: boolean;
@@ -37,6 +38,7 @@ export const DetailProcess = styled.div<{ $currentProcessType: string }>`
 export const CompanyName = styled.p`
   font-size: 18px;
   font-weight: 700;
+  ${EllipsisText}
 `;
 
 export const Job = styled.p`
