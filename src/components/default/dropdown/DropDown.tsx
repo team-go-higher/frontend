@@ -11,6 +11,7 @@ interface DropdownProps {
   options: string[] | null;
   selectedOptions: { process: ProcessType; option: string }[];
   onSelect: (process: ProcessType, option: string) => void;
+  isEmpty: boolean;
   disabled: boolean;
 }
 
@@ -21,7 +22,7 @@ const DropdownContainer = styled.div`
 const DropdownButton = styled.button<{
   $isOpen: boolean;
   $process: ProcessType;
-  $disabled: boolean;
+  $isEmpty: boolean;
 }>`
   display: flex;
   justify-content: space-between;
@@ -32,9 +33,9 @@ const DropdownButton = styled.button<{
   border: 1px solid ${props => `rgb(var(--${props.$process}))`};
   border-radius: 15px;
   background-color: ${props =>
-    props.$isOpen || props.$disabled ? `rgb(var(--${props.$process}))` : 'rgb(var(--white));'};
+    props.$isOpen || !props.$isEmpty ? `rgb(var(--${props.$process}))` : 'rgb(var(--white));'};
   color: ${props =>
-    props.$isOpen || props.$disabled ? 'rgb(var(--white));' : `rgb(var(--${props.$process}))`};
+    props.$isOpen || !props.$isEmpty ? 'rgb(var(--white));' : `rgb(var(--${props.$process}))`};
   font-size: 14px;
   cursor: pointer;
   z-index: ${props => (props.$isOpen ? '3' : '1')};
@@ -118,6 +119,7 @@ export const DropDown = ({
   options,
   selectedOptions,
   onSelect,
+  isEmpty,
   disabled,
 }: DropdownProps) => {
   const { isOpen, toggleDropdown, dropdownRef } = useDropdown();
@@ -138,10 +140,12 @@ export const DropDown = ({
         onClick={handleButtonClick}
         $isOpen={isOpen}
         $process={process}
-        $disabled={disabled}>
+        $isEmpty={isEmpty}>
         <div className='process-text'>{process && formatProcessToKor(process)}</div>
         {!disabled && (
-          <SelectArrowIcon fill={isOpen ? 'rgb(var(--white))' : `rgb(var(--${process}))`} />
+          <SelectArrowIcon
+            fill={isOpen || !isEmpty ? 'rgb(var(--white))' : `rgb(var(--${process}))`}
+          />
         )}
       </DropdownButton>
       {options && (
