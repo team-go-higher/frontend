@@ -33,7 +33,9 @@ export const CalendarCard = ({ event, openModal }: CalendarCardProps) => {
 
   return (
     <EventContainer $processType={event.process.type}>
-      <h1 className='companyName'>{event.companyName}</h1>
+      <h1 className='companyName' title={event.companyName}>
+        {event.companyName}
+      </h1>
       <p className='description'>{event.process.description}</p>
       <div className='bottomContainer'>
         <div className='schedule'>

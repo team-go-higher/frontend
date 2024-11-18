@@ -105,7 +105,7 @@ export const RenderCells = ({
           <div className='date'>{formattedDate.padStart(2, '0')}</div>
           {eventsOnThisDate &&
             eventsOnThisDate.slice(0, 3).map(event => (
-              <Event key={event.processId} $processType={event.processType}>
+              <Event key={event.processId} title={event.name} $processType={event.processType}>
                 {event.name}
               </Event>
             ))}

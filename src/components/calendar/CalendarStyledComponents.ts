@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { isSameMonth, isSameDay } from 'date-fns';
+import { EllipsisText } from 'styles/common';
 
 //RenderHeader
 export const RenderHeaderContainer = styled.div`
@@ -102,10 +103,11 @@ export const Event = styled.div<EventProps>`
   height: 22px;
   margin: auto;
   margin-bottom: 1px;
-  padding: 5px 6px;
+  padding: 2px 6px;
   border-radius: 5px;
   color: white;
   background: ${({ $processType }) => `rgb(var(--${$processType}))`};
+  ${EllipsisText}
 `;
 
 export const Row = styled.div`
@@ -199,10 +201,11 @@ export const EventContainer = styled.div<EventProps>`
   gap: 4px;
 
   .companyName {
+    width: 100%;
     color: #333;
     font-size: 22px;
     font-weight: 700;
-    margin-top: 4px;
+    ${EllipsisText}
   }
   .description {
     color: ${({ $processType }) => `rgb(var(--${$processType}))`};
