@@ -158,7 +158,7 @@ const KanbanCard = ({ item, currentProcessType, openModal, setFetchedProcessData
         <S.DetailProcess $currentProcessType={currentProcessType}>
           {item.process.description}
         </S.DetailProcess>
-        <S.CompanyName>{item.companyName}</S.CompanyName>
+        <S.CompanyName title={item.companyName}>{item.companyName}</S.CompanyName>
         <S.Job>{item.position}</S.Job>
         <S.Schedule>{formatDataType(item.process.schedule)}</S.Schedule>
         <S.MoreIconDiv>
