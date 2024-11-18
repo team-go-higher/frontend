@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 800px;
   margin: auto;
 `;
 
@@ -21,7 +20,7 @@ export const ApplicationTitle = styled.h1`
 `;
 
 export const FormContainer = styled.form`
-  min-width: 500px;
+  width: 600px;
   display: flex;
   flex-direction: column;
   margin: 3.3rem 0 5rem;
