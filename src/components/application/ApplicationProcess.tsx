@@ -102,7 +102,7 @@ const ApplicationProcess = ({
   };
 
   // 각 type별로 이 상세 전형이 비어있는지 확인하는 함수
-  const isTypeScheduleEmpty = (process: ProcessType) => {
+  const isTypeEmpty = (process: ProcessType) => {
     return fields.filter((v: any) => v.type === process).length === 0;
   };
 
@@ -112,13 +112,14 @@ const ApplicationProcess = ({
         <ProcessRowContainer>
           <LabelContainer>
             {applicationType === 'default' ? (
-              <Label process={event.type} isEmpty={isTypeScheduleEmpty(event.type)} />
+              <Label process={event.type} isEmpty={isTypeEmpty(event.type)} />
             ) : (
               <DropDown
                 process={event.type}
                 options={ProcessArr.find(e => e.type === event.type)?.description || []}
                 selectedOptions={selectedOptions}
                 onSelect={handleSelectCheckbox}
+                isEmpty={isTypeEmpty(event.type)}
                 disabled={event.type === 'DOCUMENT'}
               />
             )}
