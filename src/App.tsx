@@ -1,30 +1,17 @@
-import './App.css';
-import { styled } from 'styled-components';
-import Header from './components/default/header/Header';
-import NavBar from './components/default/navBar/NavBar';
-import AppContent from './components/default/Content';
+import React, { Suspense } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import AppContent from 'components/default/Content';
 
-function App() {
+const loading = <div>화면을 불러오는 중 입니다.</div>;
+
+const App = () => {
   return (
-    <Root>
-      <div className='leftContainer'>
-        <NavBar />
-      </div>
-      <div className='rightContainer'>
-        <Header />
+    <BrowserRouter>
+      <Suspense fallback={loading}>
         <AppContent />
-      </div>
-    </Root>
+      </Suspense>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
-
-const Root = styled.div`
-  display: flex;
-  .rightContainer {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-  }
-`;
